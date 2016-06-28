@@ -1,3 +1,5 @@
+# Setting up MySQL on your computer
+
 To download MySQL to your computer running Windows, please visit http://dev.mysql.com/downloads/installer/ and proceed to downloading the installer.
 
 ![](/docs/guides/images/Installing_MySQL/mysql-step-1.png)
