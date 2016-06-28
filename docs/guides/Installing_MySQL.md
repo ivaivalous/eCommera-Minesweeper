@@ -1,11 +1,11 @@
 To download MySQL to your computer running Windows, please visit http://dev.mysql.com/downloads/installer/ and proceed to downloading the installer.
 
-[[https://github.com/ivaivalous/eCommera-Minesweeper/tree/master/docs/guides/images/Installing_MySQL/mysql-step-1.png]]
+[[https://github.com/ivaivalous/eCommera-Minesweeper/blob/master/docs/guides/images/Installing_MySQL/mysql-step-1.png?raw=true]]
 
 
 Once downloaded, start the installer.
 
-[[https://github.com/ivaivalous/eCommera-Minesweeper/tree/master/docs/guides/images/Installing_MySQL/mysql-step-2.png]]
+![TEST](/images/Installing_MySQL/mysql-step-2.png)
 
 Read and accept the license agreement and click next to continue.
 
