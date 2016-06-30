@@ -1,0 +1,15 @@
+{
+    "name": "ecommera_minesweeper",
+    "description": "Web-based Multiplayer game using node.js",
+    "version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+
+    "dependencies": {
+        "dotenv": "2.x",
+        "express": "4.x",
+        "hbs": "4.x"
+    }
+}

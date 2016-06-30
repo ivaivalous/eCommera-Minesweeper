@@ -1,0 +1,63 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #333;
+	text-align: center;
+	margin: 0;
+}
+
+header {
+	background: #333;
+	overflow: hidden;
+}
+
+header h1 {
+	float: left;
+	margin: 20px;
+}
+
+header h1 a {
+	color: #fff;
+	text-decoration: none;
+	
+}
+
+header ul {
+	float: right;
+	list-style-type: none;
+	padding: 0;
+	margin: 20px;
+}
+
+header ul li {
+	display: inline-block;
+}
+
+header ul li a {
+	color: #aaa;
+	display: inline-block;
+	padding: 10px 20px;
+}
+
+header ul li.current a {
+	color: #fff;
+}
+
+.games-list {
+	max-width: 400px;
+	margin: 20px auto;
+	padding: 0;
+	text-align: left;
+	border-top: 1px dashed #ddd;
+}
+
+.games-list li {
+	margin: 10px 0;
+	padding-bottom: 10px;
+	border-bottom: 1px dashed #ddd;
+}
+
+footer {
+	font-size: 12px;
+	padding: 20px;
+	color: #ccc;
+}
