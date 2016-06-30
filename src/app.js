@@ -1,15 +1,15 @@
-// this loads environment variables from the local .env file into the process.env 
-// object. This is a simple alternative to command line arguments, or bash 
-// scripts that export variables or jenkins/travis configuration
-require('dotenv').config();
-
 var path = require('path');
 var express = require('express');
 var handlebars = require('hbs');
 
+// This loads environment variables from the local config.js file.
+// This is a simple alternative to command line arguments, or bash 
+// scripts that export variables or jenkins/travis configuration
+var config = require('./config');
+
 // create the server web application
 var app = express();
-app.set('port', process.env.PORT || 3000);
+app.set('port', config.port || 3000);
 
 // set the dynamic routings to use and the path for static files
 var router = require('./controllers/router');
