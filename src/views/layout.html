@@ -3,32 +3,41 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{head.title}}</title>
-	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-	<header>
+	<header class="header">
+		<div class="wrapper">
+			<h1>
+				<a href="/">{{header.title}}</a>
+			</h1>
 
-		<h1>
-			<a href="/">
-				{{header.title}}
-			</a>
-		</h1>
-
-		<ul class="main-menu">
-			{{#each header.menuItems}}
-				<li class="menu-item {{@key}}{{#if this.current}} current{{/if}}">
-					<a href="{{this.href}}">
-						{{this.label}}
-					</a>
-				</li>
-			{{/each}}
-		</ul>
-
+			<nav class="main-menu">
+				<ul class="main-menu-list">
+					{{#each header.menuItems}}
+						<li class="menu-item {{@key}}{{#if this.current}} current{{/if}}">
+							<a href="{{this.href}}">
+								{{this.label}}
+							</a>
+						</li>
+					{{/each}}
+				</ul>
+			</nav>
+		</div>
 	</header>
+	<div class="wrapper">
+		<h2>{{title}}</h2>
 
-	<h2>{{title}}</h2>
-	{{{body}}}
+		{{{body}}}
 
-	<footer>{{footer.copyright}}</footer>
+	</div>
+	<footer class="footer">
+		<div class="wrapper">
+			{{footer.copyright}}
+		</div>
+	</footer>
+
+	{{> debuglog }}
+
 </body>
 </html>

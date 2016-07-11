@@ -1,0 +1,8 @@
+<ol>
+	{{#each users}}
+		<li>
+			<a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
+			({{this.score}})
+		</li>
+	{{/each}}
+</ol>

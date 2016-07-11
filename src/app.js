@@ -11,23 +11,29 @@ var config = require('./config');
 var app = express();
 app.set('port', config.port || 3000);
 
+// the view model intercepts all requests and adds commonly used view 
+// data for the templates (such as texts, session, users, etc.)
+// (like pdict for Demandware)
+app.use(require('./middleware/viewModel'));
+
 // set the dynamic routings to use and the path for static files
-var router = require('./controllers/router');
-app.use(router);
-app.use(express.static('public'));
+app.use(require('./middleware/router'));
+app.use(express.static('public')); // use the 'public' folder
 
 // set handlebars as templating engine
 app.set('view engine', 'html');
 app.engine('html', handlebars.__express);
 
-// start the server
+// precompile and register partial views
+handlebars.registerPartials('./views/partials');
+
+// start the server and listen to the configured port
 app.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
 /*
 @TODO:
-- consider a gitignored config.js file for all configurations
 - print detailed errors when in development environment https://github.com/expressjs/errorhandler
 - use a json file for static texts?
 */

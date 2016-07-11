@@ -1,0 +1,18 @@
+{{#if debug.log}}
+	<!-- debugging partial view -->
+	<link rel="stylesheet" href="css/debug.css">
+	<div id="debug">
+		<label for="toggleAll">
+			Expand all debug messages
+		</label>
+		<input id="toggleAll" type="checkbox">
+		<ol>
+			{{#each debug.log}}
+				<li>
+					<input type="checkbox" title="Expand">
+					<pre>{{this}}</pre>
+				</li>
+			{{/each}}
+		</ol>
+	</div>	
+{{/if}}

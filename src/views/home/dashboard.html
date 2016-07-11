@@ -1,0 +1,25 @@
+<p>Here you can see a list of all games currently waiting for players to join. You can choose any one and join the fun! Or you can create a new game and invite your friends!</p>
+<div class="games-list-header">
+	<h2 class="games-list-title">Available games:</h2>
+	<a href="{{createGameLink}}" class="create-game-button">Create a new game</a>
+</div>
+<table class="games-list">
+	<thead>
+		<th>Host</th>
+		<th>Since</th>
+		<th>Players</th>
+		<th></th>
+	</thead>
+	<tbody>
+		{{#each games}}
+			<tr>
+				<td class="game-item-host">{{this.host}}</td>
+				<td class="game-item-since">{{this.created}}</td>
+				<td class="game-item-players">{{this.players}}</td>
+				<td class="game-item-actions">
+					<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button">Join</a>
+				</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

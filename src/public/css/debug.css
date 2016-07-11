@@ -1,0 +1,30 @@
+#debug {
+	margin: 20px;
+	padding: 20px 20px 10px;
+	border: 1px dashed #ccc;
+	text-align: left;
+}
+
+#debug ol {
+	list-style-type: none;
+	padding: 0;
+}
+
+#debug input {
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+#debug pre {
+	height: 1.3em;
+	margin: 0 0 10px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#toggleAll:checked ~ ol pre,
+#debug input:checked ~ pre {
+	height: auto;
+	white-space: pre;
+}
