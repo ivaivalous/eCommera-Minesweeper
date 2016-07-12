@@ -7,15 +7,17 @@
 	<thead>
 		<th>Host</th>
 		<th>Since</th>
-		<th>Players</th>
 		<th></th>
 	</thead>
 	<tbody>
 		{{#each games}}
 			<tr>
-				<td class="game-item-host">{{this.host}}</td>
-				<td class="game-item-since">{{this.created}}</td>
-				<td class="game-item-players">{{this.players}}</td>
+				<td class="game-item-host">
+					<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
+				</td>
+				<td class="game-item-since">
+					{{this.created}}
+				</td>
 				<td class="game-item-actions">
 					<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button">Join</a>
 				</td>

@@ -11,5 +11,12 @@ module.exports = {
 	// Environment
 	// May be 'production' or 'development' and may change how the app behaves
 	// environment : 'development',
+
+	database : {
+		host : 'localhost',
+		user : 'root',
+		password : '',
+		database : 'minesweeper'
+	}
 	
 };

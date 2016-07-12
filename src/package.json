@@ -9,6 +9,7 @@
 
     "dependencies": {
         "express": "4.x",
-        "hbs": "4.x"
+        "hbs": "4.x",
+        "mysql": "2.x"
     }
 }

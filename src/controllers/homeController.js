@@ -1,3 +1,5 @@
+var db = require('../database');
+
 exports.show = function (request, response) {
 	// @TODO: get session data
 	// if user is logged in redirect them to the dashboard
@@ -15,37 +17,59 @@ exports.show = function (request, response) {
 };
 
 exports.dashboard = function (request, response) {
-	// @TODO: get data from DB
-	response.viewModel.games = [
-		{
-			id : 1,
-			host : 'Batman',
-			players : 3,
-			created : '14:22'
-		},
-		{
-			id : 2,
-			host : 'Boris Johnson',
-			players : 1,
-			created : '00:12'
-		},
-		{
-			id : 3,
-			host : 'johndoe',
-			players : 7,
-			created : '22:33'
+	db.connect(function (err, connection) {
+		
+		if(err){
+			// render error page
+			response.viewModel.error = err;
+			response.render('error/500', response.viewModel);
+			return;
 		}
-	];
 
-	// set this page's menu item in the header as active/current
-	response.viewModel.header.menuItems.home.current = true;
+		var sql = ''+
+			'SELECT, '+
+				'g.id, '+
+				'u.id as \'user_id\', '+
+				'u.display_name, '+
+				'g.game_start_time '+
+			'FROM games g '+
+			'JOIN users u '+
+				'ON u.id = g.host_user_id '+
+			'WHERE g.game_finish_time IS NULL'; // i.e games that are not finished yet
 
-	// view template data
-	response.viewModel.title = 'Minesweeper games dashboard';
-	response.viewModel.createGameLink = '/host';
-	response.viewModel.joinGameLink = '/join/';
-	
-	response.render('home/dashboard', response.viewModel);
+		connection.query(sql, function(err, rows) {
+			
+			if(err){
+				// render error page
+				response.viewModel.error = err;
+				response.render('error/500', response.viewModel);
+				return;
+			}
+
+			// transform the query results and set them in the viewModel
+			response.viewModel.games = [];
+			for(var i = 0; i < rows.length; i++){
+				var row = rows[i];
+				response.viewModel.games.push({
+					id : row.id,
+					userId : row.user_id,
+					host : row.display_name,
+					created : new Date(row.game_start_time).toLocaleTimeString()
+				});
+			}
+
+			// set this page's menu item in the header as active/current
+			response.viewModel.header.menuItems.home.current = true;
+
+			// view template data
+			response.viewModel.title = 'Minesweeper games dashboard';
+			response.viewModel.createGameLink = '/host';
+			response.viewModel.joinGameLink = '/join/';
+			response.viewModel.profileLink = '/user/';
+			
+			response.render('home/dashboard', response.viewModel);
+		});
+	});
 };
 
 exports.ranking = function (request, response) {

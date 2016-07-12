@@ -7,6 +7,15 @@ var handlebars = require('hbs');
 // scripts that export variables or jenkins/travis configuration
 var config = require('./config');
 
+// initialize the database module
+var database = require('./database');
+database.setCredentials({
+	host : config.database.host,
+	user : config.database.user,
+	password : config.database.password,
+	database : config.database.database
+});
+
 // create the server web application
 var app = express();
 app.set('port', config.port || 3000);

@@ -4,6 +4,12 @@ body {
 	margin: 0;
 }
 
+.wrapper {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px
+}
+
 header {
 	background: #333;
 	overflow: hidden;
@@ -11,7 +17,7 @@ header {
 
 header h1 {
 	float: left;
-	margin: 20px;
+	margin: 20px 0;
 }
 
 header h1 a {
@@ -53,6 +59,12 @@ header ul li.current a {
 	margin: 10px 0;
 	padding-bottom: 10px;
 	border-bottom: 1px dashed #ddd;
+}
+
+.error-message {
+	font-family: monospace;
+	padding: 20px;
+	background: #eee;
 }
 
 footer {

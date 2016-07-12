@@ -1,3 +1,5 @@
+var util = require('util');
+
 module.exports = function(request, response, next){
 	response.viewModel = {
 		head : {
@@ -52,7 +54,10 @@ module.exports = function(request, response, next){
 			// when used for the first time create an array as the log property 
 			// of the debug method and start filling it the method's arguments
 			response.viewModel.debug.log = response.viewModel.debug.log || [];
-			Array.prototype.push.apply(response.viewModel.debug.log, arguments);
+			var rows = Array.prototype.slice.call(arguments);
+			for(var i = 0; i < rows.length; i++){
+				response.viewModel.debug.log.push(util.inspect(rows[i]));
+			}
 		}
 	};
 	next();
