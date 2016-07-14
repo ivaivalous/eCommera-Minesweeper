@@ -25,22 +25,20 @@ module.exports = function(request, response, next){
 				logout : {
 					label: 'Log out',
 					href: '/account/logout'
-				}
+				},
 
-				/*
-				// @TODO: for guest users
 				home : {
 					label: 'Home',
 					href: '/'
 				},
 				login : {
 					label: 'Log in',
-					href: '/account/login'
+					href: '/login'
 				},
 				register : {
 					label: 'Register',
-					href: '/account/register'
-				}*/
+					href: '/register'
+				}
 			}
 		},
 		footer : {

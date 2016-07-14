@@ -10,6 +10,8 @@
     "dependencies": {
         "express": "4.x",
         "hbs": "4.x",
-        "mysql": "2.x"
+        "mysql": "2.x",
+        "jsonwebtoken": "7.x",
+        "body-parser": "1.15.x"
     }
 }

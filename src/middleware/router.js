@@ -9,18 +9,22 @@ router.get('/', homeController.show);
 router.get('/dashboard', homeController.dashboard);
 router.get('/ranking', homeController.ranking);
 
+var accountController = require('../controllers/accountController');
+
+// Login
+router.get('/login', accountController.loginPage);
+router.post('/login', accountController.login);
+
+// Registration
+router.get('/register', accountController.registerPage);
+router.post('/register', accountController.register);
+
 /* @TODO:
 // account
 var accountController = require('../controllers/accountController');
 router.get('/account', accountController.show); // account landing page?
 router.get('/account/logout', accountController.logout); // log out and redirect
 router.get('/user/:id', accountController.profile); // visit a user's public profile
-
-router.get('/account/login', accountController.login); // get the form page
-router.post('/account/login', accountController.loginSubmit); // submit the form
-
-router.get('/account/register', accountController.create); // get the form page
-router.post('/account/register', accountController.createSubmit); // submit the form
 */
 
 // game

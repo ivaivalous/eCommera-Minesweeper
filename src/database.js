@@ -26,3 +26,33 @@ exports.connect = function (callback) {
 		callback(err, connection)
 	});
 };
+
+
+// Run a query against the database
+exports.runQuery = function(queryLiteral, params, callback, errorCallback) {
+    if (errorCallback == undefined) {
+        var errorCallbackEffective = defaultErrorHandler;
+    } else {
+        var errorCallbackEffective = errorCallback;
+    }
+
+    exports.connect(function (error, connection) {
+        if (error) {
+            errorCallbackEffective(error);
+            return;
+        }
+
+        connection.query(queryLiteral, params, function(error, results) {
+            if (error) {
+                errorCallbackEffective(error);
+            } else {
+                callback(results);
+            }
+        });
+    });
+}
+
+var defaultErrorHandler = function(error) {
+    // TODO something more useful
+    console.log("Database error");
+}

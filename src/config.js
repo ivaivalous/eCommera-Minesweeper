@@ -1,6 +1,6 @@
 // this is the application's configuration that should hold all environment 
 // variables. It is left empty on purpose since these configuration are not to 
-// be shared or versioned. Each deployment of the app will use it's unique set 
+// be shared or versioned. Each deployment of the app will use its unique set 
 // of environment variables
 module.exports = {
 	
@@ -17,6 +17,12 @@ module.exports = {
 		user : 'root',
 		password : '',
 		database : 'minesweeper'
+	},
+
+	jwt: {
+		secret: '',
+		ttlHours: 8,
+		algorithm: 'HS256'
 	}
 	
 };

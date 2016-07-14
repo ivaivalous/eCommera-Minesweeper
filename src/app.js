@@ -2,6 +2,9 @@ var path = require('path');
 var express = require('express');
 var handlebars = require('hbs');
 
+// For parsing request bodies
+var bodyParser = require('body-parser');
+
 // This loads environment variables from the local config.js file.
 // This is a simple alternative to command line arguments, or bash 
 // scripts that export variables or jenkins/travis configuration
@@ -16,9 +19,15 @@ database.setCredentials({
 	database : config.database.database
 });
 
+// Use for JWT-based authentication
+var authentication = require('./authentication');
+
 // create the server web application
 var app = express();
 app.set('port', config.port || 3000);
+
+// Allow parsing HTTP POST bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // the view model intercepts all requests and adds commonly used view 
 // data for the templates (such as texts, session, users, etc.)
