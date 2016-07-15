@@ -54,5 +54,5 @@ exports.runQuery = function(queryLiteral, params, callback, errorCallback) {
 
 var defaultErrorHandler = function(error) {
     // TODO something more useful
-    console.log("Database error");
+    console.log("Database error: " + error);
 }

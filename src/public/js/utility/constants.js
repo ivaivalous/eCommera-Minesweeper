@@ -17,10 +17,17 @@
             passwordConfirmation: "#register-password-confirm",
             submit: "#submit-registration",
             container: "#register"
-        }
-    }
+        },
+        jwtContainer: "#jwt"
+    };
 
     constants.keys = {
         enter: 13
+    };
+
+    constants.regex = {
+        emailValidation: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        displayNameValidation: /^.{2,64}$/,
+        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^\w])).{8,100}$/
     }
 })();

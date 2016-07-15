@@ -12,32 +12,39 @@ module.exports = function(request, response, next){
 				// @TODO: for logged in users
 				home : {
 					label: 'Home',
-					href: '/dashboard'
+					href: '/dashboard',
+					showToGuests: true,
+					showToRegistered: true
 				},
 				ranking : {
 					label: 'Ranking', // High score / Hall of fame / Score board
-					href: '/ranking'
+					href: '/ranking',
+					showToGuests: false,
+					showToRegistered: true
 				},
 				account : {
 					label: 'My account', // @TODO: print user's name from session?
-					href: '/account'
+					href: '/account',
+					showToGuests: false,
+					showToRegistered: true
 				},
 				logout : {
 					label: 'Log out',
-					href: '/account/logout'
-				},
-
-				home : {
-					label: 'Home',
-					href: '/'
+					href: '/account/logout',
+					showToGuests: false,
+					showToRegistered: true
 				},
 				login : {
 					label: 'Log in',
-					href: '/login'
+					href: '/login',
+					showToGuests: true,
+					showToRegistered: false
 				},
 				register : {
 					label: 'Register',
-					href: '/register'
+					href: '/register',
+					showToGuests: true,
+					showToRegistered: false
 				}
 			}
 		},

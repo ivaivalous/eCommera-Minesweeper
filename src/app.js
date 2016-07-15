@@ -1,6 +1,7 @@
 var path = require('path');
 var express = require('express');
 var handlebars = require('hbs');
+var handlebarsHelpers = require('./handlebarsHelpers');
 
 // For parsing request bodies
 var bodyParser = require('body-parser');

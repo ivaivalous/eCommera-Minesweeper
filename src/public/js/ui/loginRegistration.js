@@ -18,21 +18,6 @@
         loginApi.register(email, displayName, password);
     }
 
-    // "Log In" button on the login page - handle submission
-    $(constants.locators.login.submit).click(function (event) {
-        event.preventDefault();
-        login();
-    });
-
-    // Login form - handle submission on pressing enter
-    $(constants.locators.login.container).onkeydown = function (event) {
-        event.preventDefault();
-        // Submit the form on pressing Enter
-        if (event.keyCode === constants.keys.enter) {
-            login();
-        }
-    };
-
     // "Register" button on the register page - handle registration
     $(constants.locators.register.submit).click(function (event) {
         event.preventDefault();
@@ -46,4 +31,13 @@
 
         return password === passwordConfirmation;
     }
+
+    // Load the JWT into localStorage
+    $(document).ready(function() {
+        var jwtRaw = $(constants.locators.jwtContainer).val();
+
+        if (jwtRaw != undefined && jwtRaw.length > 0) {
+            localStorage.setItem("session", jwtRaw);
+        }
+    });
 })();
