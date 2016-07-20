@@ -19,7 +19,7 @@ module.exports = {
 		database : 'minesweeper'
 	},
 	jwt: {
-		secret: '',
+		secret: 'crypto horse',
 		ttlHours: 24,
 		algorithm: 'HS256'
 	},

@@ -3,6 +3,51 @@ var auth = require('../authentication');
 var queries = require('../queries');
 var config = require('../config');
 
+function createUser(data, callback) {
+    var salt = auth.generateSalt();
+    var params = [
+        data.email, 
+        auth.hashPassword(data.password, salt), 
+        salt, 
+        data.name
+    ];
+    db.query(queries.queries.register, params, callback);
+}
+
+function validateRegisterInput(data) {
+    return (isEmailValid(data.email) &&
+        isDisplayNameValid(data.name) &&
+            isPasswordValid(data.password));
+}
+
+// Check if an email is already in use for another account:
+// if free, run callback,
+// otherwise execute callbackIfTaken
+function checkEmailAvailability(email, callback) {
+    db.query(queries.queries.findEmail, [email], function (error, results) {
+        var emailIsFree = results && results[0] && results[0].count == 0;
+        callback(error, emailIsFree);
+    });
+}
+
+function isEmailValid(email) {
+    // Is the email a valid address?
+    var re = config.regex.emailValidation;
+    return re.test(email);
+}
+
+// Validate the user's chosen display name against a regex
+function isDisplayNameValid(displayName) {
+    var re = config.regex.displayNameValidation;
+    return re.test(displayName);
+}
+
+// Validate a password is complex enough to be used
+function isPasswordValid(password) {
+    var re = config.regex.passwordValidation;
+    return re.test(password);
+}
+
 // Reguest the login page
 exports.loginPage = function (request, response) {
     // If already logged in (JWT in request), redirect to dashboard
@@ -40,100 +85,76 @@ exports.login = function (request, response) {
         return;
     }
 
-    var tryLogin = function (saltResults) {
+    // @TODO:
+    // - get * fields for user based on email
+    // - if no result - invalid email - user does not exist
+    // - use salt to hash input password
+    // - compare hashed input with hashed database passwords
+    // - if they match - user can log in
+
+    // check if the user exists based on email
+    db.query(queries.queries.getSalt, [email], function (error, saltResults) {
         var salt = saltResults[0].salt;
+        var params = [
+            email,
+            auth.hashPassword(password, salt)
+        ];
 
-        db.runQuery(
-            queries.queries.login,
-            [email, auth.hashPassword(password, salt)],
-            function (results) {
-                if (results.length) {
-                    var result = results[0];
+        db.query(queries.queries.login, params, function (error, results) {
+            if (results.length) {
+                var result = results[0];
 
-                    // Create a JWT and return it with the viewModel
-                    response.viewModel.jwt = auth.issueJwt(
-                        result.email,
-                        result['display_name']);
+                // Create a JWT and return it with the viewModel
+                response.viewModel.jwt = auth.issueJwt(
+                    result.email,
+                    result['display_name']);
 
-                    // TODO redirect to another page
-                    response.render('login/success', response.viewModel);
-                } else {
-                    // Login failed
-                    response.viewModel.loginError = true;
-                    exports.loginPage(request, response);
-                }
+                // TODO redirect to another page
+                response.render('login/success', response.viewModel);
+            } else {
+                // Login failed
+                response.viewModel.loginError = true;
+                exports.loginPage(request, response);
             }
-        );
-    };
-
-    db.runQuery(queries.queries.getSalt, [email], tryLogin);
+        });
+    });
 }
 
 // Perform user registration. Return {success: true} if it went well
 exports.register = function (request, response) {
-    var email = request.body.email;
-    var displayName = request.body.displayName;
-    var password = request.body.password;
+    var input = {
+        email : request.body.email,
+        name : request.body.displayName,
+        password : request.body.password
+    };
 
-    if (!validateRegisterInput(email, displayName, password)) {
-        response.send({ success: false });
-    } else {
-        ifEmailNotTaken(email, function() {
-            createUser(email, displayName, password);
-            response.send({ success: true });
-        }, function () {
-            response.send({ success: false });
-        })
+    if (!validateRegisterInput(input)) {
+        response.send({
+            success : false,
+            message : 'Invalid input'
+        });
+        return;
     }
-}
 
-function createUser(email, displayName, password) {
-    var salt = auth.generateSalt();
-
-    db.runQuery(
-        queries.queries.register,
-        [email, auth.hashPassword(password, salt), salt, displayName],
-        function (results) {
-            console.log("User " + email + " has been created");
+    checkEmailAvailability(input.email, function(error, isFree) {
+        if(error || !isFree){
+            response.send({
+                success : false,
+                message : 'Email is already taken'
+            });
+            return;
         }
-    );
-}
 
-function validateRegisterInput(email, displayName, password) {
-    return (isEmailValid(email) &&
-        isDisplayNameValid(displayName) &&
-            isPasswordValid(password));
-}
+        createUser(input, function (err) {
+            if(err){
+                response.send({
+                    success : false,
+                    message : 'Database error'
+                });
+                return;
+            }
 
-// Check if an email is already in use for another account:
-// if free, run callback,
-// otherwise execute callbackIfTaken
-function ifEmailNotTaken(email, callback, callbackIfTaken) {
-    db.runQuery(queries.queries.findEmail, [email], function (results) {
-        if (results[0].count) {
-            // Email has been taken
-            callbackIfTaken();
-        } else {
-            // Email is free
-            callback();
-        }
+            response.send({ success: true });
+        });
     });
-}
-
-function isEmailValid(email) {
-    // Is the email a valid address?
-    var re = config.regex.emailValidation;
-    return re.test(email);
-}
-
-// Validate the user's chosen display name against a regex
-function isDisplayNameValid(displayName) {
-    var re = config.regex.displayNameValidation;
-    return re.test(displayName);
-}
-
-// Validate a password is complex enough to be used
-function isPasswordValid(password) {
-    var re = config.regex.passwordValidation;
-    return re.test(password);
 }

@@ -28,7 +28,7 @@ var app = express();
 app.set('port', config.port || 3000);
 
 // Allow parsing HTTP POST bodies
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended : true}));
 
 // the view model intercepts all requests and adds commonly used view 
 // data for the templates (such as texts, session, users, etc.)
@@ -43,7 +43,7 @@ app.use(express.static('public')); // use the 'public' folder
 app.set('view engine', 'html');
 app.engine('html', handlebars.__express);
 
-// precompile and register partial views
+// precompile and register partial views in this folder
 handlebars.registerPartials('./views/partials');
 
 // start the server and listen to the configured port

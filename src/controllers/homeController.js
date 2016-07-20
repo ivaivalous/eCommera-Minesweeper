@@ -17,8 +17,18 @@ exports.show = function (request, response) {
 };
 
 exports.dashboard = function (request, response) {
-	db.connect(function (err, connection) {
-		
+	var sql = ''+
+		'SELECT '+
+			'g.id, '+
+			'u.id as \'user_id\', '+
+			'u.display_name, '+
+			'g.game_start_time '+
+		'FROM games g '+
+		'JOIN users u '+
+			'ON u.id = g.host_user_id '+
+		'WHERE g.game_finish_time IS NULL'; // i.e games that are not finished yet
+
+	db.query(sql, function(err, rows) {
 		if(err){
 			// render error page
 			response.viewModel.error = err;
@@ -26,49 +36,28 @@ exports.dashboard = function (request, response) {
 			return;
 		}
 
-		var sql = ''+
-			'SELECT, '+
-				'g.id, '+
-				'u.id as \'user_id\', '+
-				'u.display_name, '+
-				'g.game_start_time '+
-			'FROM games g '+
-			'JOIN users u '+
-				'ON u.id = g.host_user_id '+
-			'WHERE g.game_finish_time IS NULL'; // i.e games that are not finished yet
+		// transform the query results and set them in the viewModel
+		response.viewModel.games = [];
+		for(var i = 0; i < rows.length; i++){
+			var row = rows[i];
+			response.viewModel.games.push({
+				id : row.id,
+				userId : row.user_id,
+				host : row.display_name,
+				created : new Date(row.game_start_time).toLocaleTimeString()
+			});
+		}
 
-		connection.query(sql, function(err, rows) {
-			
-			if(err){
-				// render error page
-				response.viewModel.error = err;
-				response.render('error/500', response.viewModel);
-				return;
-			}
+		// set this page's menu item in the header as active/current
+		response.viewModel.header.menuItems.home.current = true;
 
-			// transform the query results and set them in the viewModel
-			response.viewModel.games = [];
-			for(var i = 0; i < rows.length; i++){
-				var row = rows[i];
-				response.viewModel.games.push({
-					id : row.id,
-					userId : row.user_id,
-					host : row.display_name,
-					created : new Date(row.game_start_time).toLocaleTimeString()
-				});
-			}
-
-			// set this page's menu item in the header as active/current
-			response.viewModel.header.menuItems.home.current = true;
-
-			// view template data
-			response.viewModel.title = 'Minesweeper games dashboard';
-			response.viewModel.createGameLink = '/host';
-			response.viewModel.joinGameLink = '/join/';
-			response.viewModel.profileLink = '/user/';
-			
-			response.render('home/dashboard', response.viewModel);
-		});
+		// view template data
+		response.viewModel.title = 'Minesweeper games dashboard';
+		response.viewModel.createGameLink = '/host';
+		response.viewModel.joinGameLink = '/join/';
+		response.viewModel.profileLink = '/user/';
+		
+		response.render('home/dashboard', response.viewModel);
 	});
 };
 
