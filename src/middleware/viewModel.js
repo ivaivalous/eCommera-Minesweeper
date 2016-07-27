@@ -8,7 +8,9 @@ module.exports = function(request, response, next){
 		header : {
 			title : 'eCommera Minesweeper',
 			userMenuItems : {
-				/*account : {
+				/*
+				// @TODO: for logged in users
+				account : {
 					label: 'My account', // @TODO: print user's name from session?
 					href: '/account',
 					showToGuests: false,

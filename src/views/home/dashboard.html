@@ -5,28 +5,32 @@
 <div class="item-list-wrapper">
 	<a href="{{createGameLink}}" class="create-item-button button">Create a new game</a>
 
-	<table class="item-list-table" cellspacing="0">
-		<thead>
-			<th>Host player</th>
-			<th>Open since</th>
-			<th></th>
-		</thead>
-		<tbody>
+	{{#if games}}
+		<table class="item-list-table" cellspacing="0">
+			<thead>
+				<th>Host player</th>
+				<th>Open since</th>
+				<th></th>
+			</thead>
+			<tbody>
 
-			{{#each games}}
-				<tr>
-					<td class="game-item-host">
-						<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
-					</td>
-					<td class="game-item-since">
-						{{this.created}}
-					</td>
-					<td class="game-item-actions">
-						<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button button">Join</a>
-					</td>
-				</tr>
-			{{/each}}
+				{{#each games}}
+					<tr>
+						<td class="game-item-host">
+							<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
+						</td>
+						<td class="game-item-since">
+							{{this.created}}
+						</td>
+						<td class="game-item-actions">
+							<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button button">Join</a>
+						</td>
+					</tr>
+				{{/each}}
 
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	{{else}}
+		<p>No games available :(</p>
+	{{/if}}
 </div>

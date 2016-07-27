@@ -55,7 +55,7 @@ exports.loginPage = function (request, response) {
 
     // Set navigation
     response.viewModel.header.userMenuItems.login.current = true;
-    response.viewModel.title = 'Login - eCommera Minesweeper';
+    response.viewModel.title = 'Log in to your account';
     response.render('login', response.viewModel);
 }
 
@@ -68,7 +68,7 @@ exports.registerPage = function (request, response) {
     response.viewModel.header.userMenuItems.register.current = true;
 
     // TODO: Have the title read off a config file
-    response.viewModel.title = 'Register - eCommera Minesweeper';
+    response.viewModel.title = 'Create a new account';
     response.render('register', response.viewModel);
 }
 

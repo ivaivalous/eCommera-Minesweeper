@@ -28,7 +28,7 @@ exports.dashboard = function (request, response) {
 			'ON u.id = g.host_user_id '+
 		'WHERE g.game_finish_time IS NULL'; // i.e games that are not finished yet
 
-	db.query(sql, function(err, rows) {
+	db.query(sql, [], function(err, rows) {
 		if(err){
 			// render error page
 			response.viewModel.error = err;
@@ -47,30 +47,6 @@ exports.dashboard = function (request, response) {
 				created : new Date(row.game_start_time).toLocaleTimeString()
 			});
 		}
-		response.viewModel.games.push({
-			id : 12,
-			userId : 123,
-			host : 'blah',
-			created : new Date().toLocaleTimeString()
-		});
-		response.viewModel.games.push({
-			id : 12,
-			userId : 123,
-			host : 'blah',
-			created : new Date().toLocaleTimeString()
-		});
-		response.viewModel.games.push({
-			id : 12,
-			userId : 123,
-			host : 'blah',
-			created : new Date().toLocaleTimeString()
-		});
-		response.viewModel.games.push({
-			id : 12,
-			userId : 123,
-			host : 'blah',
-			created : new Date().toLocaleTimeString()
-		});
 
 		// set this page's menu item in the header as active/current
 		response.viewModel.header.menuItems.dashboard.current = true;

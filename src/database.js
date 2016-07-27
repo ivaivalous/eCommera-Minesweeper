@@ -23,7 +23,7 @@ function connect (callback) {
     });
 
     connection.connect(function (err) {
-        callback(err, connection)
+        callback(err, connection);
     });
 }
 
