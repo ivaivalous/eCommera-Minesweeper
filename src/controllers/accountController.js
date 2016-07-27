@@ -157,4 +157,42 @@ exports.register = function (request, response) {
             response.send({ success: true });
         });
     });
+};
+
+// User profile preview page
+exports.profile = function (request, response) {
+
+    var userid = request.params.id;
+    var sql = 'SELECT * FROM users WHERE id = ?';
+    
+    db.connect(function (err, connection) {
+       
+       if(err){
+            // render error page
+            response.viewModel.error = err;
+            response.render('error/500', response.viewModel);
+            return;
+        }
+        
+        connection.query(sql, [userid] , function(err, result) {
+            
+            if(err || result.length == 0){
+                // render error page
+                response.viewModel.error = "This user doesn't exists!";
+                response.render('error/500', response.viewModel);
+                return;
+            }
+
+            response.viewModel.user = {
+                id      : result[0].id,
+                email   : result[0].email,
+                name    : result[0].display_name
+            };
+
+            response.viewModel.header.title = "Profile Page of " + result[0].display_name;
+            
+            response.render('login/profile', response.viewModel);
+      });
+
+    });
 }

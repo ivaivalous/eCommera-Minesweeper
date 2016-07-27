@@ -24,8 +24,10 @@ router.post('/register', accountController.register);
 var accountController = require('../controllers/accountController');
 router.get('/account', accountController.show); // account landing page?
 router.get('/account/logout', accountController.logout); // log out and redirect
-router.get('/user/:id', accountController.profile); // visit a user's public profile
+
 */
+var accountController = require('../controllers/accountController');
+router.get('/user/:id', accountController.profile); // visit a user's public profile
 
 // game
 var gameController = require('../controllers/gameController');

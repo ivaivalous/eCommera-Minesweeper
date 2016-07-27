@@ -5,9 +5,10 @@ body {
 }
 
 .wrapper {
+    width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px
+    padding: 0 20px;
 }
 
 header {
@@ -80,3 +81,28 @@ footer {
     padding: 5px;
     margin: 10px 0px;
 }
+
+.menu-item > a:hover{
+    color:#fff;
+}
+
+.profile-info{
+    text-align: right;
+    margin-left: 30px;
+}
+
+.profile-info > p {
+    line-height: 20px;
+    margin:0px;
+    font-family: 
+}
+
+.profile-info,
+.profile-icon {
+    display: inline-block;
+}
+
+.user-info-wrapper{
+    display: flex;
+}
+
