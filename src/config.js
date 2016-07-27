@@ -16,7 +16,7 @@ module.exports = {
 		host : 'localhost',
 		user : 'root',
 		password : '',
-		database : 'minesweeper'
+		database : 'minesweeper'  
 	},
 	jwt: {
 		secret: 'crypto horse',

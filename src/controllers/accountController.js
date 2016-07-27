@@ -54,7 +54,7 @@ exports.loginPage = function (request, response) {
     //response.redirect('/dashboard');
 
     // Set navigation
-    response.viewModel.header.menuItems.login.current = true;
+    response.viewModel.header.userMenuItems.login.current = true;
     response.viewModel.title = 'Login - eCommera Minesweeper';
     response.render('login', response.viewModel);
 }
@@ -65,7 +65,7 @@ exports.registerPage = function (request, response) {
     //response.redirect('/dashboard');
 
     // Set navigation
-    response.viewModel.header.menuItems.register.current = true;
+    response.viewModel.header.userMenuItems.register.current = true;
 
     // TODO: Have the title read off a config file
     response.viewModel.title = 'Register - eCommera Minesweeper';
@@ -85,7 +85,7 @@ exports.login = function (request, response) {
         return;
     }
 
-    // @TODO:
+    // @TODO: single query login:
     // - get * fields for user based on email
     // - if no result - invalid email - user does not exist
     // - use salt to hash input password

@@ -47,9 +47,33 @@ exports.dashboard = function (request, response) {
 				created : new Date(row.game_start_time).toLocaleTimeString()
 			});
 		}
+		response.viewModel.games.push({
+			id : 12,
+			userId : 123,
+			host : 'blah',
+			created : new Date().toLocaleTimeString()
+		});
+		response.viewModel.games.push({
+			id : 12,
+			userId : 123,
+			host : 'blah',
+			created : new Date().toLocaleTimeString()
+		});
+		response.viewModel.games.push({
+			id : 12,
+			userId : 123,
+			host : 'blah',
+			created : new Date().toLocaleTimeString()
+		});
+		response.viewModel.games.push({
+			id : 12,
+			userId : 123,
+			host : 'blah',
+			created : new Date().toLocaleTimeString()
+		});
 
 		// set this page's menu item in the header as active/current
-		response.viewModel.header.menuItems.home.current = true;
+		response.viewModel.header.menuItems.dashboard.current = true;
 
 		// view template data
 		response.viewModel.title = 'Minesweeper games dashboard';
@@ -89,6 +113,9 @@ exports.ranking = function (request, response) {
 	// set this page's menu item in the header as active/current
 	response.viewModel.header.menuItems.ranking.current = true;
 	response.viewModel.profileLink = '/user/';
+
+	// view template data
+	response.viewModel.title = 'High scores';
 
 	response.render('home/ranking', response.viewModel);
 };

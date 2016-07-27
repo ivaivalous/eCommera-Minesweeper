@@ -2,41 +2,69 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, target-densitydpi=medium-dpi, minimal-ui">
+
 	<title>{{head.title}}</title>
+
 	<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-	<header class="header">
-		<div class="wrapper">
-			<h1>
-				<a href="/">{{header.title}}</a>
-			</h1>
-
-			<nav class="main-menu">
-				<ul class="main-menu-list">
-					{{#each header.menuItems}}
-						<li class="menu-item {{@key}}{{#if this.current}} current{{/if}}">
-							<a href="{{this.href}}">
-								{{this.label}}
-							</a>
-						</li>
-					{{/each}}
-				</ul>
-			</nav>
-		</div>
+	<header class="main-header">
+		<label for="navigationTriggerCheckbox" class="navigation-trigger"></label>
+		
+		<h1 class="header-title">
+			<a href="/">{{header.title}}</a>
+		</h1>
 	</header>
-	<div class="wrapper">
-		{{#if title}}
-			<h2>{{title}}</h2>
-		{{/if}}
 
-		{{{body}}}
+	<div class="main-content">
+		<article class="page-container">
+			<header class="page-header">
+				{{#if title}}
+					<h1 class="page-title">{{title}}</h1>
+				{{/if}}
+			</header>
 
+			{{{body}}}
+		</article>
 	</div>
-	<footer class="footer">
-		<div class="wrapper">
-			{{footer.copyright}}
-		</div>
+
+	<input type="checkbox" name="navigationTriggerCheckbox" id="navigationTriggerCheckbox">
+
+	<label for="navigationTriggerCheckbox" class="navigation-overlay"></label>
+	
+	<nav class="navigation-bar">
+		<header class="navigation-header">
+			<a href="/" class="navigation-logo"></a>
+
+			<ul class="user-links">
+
+				{{#each header.userMenuItems}}
+					<li class="user-menu-item {{@key}}{{#if this.current}} current{{/if}}">
+						<a href="{{this.href}}">
+							{{this.label}}
+						</a>
+					</li>
+				{{/each}}
+
+			</ul>
+		</header>
+
+		<ul class="main-menu">
+
+			{{#each header.menuItems}}
+				<li class="menu-item {{@key}}{{#if this.current}} current{{/if}}">
+					<a href="{{this.href}}">
+						{{this.label}}
+					</a>
+				</li>
+			{{/each}}
+
+		</ul>
+	</nav>
+
+	<footer class="main-footer">
+		{{footer.copyright}}
 	</footer>
 
 	{{> debuglog }}

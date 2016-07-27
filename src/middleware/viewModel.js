@@ -7,22 +7,8 @@ module.exports = function(request, response, next){
 		},
 		header : {
 			title : 'eCommera Minesweeper',
-			menuItems : {
-
-				// @TODO: for logged in users
-				home : {
-					label: 'Home',
-					href: '/dashboard',
-					showToGuests: true,
-					showToRegistered: true
-				},
-				ranking : {
-					label: 'Ranking', // High score / Hall of fame / Score board
-					href: '/ranking',
-					showToGuests: false,
-					showToRegistered: true
-				},
-				account : {
+			userMenuItems : {
+				/*account : {
 					label: 'My account', // @TODO: print user's name from session?
 					href: '/account',
 					showToGuests: false,
@@ -33,7 +19,7 @@ module.exports = function(request, response, next){
 					href: '/account/logout',
 					showToGuests: false,
 					showToRegistered: true
-				},
+				},*/
 				login : {
 					label: 'Log in',
 					href: '/login',
@@ -45,6 +31,27 @@ module.exports = function(request, response, next){
 					href: '/register',
 					showToGuests: true,
 					showToRegistered: false
+				}
+			},
+			menuItems : {
+				home : {
+					label: 'Home',
+					href: '/',
+					showToGuests: true,
+					showToRegistered: true
+				},
+				// @TODO: for logged in users
+				dashboard : {
+					label: 'Dashboard',
+					href: '/dashboard',
+					showToGuests: true,
+					showToRegistered: true
+				},
+				ranking : {
+					label: 'Ranking', // High score / Hall of fame / Score board
+					href: '/ranking',
+					showToGuests: false,
+					showToRegistered: true
 				}
 			}
 		},

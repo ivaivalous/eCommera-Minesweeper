@@ -1,27 +1,32 @@
 <p>Here you can see a list of all games currently waiting for players to join. You can choose any one and join the fun! Or you can create a new game and invite your friends!</p>
-<div class="games-list-header">
-	<h2 class="games-list-title">Available games:</h2>
-	<a href="{{createGameLink}}" class="create-game-button">Create a new game</a>
+
+<h2 class="games-list-title">Available games:</h2>
+
+<div class="item-list-wrapper">
+	<a href="{{createGameLink}}" class="create-item-button button">Create a new game</a>
+
+	<table class="item-list-table" cellspacing="0">
+		<thead>
+			<th>Host player</th>
+			<th>Open since</th>
+			<th></th>
+		</thead>
+		<tbody>
+
+			{{#each games}}
+				<tr>
+					<td class="game-item-host">
+						<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
+					</td>
+					<td class="game-item-since">
+						{{this.created}}
+					</td>
+					<td class="game-item-actions">
+						<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button button">Join</a>
+					</td>
+				</tr>
+			{{/each}}
+
+		</tbody>
+	</table>
 </div>
-<table class="games-list">
-	<thead>
-		<th>Host</th>
-		<th>Since</th>
-		<th></th>
-	</thead>
-	<tbody>
-		{{#each games}}
-			<tr>
-				<td class="game-item-host">
-					<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
-				</td>
-				<td class="game-item-since">
-					{{this.created}}
-				</td>
-				<td class="game-item-actions">
-					<a href="{{../joinGameLink}}{{this.id}}" class="join-game-button">Join</a>
-				</td>
-			</tr>
-		{{/each}}
-	</tbody>
-</table>
