@@ -1,5 +1,31 @@
 var util = require('util');
 
+function getUserMenuItems (loggedIn) {
+	if(loggedIn){
+		return {
+			account : {
+				label: 'My account',
+				href: '/account'
+			},
+			logout : {
+				label: 'Log out',
+				href: '/logout'
+			}
+		};
+	} else {
+		return {
+			login : {
+				label: 'Log in',
+				href: '/login'
+			},
+			register : {
+				label: 'Register',
+				href: '/register'
+			}
+		};
+	}
+}
+
 module.exports = function(request, response, next){
 	response.viewModel = {
 		head : {
@@ -7,58 +33,29 @@ module.exports = function(request, response, next){
 		},
 		header : {
 			title : 'eCommera Minesweeper',
-			userMenuItems : {
-				/*
-				// @TODO: for logged in users
-				account : {
-					label: 'My account', // @TODO: print user's name from session?
-					href: '/account',
-					showToGuests: false,
-					showToRegistered: true
-				},
-				logout : {
-					label: 'Log out',
-					href: '/account/logout',
-					showToGuests: false,
-					showToRegistered: true
-				},*/
-				login : {
-					label: 'Log in',
-					href: '/login',
-					showToGuests: true,
-					showToRegistered: false
-				},
-				register : {
-					label: 'Register',
-					href: '/register',
-					showToGuests: true,
-					showToRegistered: false
-				}
-			},
+			userMenuItems : getUserMenuItems(request.session.isUserLogged),
 			menuItems : {
 				home : {
 					label: 'Home',
-					href: '/',
-					showToGuests: true,
-					showToRegistered: true
+					href: '/'
 				},
 				// @TODO: for logged in users
 				dashboard : {
 					label: 'Dashboard',
-					href: '/dashboard',
-					showToGuests: true,
-					showToRegistered: true
+					href: '/dashboard'
 				},
 				ranking : {
 					label: 'Ranking', // High score / Hall of fame / Score board
-					href: '/ranking',
-					showToGuests: false,
-					showToRegistered: true
+					href: '/ranking'
 				}
 			}
 		},
 		footer : {
 			copyright : '© eCommera Limited ' + new Date().getFullYear()
+		},
+		//This will be used for storing session params
+		session : {
+			isLoggedUser : request.session.isUserLogged
 		},
 
 		// utility method for debugging

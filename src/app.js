@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 var handlebars = require('hbs');
 var handlebarsHelpers = require('./handlebarsHelpers');
+var session = require('express-session');
 
 // For parsing request bodies
 var bodyParser = require('body-parser');
@@ -29,6 +30,9 @@ app.set('port', config.port || 3000);
 
 // Allow parsing HTTP POST bodies
 app.use(bodyParser.urlencoded({extended : true}));
+
+//Initialize and set the session
+app.use(session({key: "sessionCookie", resave: true, saveUninitialized: true, secret: 'shhh', cookie: { maxAge: 60000 }}));
 
 // the view model intercepts all requests and adds commonly used view 
 // data for the templates (such as texts, session, users, etc.)

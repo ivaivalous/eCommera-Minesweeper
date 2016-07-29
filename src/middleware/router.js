@@ -6,6 +6,7 @@ var router = express.Router();
 // homepage
 var homeController = require('../controllers/homeController');
 router.get('/', homeController.show);
+router.get('/logout', homeController.logout);
 router.get('/dashboard', homeController.dashboard);
 router.get('/ranking', homeController.ranking);
 

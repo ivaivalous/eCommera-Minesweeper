@@ -105,12 +105,17 @@ exports.login = function (request, response) {
                 var result = results[0];
 
                 // Create a JWT and return it with the viewModel
-                response.viewModel.jwt = auth.issueJwt(
-                    result.email,
-                    result['display_name']);
+                //response.viewModel.jwt = auth.issueJwt(
+                //    result.email,
+                //    result['display_name']);
 
+                request.session.isUserLogged = true;
+                //response.viewModel.session.isLoggedUser = request.session.isUserLogged;
                 // TODO redirect to another page
-                response.render('login/success', response.viewModel);
+
+                //require('./homeController').dashboard(request, response);
+
+                response.redirect('/dashboard');
             } else {
                 // Login failed
                 response.viewModel.loginError = true;
@@ -182,11 +187,14 @@ exports.profile = function (request, response) {
                 response.render('error/500', response.viewModel);
                 return;
             }
+            // @TODO:
+            // Gather more information 
 
-            response.viewModel.user = {
-                id      : result[0].id,
-                email   : result[0].email,
-                name    : result[0].display_name
+            // The information that will be displayed on profile page 
+            response.viewModel.userProfile = {
+                id : result[0].id,
+                email : result[0].email,
+                name : result[0].display_name
             };
 
             response.viewModel.header.title = "Profile Page of " + result[0].display_name;

@@ -3,8 +3,9 @@ var db = require('../database');
 exports.show = function (request, response) {
 	// @TODO: get session data
 	// if user is logged in redirect them to the dashboard
-	if(false){
+	if(request.session.isUserLogged){
 		response.redirect('/dashboard');
+		return;
 	}
 
 	// set this page's menu item in the header as active/current
@@ -89,9 +90,14 @@ exports.ranking = function (request, response) {
 	// set this page's menu item in the header as active/current
 	response.viewModel.header.menuItems.ranking.current = true;
 	response.viewModel.profileLink = '/user/';
-
+	
 	// view template data
 	response.viewModel.title = 'High scores';
 
 	response.render('home/ranking', response.viewModel);
+};
+
+exports.logout = function (request, response) {
+	request.session.destroy();
+	response.redirect('/');
 };
