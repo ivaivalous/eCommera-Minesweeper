@@ -40,8 +40,8 @@ app.use(session({key: "sessionCookie", resave: true, saveUninitialized: true, se
 app.use(require('./middleware/viewModel'));
 
 // set the dynamic routings to use and the path for static files
-app.use(require('./middleware/router'));
 app.use(express.static('public')); // use the 'public' folder
+app.use(require('./middleware/router'));
 
 // set handlebars as templating engine
 app.set('view engine', 'html');

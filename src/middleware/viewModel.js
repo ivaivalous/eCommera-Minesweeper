@@ -1,5 +1,27 @@
 var util = require('util');
 
+function getMenuItems (loggedIn) {
+	if(loggedIn){
+		return {
+			dashboard : {
+				label: 'Dashboard',
+				href: '/dashboard'
+			},
+			ranking : {
+				label: 'Ranking', // High score / Hall of fame / Score board
+				href: '/ranking'
+			}
+		};
+	} else {
+		return {
+			home : {
+				label: 'Home',
+				href: '/'
+			}
+		};
+	}
+}
+
 function getUserMenuItems (loggedIn) {
 	if(loggedIn){
 		return {
@@ -34,21 +56,7 @@ module.exports = function(request, response, next){
 		header : {
 			title : 'eCommera Minesweeper',
 			userMenuItems : getUserMenuItems(request.session.isUserLogged),
-			menuItems : {
-				home : {
-					label: 'Home',
-					href: '/'
-				},
-				// @TODO: for logged in users
-				dashboard : {
-					label: 'Dashboard',
-					href: '/dashboard'
-				},
-				ranking : {
-					label: 'Ranking', // High score / Hall of fame / Score board
-					href: '/ranking'
-				}
-			}
+			menuItems : getMenuItems(request.session.isUserLogged),
 		},
 		footer : {
 			copyright : '© eCommera Limited ' + new Date().getFullYear()

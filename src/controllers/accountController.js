@@ -50,8 +50,11 @@ function isPasswordValid(password) {
 
 // Reguest the login page
 exports.loginPage = function (request, response) {
-    // If already logged in (JWT in request), redirect to dashboard
-    //response.redirect('/dashboard');
+    // if user is logged in redirect them to the dashboard
+    if(request.session.isUserLogged){
+        response.redirect('/dashboard');
+        return;
+    }
 
     // Set navigation
     response.viewModel.header.userMenuItems.login.current = true;
@@ -61,8 +64,11 @@ exports.loginPage = function (request, response) {
 
 // Request the register page
 exports.registerPage = function (request, response) {
-    // If already logged in (JWT in request), redirect to dashboard
-    //response.redirect('/dashboard');
+    // if user is logged in redirect them to the dashboard
+    if(request.session.isUserLogged){
+        response.redirect('/dashboard');
+        return;
+    }
 
     // Set navigation
     response.viewModel.header.userMenuItems.register.current = true;
@@ -166,6 +172,11 @@ exports.register = function (request, response) {
 
 // User profile preview page
 exports.profile = function (request, response) {
+    // if user is not logged in redirect them to homepage
+    if(!request.session.isUserLogged){
+        response.redirect('/');
+        return;
+    }
 
     var userid = request.params.id;
     var sql = 'SELECT * FROM users WHERE id = ?';
@@ -197,7 +208,7 @@ exports.profile = function (request, response) {
                 name : result[0].display_name
             };
 
-            response.viewModel.header.title = "Profile Page of " + result[0].display_name;
+            response.viewModel.title = "Profile Page of " + result[0].display_name;
             
             response.render('login/profile', response.viewModel);
       });

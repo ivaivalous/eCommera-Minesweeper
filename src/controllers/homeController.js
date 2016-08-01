@@ -1,7 +1,6 @@
 var db = require('../database');
 
 exports.show = function (request, response) {
-	// @TODO: get session data
 	// if user is logged in redirect them to the dashboard
 	if(request.session.isUserLogged){
 		response.redirect('/dashboard');
@@ -12,12 +11,18 @@ exports.show = function (request, response) {
 	response.viewModel.header.menuItems.home.current = true;
 
 	// put a title for the page
-	response.viewModel.title = 'Welcome to our Minesweeper game!';
+	response.viewModel.title = 'eCommera Minesweeper';
 	
 	response.render('home/index', response.viewModel);
 };
 
 exports.dashboard = function (request, response) {
+	// if user is not logged in redirect them to homepage
+	if(!request.session.isUserLogged){
+		response.redirect('/');
+		return;
+	}
+
 	var sql = ''+
 		'SELECT '+
 			'g.id, '+
@@ -63,41 +68,64 @@ exports.dashboard = function (request, response) {
 };
 
 exports.ranking = function (request, response) {
-	// @TODO: get data from DB
-	response.viewModel.users = [
-		{
-			id : 1,
-			name : 'Lorem',
-			score : 400
-		},
-		{
-			id : 2,
-			name : 'Ipsum',
-			score : 300
-		},
-		{
-			id : 3,
-			name : 'Dolor',
-			score : 200
-		},
-		{
-			id : 4,
-			name : 'Sit Amet',
-			score : 100
+	// if user is not logged in redirect them to homepage
+	if(!request.session.isUserLogged){
+		response.redirect('/');
+		return;
+	}
+
+	var sql = 'SELECT id, display_name FROM users';
+	db.query(sql, [], function(err, rows) {
+		if(err){
+			// render error page
+			response.viewModel.error = err;
+			response.render('error/500', response.viewModel);
+			return;
 		}
-	];
 
-	// set this page's menu item in the header as active/current
-	response.viewModel.header.menuItems.ranking.current = true;
-	response.viewModel.profileLink = '/user/';
-	
-	// view template data
-	response.viewModel.title = 'High scores';
+		response.viewModel.users = [];
+		for(var i = 0; i < rows.length; i++){
+			var row = rows[i];
+			response.viewModel.users.push({
+				id : row.id,
+				name : row.display_name,
+				score : (rows.length - i) * 100 // @TODO: get real scores
+			});
+		}
 
-	response.render('home/ranking', response.viewModel);
+		// set this page's menu item in the header as active/current
+		response.viewModel.header.menuItems.ranking.current = true;
+		response.viewModel.profileLink = '/user/';
+		
+		// view template data
+		response.viewModel.title = 'High scores';
+
+		response.render('home/ranking', response.viewModel);
+	});
 };
 
 exports.logout = function (request, response) {
 	request.session.destroy();
 	response.redirect('/');
 };
+
+exports.notFound = function (request, response) {
+	response.status(404);
+
+	// respond with html page
+	if(request.accepts('html')){
+		response.viewModel.title = 'Error 404';
+		response.viewModel.error = request.originalUrl;
+		response.render('error/404', response.viewModel);
+		return;
+	}
+
+	// respond with json
+	if(request.accepts('json')){
+		response.send({ error: 'Not found' });
+		return;
+	}
+
+	// default to plain-text. send()
+	response.type('txt').send('Not found');
+}

@@ -35,4 +35,9 @@ var gameController = require('../controllers/gameController');
 router.get('/host', gameController.create);
 router.get('/join/:id', gameController.join);
 
+// Default handler for 404 requests:
+// if the request was not handled by any router above (or by the static file 
+// service) then return 404
+router.get('*', homeController.notFound);
+
 module.exports = router;
