@@ -1,5 +1,5 @@
 exports.queries = {
-    login: "SELECT * FROM users WHERE email = ? and password = ?",
+    getCustomer: "SELECT * FROM users WHERE email = ?",
     register: (
         "INSERT INTO users (email, password, salt, display_name, active) " +
         "VALUES (?, ?, ?, ?, 1)"),

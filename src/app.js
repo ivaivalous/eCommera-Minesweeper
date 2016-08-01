@@ -56,3 +56,9 @@ app.listen(app.get('port'), function(){
 - print detailed errors when in development environment https://github.com/expressjs/errorhandler
 - use a json file for static texts?
 */
+
+if (config.environment === 'development') {
+	app.use(function(req, res){
+		res.status(404).send({ error: 'Not found! :(' });
+	});
+}

@@ -18,6 +18,7 @@ function validateRegisterInput(data) {
     return (isEmailValid(data.email) &&
         isDisplayNameValid(data.name) &&
             isPasswordValid(data.password));
+
 }
 
 // Check if an email is already in use for another account:
@@ -93,32 +94,34 @@ exports.login = function (request, response) {
     // - if they match - user can log in
 
     // check if the user exists based on email
-    db.query(queries.queries.getSalt, [email], function (error, saltResults) {
-        var salt = saltResults[0].salt;
-        var params = [
-            email,
-            auth.hashPassword(password, salt)
-        ];
+ 
+    db.query(queries.queries.getCustomer, [email], function (error, results) {
+        if(error || results.length === 0){
+            // render error page
+            response.send({
+                success: false,
+                message: 'Database issue'
+            });
+            return;
+        }else {
+            var result = results[0];
+            var salt = result.salt;
+            var pass = result.password;
 
-        db.query(queries.queries.login, params, function (error, results) {
-            if (results.length) {
-                var result = results[0];
-
-                // Create a JWT and return it with the viewModel
+             if( auth.hashPassword(password, salt) != pass ){
+      	       // render error page
+               response.viewModel.loginError = true;
+               exports.loginPage(request, response);
+             }else {
                 response.viewModel.jwt = auth.issueJwt(
-                    result.email,
-                    result['display_name']);
-
+                result.email,
+                result['display_name']);
                 // TODO redirect to another page
                 response.render('login/success', response.viewModel);
-            } else {
-                // Login failed
-                response.viewModel.loginError = true;
-                exports.loginPage(request, response);
-            }
-        });
+             }
+        }
     });
-}
+},
 
 // Perform user registration. Return {success: true} if it went well
 exports.register = function (request, response) {

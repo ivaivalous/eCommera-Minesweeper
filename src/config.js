@@ -10,13 +10,15 @@ module.exports = {
 	
 	// Environment
 	// May be 'production' or 'development' and may change how the app behaves
-	// environment : 'development',
+	environment : process.env.NODE_ENV || 'development' ,
 
 	database : {
 		host : 'localhost',
 		user : 'root',
 		password : '',
 		database : 'minesweeper'  
+
+
 	},
 	jwt: {
 		secret: 'crypto horse',
