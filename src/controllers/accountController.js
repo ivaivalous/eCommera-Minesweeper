@@ -51,8 +51,11 @@ function isPasswordValid(password) {
 
 // Reguest the login page
 exports.loginPage = function (request, response) {
-    // If already logged in (JWT in request), redirect to dashboard
-    //response.redirect('/dashboard');
+    // if user is logged in redirect them to the dashboard
+    if(request.session.isUserLogged){
+        response.redirect('/dashboard');
+        return;
+    }
 
     // Set navigation
     response.viewModel.header.userMenuItems.login.current = true;
@@ -62,8 +65,11 @@ exports.loginPage = function (request, response) {
 
 // Request the register page
 exports.registerPage = function (request, response) {
-    // If already logged in (JWT in request), redirect to dashboard
-    //response.redirect('/dashboard');
+    // if user is logged in redirect them to the dashboard
+    if(request.session.isUserLogged){
+        response.redirect('/dashboard');
+        return;
+    }
 
     // Set navigation
     response.viewModel.header.userMenuItems.register.current = true;
@@ -94,7 +100,6 @@ exports.login = function (request, response) {
     // - if they match - user can log in
 
     // check if the user exists based on email
- 
     db.query(queries.queries.getCustomer, [email], function (error, results) {
         if(error || results.length === 0){
             // render error page
@@ -164,6 +169,11 @@ exports.register = function (request, response) {
 
 // User profile preview page
 exports.profile = function (request, response) {
+    // if user is not logged in redirect them to homepage
+    if(!request.session.isUserLogged){
+        response.redirect('/');
+        return;
+    }
 
     var userid = request.params.id;
     var sql = 'SELECT * FROM users WHERE id = ?';
@@ -185,14 +195,17 @@ exports.profile = function (request, response) {
                 response.render('error/500', response.viewModel);
                 return;
             }
+            // @TODO:
+            // Gather more information 
 
-            response.viewModel.user = {
-                id      : result[0].id,
-                email   : result[0].email,
-                name    : result[0].display_name
+            // The information that will be displayed on profile page 
+            response.viewModel.userProfile = {
+                id : result[0].id,
+                email : result[0].email,
+                name : result[0].display_name
             };
 
-            response.viewModel.header.title = "Profile Page of " + result[0].display_name;
+            response.viewModel.title = "Profile Page of " + result[0].display_name;
             
             response.render('login/profile', response.viewModel);
       });

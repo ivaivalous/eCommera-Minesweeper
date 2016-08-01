@@ -36,9 +36,8 @@
 	<nav class="navigation-bar">
 		<header class="navigation-header">
 			<a href="/" class="navigation-logo"></a>
-
+			
 			<ul class="user-links">
-
 				{{#each header.userMenuItems}}
 					<li class="user-menu-item {{@key}}{{#if this.current}} current{{/if}}">
 						<a href="{{this.href}}">
@@ -46,7 +45,6 @@
 						</a>
 					</li>
 				{{/each}}
-
 			</ul>
 		</header>
 

@@ -6,6 +6,7 @@ var router = express.Router();
 // homepage
 var homeController = require('../controllers/homeController');
 router.get('/', homeController.show);
+router.get('/logout', homeController.logout);
 router.get('/dashboard', homeController.dashboard);
 router.get('/ranking', homeController.ranking);
 
@@ -33,5 +34,10 @@ router.get('/user/:id', accountController.profile); // visit a user's public pro
 var gameController = require('../controllers/gameController');
 router.get('/host', gameController.create);
 router.get('/join/:id', gameController.join);
+
+// Default handler for 404 requests:
+// if the request was not handled by any router above (or by the static file 
+// service) then return 404
+router.get('*', homeController.notFound);
 
 module.exports = router;

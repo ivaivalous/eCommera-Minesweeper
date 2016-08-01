@@ -1,17 +1,18 @@
 {
-  "name": "ecommera_minesweeper",
-  "description": "Web-based Multiplayer game using node.js",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "body-parser": "1.15.x",
-    "express": "4.x",
-    "handlebars": "^4.0.5",
-    "hbs": "4.x",
-    "jsonwebtoken": "7.x",
-    "mysql": "2.x"
-  }
+    "name": "ecommera_minesweeper",
+    "description": "Web-based Multiplayer game using node.js",
+    "version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+
+    "dependencies": {
+        "express": "4.x",
+        "hbs": "4.x",
+        "mysql": "2.x",
+        "jsonwebtoken": "7.x",
+        "body-parser": "1.15.x",
+        "express-session": "1.x"
+    }
 }

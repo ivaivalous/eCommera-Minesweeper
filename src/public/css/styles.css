@@ -210,7 +210,11 @@ a:active {
 
 /* reusables */
 
-input {
+input[type=text],
+input[type=number],
+input[type=email],
+input[type=password] {
+    -webkit-appearance: none;
     display: block;
     width: 100%;
     max-width: 300px;
@@ -219,6 +223,7 @@ input {
     margin-bottom: 10px;
     border: 1px solid #eee;
     border-left: 2px solid #aaa;
+    border-radius: 0;
     background: #fafafa;
     color: #555;
 }
@@ -232,6 +237,7 @@ input[type=button],
 input[type=submit],
 a.button,
 .button {
+    -webkit-appearance: none;
     display: inline-block;
     padding: 10px 20px;
     margin: 0;
