@@ -20,15 +20,11 @@ router.post('/login', accountController.login);
 router.get('/register', accountController.registerPage);
 router.post('/register', accountController.register);
 
-/* @TODO:
-// account
-var accountController = require('../controllers/accountController');
-router.get('/account', accountController.show); // account landing page?
-router.get('/account/logout', accountController.logout); // log out and redirect
 
-*/
 var accountController = require('../controllers/accountController');
 router.get('/user/:id', accountController.profile); // visit a user's public profile
+router.get('/account', accountController.show); //change password page
+router.post('/account', accountController.change) //the actual change of password 
 
 // game
 var gameController = require('../controllers/gameController');

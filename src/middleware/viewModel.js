@@ -62,9 +62,7 @@ module.exports = function(request, response, next){
 			copyright : '© eCommera Limited ' + new Date().getFullYear()
 		},
 		//This will be used for storing session params
-		session : {
-			isLoggedUser : request.session.isUserLogged
-		},
+		session : request.session,		
 
 		// utility method for debugging
 		// dumps whatever it receives as arguments to the bottom of the page

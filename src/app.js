@@ -32,7 +32,7 @@ app.set('port', config.port || 3000);
 app.use(bodyParser.urlencoded({extended : true}));
 
 //Initialize and set the session
-app.use(session({key: "sessionCookie", resave: true, saveUninitialized: true, secret: 'shhh', cookie: { maxAge: 60000 }}));
+app.use(session({key: "sessionCookie", resave: true, saveUninitialized: true, secret: 'shhh', cookie: { maxAge: 300000 }}));
 
 // the view model intercepts all requests and adds commonly used view 
 // data for the templates (such as texts, session, users, etc.)

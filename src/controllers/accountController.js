@@ -118,11 +118,11 @@ exports.login = function (request, response) {
                response.viewModel.loginError = true;
                exports.loginPage(request, response);
              }else {
-                response.viewModel.jwt = auth.issueJwt(
-                result.email,
-                result['display_name']);
+                request.session.isUserLogged = true;
+                request.session.userEmail = email;
+                
                 // TODO redirect to another page
-                response.render('login/success', response.viewModel);
+                response.redirect('/dashboard');
              }
         }
     });
@@ -211,4 +211,65 @@ exports.profile = function (request, response) {
       });
 
     });
+}
+
+exports.show = function (request, response) {
+    response.viewModel.header.userMenuItems.account.current = true;
+    response.viewModel.title = "Change your password ";
+    response.render('login/account', response.viewModel);    
+}
+
+exports.change = function (request, response) {
+    var salt, currentPassword;
+    var updatePassword = "UPDATE users SET password = ?, salt = ? WHERE email = ?";
+    var getSaltAndPassword = "SELECT salt, password FROM users WHERE email = ?";
+    var input = {
+        email : request.session.userEmail,
+        oldpassword : request.body.oldpassword,
+        password : request.body.password,
+        confirmpassword : request.body.confirmpassword
+    }
+    if(isPasswordValid(input.password)){
+         if(input.password == input.confirmpassword){
+            db.connect(function (err, connection) {
+                if(err){
+                // render error page
+                response.viewModel.error = err;
+                response.render('error/500', response.viewModel);
+                return;
+                }
+                connection.query(getSaltAndPassword, [input.email] , function(err, result) {
+                    if(err){
+                        response.viewModel.error = err;
+                        response.render('error/500', response.viewModel);
+                        return;
+                    }
+                    if(result.length == 0){
+                        response.viewModel.title = 'No user found try again';
+                        response.redirect('/account');
+                        return;
+                    }
+                    salt = result[0].salt;
+                    currentPassword = result[0].password;
+                    if(auth.hashPassword(input.oldpassword, salt) == currentPassword){
+                        var newSalt = auth.generateSalt();
+                        var newPassword = auth.hashPassword(input.password, newSalt);
+                        connection.query(updatePassword, [newPassword, newSalt, input.email] , function(err){
+                            if(err){
+                                response.viewModel.error = err;
+                                response.render('error/500', response.viewModel);
+                            }
+                            response.redirect('/dashboard');
+                        });
+                    }
+                });
+            });
+        
+        }
+    } else {
+        response.viewModel.title = "Change your password ";
+        response.viewModel.wrongpasswordtitle = 'Your password have to contain a-Z 0-9 and special symbols';
+        response.render('login/account', response.viewModel);
+        return;
+    }
 }
