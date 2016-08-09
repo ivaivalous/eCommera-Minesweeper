@@ -18,6 +18,10 @@
             submit: "#submit-registration",
             container: "#register"
         },
+        gameListing: {
+            button: "#reload-games",
+            gameListTemplate: "#games-list"
+        },
         jwtContainer: "#jwt"
     };
 

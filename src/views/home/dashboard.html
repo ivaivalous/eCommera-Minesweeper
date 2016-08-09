@@ -2,20 +2,26 @@
 
 <h2 class="games-list-title">Available games:</h2>
 
-<div class="item-list-wrapper">
+<div class="item-list-wrapper" id="games-list">
 	<a href="{{createGameLink}}" class="create-item-button button">Create a new game</a>
+	<button id="reload-games">Refresh game list</button>
 
 	{{#if games}}
 		<table class="item-list-table" cellspacing="0">
 			<thead>
-				<th>Host player</th>
-				<th>Open since</th>
+				<th>Room Name</th>
+				<th>Host</th>
+				<th>Max Players</th>
+				<th>Map Size</th>
 				<th></th>
 			</thead>
 			<tbody>
 
 				{{#each games}}
 					<tr>
+						<td class="game-item-host">
+							{{this.host}}
+						</td>
 						<td class="game-item-host">
 							<a href="{{../profileLink}}{{this.userId}}" class="user-link">{{this.host}}</a>
 						</td>

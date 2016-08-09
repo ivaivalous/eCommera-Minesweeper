@@ -40,7 +40,6 @@ exports.createGame = function(request, response) {
 
 // Join an existing game
 exports.joinGame = function(request, response) {
-
 }
 
 // Get the current status of the game
@@ -51,4 +50,7 @@ exports.getStatus = function(request, response) {
 // Make a move on the game map
 exports.makeMove = function(request, response) {
 
+}
+
+exports.setGameMap = function(gameId, map) {
 }

@@ -28,34 +28,55 @@ exports.buildGameParameters = function(
 exports.buildGame = function(hostUser, gameParameters) {
     return {
         hostUser: hostUser,
-        gameParameters: gameParameters
+        gameParameters: gameParameters,
+        hasStarted: false,
+        gameStartsIn: config.gameBoundaries.defaultGameStartTimeMs,
+        thinkTime: config.gameBoundaries.defaultThinkTimeMs,
+        map: {},
+        currentPlayerTurn: {
+            userId: null,
+            thinkTimeLeft: null
+        },
+        players: []
     }
-}
+};
 
 exports.addGame = function(game) {
     return createGame(game);
-}
+};
 
 exports.getGame = function(gameId) {
     return games[gameId];
-}
+};
+
+exports.updateGame = function(gameId, action) {
+    action(games[gameId]);
+};
 
 exports.getGames = function(includePrivate) {
-    if (includePrivate) {
-        return games;
-    }
+    var gamesList = {};
 
-    var publicGames = {};
     for (var property in games) {
         if (games.hasOwnProperty(property) &&
-                games[property].gameParameters.isPublic) {
+            !games[property].hasStarted) {
 
-            publicGames[property] = games[property];
+            var game = games[property];
+            console.log("GAEM: " + JSON.stringify(game));
+
+            if (!game.gameParameters.isPublic && !includePrivate) {
+                continue;
+            }
+
+            gamesList[property] = {
+                hostUser: game.hostUser,
+                gameParameters: game.gameParameters
+            };
+            delete gamesList[property].gameParameters.mineCount;
         }
     }
 
-    return publicGames;
-}
+    return gamesList;
+};
 
 var createGame = function(game) {
     var gameId = generateGameId();
@@ -66,7 +87,7 @@ var createGame = function(game) {
 
     games[gameId] = game;
     return gameId;
-}
+};
 
 var generateGameId = function() {
     var text = "";
@@ -77,11 +98,11 @@ var generateGameId = function() {
     }
 
     return text;
-}
+};
 
 var isGameIdTaken = function(id) {
     return games[id] != undefined;
-}
+};
 
 var validateRoomName = function(desiredName) {
     var re = config.regex.roomNameValidation;
@@ -114,10 +135,10 @@ var validateDimensions = function(x, y, mineCount) {
     }
 
     return true;
-}
+};
 
 var validateMaxPlayers = function(maxPlayers) {
     if (maxPlayers > config.gameBoundaries.maxPlayerCount) {
         throw {error: "Too many players"}; 
     }
-}
+};

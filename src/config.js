@@ -46,6 +46,8 @@ module.exports = {
     	},
     	minePercentMax: 0.9,
     	maxPlayerCount: 100,
-    	allowedGameIdCharacters: "BCDFJKLMNPQRSTVWXYXbcdfghjklmnpqrstvwxyz123456789"
+    	allowedGameIdCharacters: "BCDFJKLMNPQRSTVWXYXbcdfghjklmnpqrstvwxyz123456789",
+        defaultGameStartTimeMs: 300000,
+        defaultThinkTimeMs: 30000
     }
 };
