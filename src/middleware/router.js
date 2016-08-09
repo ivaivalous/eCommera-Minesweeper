@@ -24,12 +24,22 @@ router.post('/register', accountController.register);
 var accountController = require('../controllers/accountController');
 router.get('/user/:id', accountController.profile); // visit a user's public profile
 router.get('/account', accountController.show); //change password page
-router.post('/account', accountController.change) //the actual change of password 
+router.post('/account', accountController.change); //the actual change of password 
 
 // game
 var gameController = require('../controllers/gameController');
 router.get('/host', gameController.create);
 router.get('/join/:id', gameController.join);
+
+// game communication
+var games = {};
+var commControler = require('../controllers/gameCommunicationController');
+router.get('/list', commControler.listGames);
+router.post('/create', commControler.createGame);
+router.post('/join', commControler.joinGame);
+router.get('/status', commControler.getStatus);
+router.post('/move', commControler.makeMove);
+
 
 // Default handler for 404 requests:
 // if the request was not handled by any router above (or by the static file 

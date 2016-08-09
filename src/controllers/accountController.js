@@ -137,6 +137,7 @@ exports.register = function (request, response) {
     };
 
     if (!validateRegisterInput(input)) {
+        response.status(400);
         response.send({
             success : false,
             message : 'Invalid input'
@@ -145,7 +146,8 @@ exports.register = function (request, response) {
     }
 
     checkEmailAvailability(input.email, function(error, isFree) {
-        if(error || !isFree){
+        if (error || !isFree) {
+            response.status(400);
             response.send({
                 success : false,
                 message : 'Email is already taken'
@@ -154,14 +156,16 @@ exports.register = function (request, response) {
         }
 
         createUser(input, function (err) {
-            if(err){
+            if(err) {
+                response.status(400);
                 response.send({
                     success : false,
-                    message : 'Database error'
+                    message : 'Other error'
                 });
                 return;
             }
 
+            response.status(200);
             response.send({ success: true });
         });
     });
