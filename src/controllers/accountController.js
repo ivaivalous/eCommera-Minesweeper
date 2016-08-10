@@ -101,25 +101,27 @@ exports.login = function (request, response) {
 
     // check if the user exists based on email
     db.query(queries.queries.getCustomer, [email], function (error, results) {
-        if(error || results.length === 0){
+        if(error || results.length === 0) {
             // render error page
             response.send({
                 success: false,
                 message: 'Database issue'
             });
             return;
-        }else {
+        } else {
             var result = results[0];
             var salt = result.salt;
             var pass = result.password;
 
-             if( auth.hashPassword(password, salt) != pass ){
+             if(auth.hashPassword(password, salt) != pass ){
       	       // render error page
                response.viewModel.loginError = true;
                exports.loginPage(request, response);
-             }else {
+             } else {
                 request.session.isUserLogged = true;
                 request.session.userEmail = email;
+                request.session.userId = result.id;
+                request.session.displayName = result["display_name"];
                 
                 // TODO redirect to another page
                 response.redirect('/dashboard');

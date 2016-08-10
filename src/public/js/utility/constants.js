@@ -23,7 +23,25 @@
             gamesTable: "#games-list",
             gameListBody: "#games-list-body"
         },
+        gameCreation: {
+            form: "#create-game-form",
+            openFormButton: "#create-game",
+            cancelButton: "#cancel-create",
+            submitButton: "#create-game-submit",
+            roomName: "#game-name",
+            maxPlayers: "#game-players",
+            sizeX: "#game-map-x",
+            sizeY: "#game-map-y",
+            mineCount: "#game-mine-count",
+            isPublic: "#game-public",
+            errorContainer: "#game-create-error"
+        },
         jwtContainer: "#jwt"
+    };
+
+    constants.classes = {
+        hiddenContainer: "hidden",
+        centered: "centered"
     };
 
     constants.keys = {

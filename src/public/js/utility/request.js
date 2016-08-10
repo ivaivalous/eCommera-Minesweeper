@@ -5,18 +5,16 @@
 
     request.requestPost = function(
             urlArray, paramsObject, callback, callbackOnError) {
-        request(
-            'POST', urlArray, true,
-            {'Content-Type': 'application/x-www-form-urlencoded'},
-            paramsObject, callback, callbackOnError);
+        request.request(
+            'POST', urlArray,
+            'application/x-www-form-urlencoded',
+            {}, paramsObject, callback, callbackOnError);
     };
 
     request.requestGet = function(urlArray, callback, callbackOnError) {
-        if (isAuthenticated()) {
-            request.request(
-                'GET', urlArray, true, null, null,
-                callback, callbackOnError);
-        }
+        request.request(
+            'GET', urlArray, true, null, null,
+            callback, callbackOnError);
     };
 
     request.request = function(
@@ -35,7 +33,7 @@
             headers: (headers == undefined ? {} : headers),
             success: callback,
             error: callbackOnErrorToUse
-        });                
+        });
     };
 
     function buildUrl(urlArray) {
@@ -47,10 +45,6 @@
         }
 
         return url;
-    };
-
-    function isAuthenticated() {
-        return true;
     };
 
     function defaultErrorHandle(response) {

@@ -3,7 +3,7 @@
 <h2 class="games-list-title">Available games:</h2>
 
 <div class="item-list-wrapper" id="games-list">
-    <a href="{{createGameLink}}" class="create-item-button button">Create a new game</a>
+    <button id="create-game" class="create-item-button button">Create a new game</a>
     <button id="reload-games">Refresh game list</button>
 
     <table id="games-list" class="item-list-table" cellspacing="0">
@@ -17,4 +17,41 @@
         <tbody id="games-list-body">
         </tbody>
     </table>
+</div>
+
+<div class="popup hidden" id="create-game-form">
+    <div class="header">
+        <h1 class="page-title">Create new game</h1>
+    </div>
+    <div class="server-validation-error hidden" id="game-create-error">
+    </div>
+    <form>
+        <label for="game-name">Room name:</label>
+        <input id="game-name" type="text" />
+        <label for="game-public">Show game on listing page:</label>
+        <input id="game-public" type="checkbox" checked="checked" />
+        <br />
+        <br />
+
+        <label for="game-players">Max number of players:</label>
+        <input id="game-players" type="number" />
+        <br />
+
+        <label for="game-map-x">Map size, x:</label>
+        <input id="game-map-x" type="number" />
+        <br />
+
+        <label for="game-map-y">Map size, y:</label>
+        <input id="game-map-y" type="number" />
+        <br />
+
+        <label for="game-mine-count">Number of mines:</label>
+        <input id="game-mine-count" type="number" />
+        <br />
+
+        <div class="form-actions">
+            <button id="cancel-create">Cancel</button>
+            <button id="create-game-submit" class="create-item-button button">Start game</a>
+        </button>
+    </form>
 </div>

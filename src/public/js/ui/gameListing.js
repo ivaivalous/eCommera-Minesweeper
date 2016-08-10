@@ -4,12 +4,15 @@
     var TABLE_ROW = "tr";
     var TABLE_CELL = "td";
 
+    // Click event for the load games in progress button
     $(constants.locators.gameListing.button).click(function (event) {
         getGamesList();
     });
 
     $(document).ready(function() {
-        getGamesList();
+        if (location.pathname.indexOf("/dashboard") !== -1) {
+            getGamesList();
+        }
     });
 
     function getGamesList() {
@@ -48,7 +51,12 @@
 
     function buildHostCell(game) {
         var td = $(document.createElement(TABLE_CELL));
-        td.text(game.hostUser.userDisplayName);
+        var link = $(document.createElement('a'));
+
+        link.text(game.hostUser.userDisplayName);
+        link.attr("href", "/user/" + game.hostUser.userId);
+
+        td.append(link);
         return td;
     }
 
@@ -86,8 +94,11 @@
         var tr = $(document.createElement(TABLE_ROW));
         var td = $(document.createElement(TABLE_CELL));
 
-        td.text("There are no games available to join.");
+        td.text(
+            "There are no games available to join. " +
+            "You can create one.");
         td.attr("colspan", "5");
+        td.addClass(constants.classes.centered);
 
         tr.append(td);
         return tr;

@@ -17,14 +17,16 @@ module.exports = {
 		user : 'root',
 		password : '',
 		database : 'minesweeper'  
-
-
 	},
 	jwt: {
 		secret: 'crypto horse',
 		ttlHours: 24,
 		algorithm: 'HS256'
 	},
+    session: {
+        secret: "REPLACE ME",
+        cookieMaxAge: 300000
+    },
 	passwordHashing: {
 		numberOfIterations: 1000,
 		keyLengthBytes: 64

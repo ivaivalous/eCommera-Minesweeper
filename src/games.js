@@ -168,7 +168,7 @@ var validateDimensions = function(x, y, mineCount) {
     var fieldCount = x * y;
     var maxAllowedMines = fieldCount * maxMinePercent;
 
-    if (mineCount > maxAllowedMines) {
+    if (mineCount < 1 || mineCount > maxAllowedMines) {
         throw {error: "Mine count out of bounds"};
     }
 
@@ -176,7 +176,7 @@ var validateDimensions = function(x, y, mineCount) {
 };
 
 var validateMaxPlayers = function(maxPlayers) {
-    if (maxPlayers > config.gameBoundaries.maxPlayerCount) {
-        throw {error: "Too many players"}; 
+    if (maxPlayers < 2 || maxPlayers > config.gameBoundaries.maxPlayerCount) {
+        throw {error: "Too many or too few players"}; 
     }
 };

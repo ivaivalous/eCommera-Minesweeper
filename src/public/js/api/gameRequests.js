@@ -18,7 +18,7 @@
             boardSizeY: boardSizeY,
             maxPlayers: maxPlayers,
             mineCount: mineCount,
-            isPublic: isPublic
+            isPublic: isPublic ? "true" : "false",
         }, callback, callbackOnError);
     };
 
