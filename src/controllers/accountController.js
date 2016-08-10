@@ -195,7 +195,7 @@ exports.profile = function (request, response) {
             
             if(err || result.length == 0){
                 // render error page
-                response.viewModel.error = "This user doesn't exists!";
+                response.viewModel.error = "This user doesn't exist!";
                 response.render('error/500', response.viewModel);
                 return;
             }

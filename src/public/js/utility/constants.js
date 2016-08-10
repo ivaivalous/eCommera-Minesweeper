@@ -20,7 +20,8 @@
         },
         gameListing: {
             button: "#reload-games",
-            gameListTemplate: "#games-list"
+            gamesTable: "#games-list",
+            gameListBody: "#games-list-body"
         },
         jwtContainer: "#jwt"
     };

@@ -25,14 +25,13 @@ exports.createGame = function(request, response) {
             boardSizeX, boardSizeY, mineCount);
 
         var game = games.buildGame(user, gameParams);
+        var id = games.addGame(game);
 
     } catch (err) {
         response.status(400);
         response.json(err);
         return;
     }
-
-    var id = games.addGame(game);
 
     response.status(201);
     response.json({success: true, gameId: id});
