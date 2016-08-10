@@ -74,7 +74,14 @@
 
     function buildJoinLinkCell(game) {
         var td = $(document.createElement(TABLE_CELL));
-        td.text("JOIN!");
+        var joinButton = $(document.createElement("button"));
+
+        joinButton.text("Join");
+        joinButton.on("click", function () {
+            joinGame(game.id)
+        });
+
+        td.append(joinButton);
         return td;
     }
 
@@ -102,5 +109,9 @@
 
         tr.append(td);
         return tr;
+    }
+
+    function joinGame(gameId) {
+        window.location.replace("/play/" + gameId);
     }
 })();

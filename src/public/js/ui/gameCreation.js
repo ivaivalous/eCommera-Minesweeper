@@ -35,7 +35,7 @@
     });
 
     function joinGame(response) {
-        window.location.replace("/join/" + response.gameId);
+        window.location.replace("/play/" + response.gameId);
     }
 
     function displayCreationFailureFeedback(error) {

@@ -1,4 +1,5 @@
 var config = require('./config');
+var validation = require('./gameValidation');
 var games = {};
 var gameCount = 0;
 var hosts = {};
@@ -13,9 +14,9 @@ exports.buildUser = function(userId, userDisplayName) {
 exports.buildGameParameters = function(
     roomName, isPublic, maxPlayers, sizeX, sizeY, mineCount) {
 
-    validateRoomName(roomName);
-    validateMaxPlayers(maxPlayers);
-    validateDimensions(sizeX, sizeY, mineCount);
+    validation.validateRoomName(roomName);
+    validation.validateMaxPlayers(maxPlayers);
+    validation.validateDimensions(sizeX, sizeY, mineCount);
 
     return {
         roomName: roomName,
@@ -101,6 +102,14 @@ var createGame = function(game) {
 
     games[gameId] = game;
 
+    try {
+        addPlayer(game.hostUser, gameId);
+    } catch(error) {
+        // The user was not eligible to join their own game
+        delete games[gameId];
+        throw error;
+    }
+
     registerGame(game);
     return gameId;
 };
@@ -131,7 +140,7 @@ var generateGameId = function() {
     var text = "";
     var allowed = config.gameBoundaries.allowedGameIdCharacters;
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < config.gameBoundaries.roomIdLength; i++) {
         text += allowed.charAt(Math.floor(Math.random() * allowed.length));
     }
 
@@ -142,41 +151,13 @@ var isGameIdTaken = function(id) {
     return games[id] != undefined;
 };
 
-var validateRoomName = function(desiredName) {
-    var re = config.regex.roomNameValidation;
-    if (!re.test(desiredName)) {
-        throw {error: "Invalid room name"};
-    }
-};
+var addPlayer = function(user, gameId) {
+    validation.verifyEligibleToJoin(games, gameId, user.userId);
 
-var validateDimensions = function(x, y, mineCount) {
-    var minX = config.gameBoundaries.x.minX;
-    var maxX = config.gameBoundaries.x.maxX;
-    var minY = config.gameBoundaries.y.minY;
-    var maxY = config.gameBoundaries.y.maxY;
-
-    var maxMinePercent = config.gameBoundaries.minePercentMax;
-
-    if (x < minX || x > maxX) {
-        throw {error: "X dimension out of bounds"};
-    }
-
-    if (y < minY || y > maxY) {
-        throw {error: "Y dimension out of bounds"};
-    }
-
-    var fieldCount = x * y;
-    var maxAllowedMines = fieldCount * maxMinePercent;
-
-    if (mineCount < 1 || mineCount > maxAllowedMines) {
-        throw {error: "Mine count out of bounds"};
-    }
-
-    return true;
-};
-
-var validateMaxPlayers = function(maxPlayers) {
-    if (maxPlayers < 2 || maxPlayers > config.gameBoundaries.maxPlayerCount) {
-        throw {error: "Too many or too few players"}; 
-    }
-};
+    games[gameId].players.push({
+        name: user.userDisplayName,
+        id: user.userId,
+        alive: true,
+        score: 0
+    })
+}

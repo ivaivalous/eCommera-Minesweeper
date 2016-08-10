@@ -59,10 +59,6 @@ exports.dashboard = function (request, response) {
 
 		// view template data
 		response.viewModel.title = 'Minesweeper games dashboard';
-		response.viewModel.createGameLink = '/host';
-		response.viewModel.joinGameLink = '/join/';
-		response.viewModel.profileLink = '/user/';
-		
 		response.render('home/dashboard', response.viewModel);
 	});
 };

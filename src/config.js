@@ -18,11 +18,6 @@ module.exports = {
 		password : '',
 		database : 'minesweeper'  
 	},
-	jwt: {
-		secret: 'crypto horse',
-		ttlHours: 24,
-		algorithm: 'HS256'
-	},
     session: {
         secret: "REPLACE ME",
         cookieMaxAge: 300000
@@ -52,6 +47,8 @@ module.exports = {
         defaultGameStartTimeMs: 300000,
         defaultThinkTimeMs: 30000,
         maxGames: 200,
-        maxGamesPerHost: 5
+        maxGamesPerHost: 2,
+        maxGamesToJoin: 2,
+        roomIdLength: 7
     }
 };

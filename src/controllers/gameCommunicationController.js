@@ -55,7 +55,13 @@ exports.createGame = function(request, response) {
 
 // Join an existing game
 exports.joinGame = function(request, response) {
-    validateRequest(request);
+    try {
+        validateRequest(request);
+    } catch (err) {
+        response.status(401);
+        response.json({error: "Unauthorized"});
+        return;
+    }  
 }
 
 // Get the current status of the game

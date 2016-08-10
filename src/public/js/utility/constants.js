@@ -35,8 +35,7 @@
             mineCount: "#game-mine-count",
             isPublic: "#game-public",
             errorContainer: "#game-create-error"
-        },
-        jwtContainer: "#jwt"
+        }
     };
 
     constants.classes = {

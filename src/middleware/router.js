@@ -29,14 +29,13 @@ router.post('/account', accountController.change); //the actual change of passwo
 // game
 var gameController = require('../controllers/gameController');
 router.get('/host', gameController.create);
-router.get('/join/:id', gameController.join);
 
 // game communication
 var games = {};
 var commControler = require('../controllers/gameCommunicationController');
 router.get('/list', commControler.listGames);
 router.post('/create', commControler.createGame);
-router.post('/join', commControler.joinGame);
+router.post('/play', commControler.joinGame);
 router.get('/status', commControler.getStatus);
 router.post('/move', commControler.makeMove);
 
