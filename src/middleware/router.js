@@ -35,8 +35,8 @@ var games = {};
 var commControler = require('../controllers/gameCommunicationController');
 router.get('/list', commControler.listGames);
 router.post('/create', commControler.createGame);
-router.post('/play', commControler.joinGame);
-router.get('/status', commControler.getStatus);
+router.get('/play/:gameId', commControler.joinGame);
+router.get('/status/:gameId', commControler.getStatus);
 router.post('/move', commControler.makeMove);
 
 

@@ -59,7 +59,7 @@ exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
     }
 };
 
-countGamesParticipating = function(games, userId) {
+var countGamesParticipating = function(games, userId) {
     var count = 0;
 
     for (var key in games) {

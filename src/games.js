@@ -4,14 +4,15 @@ var games = {};
 var gameCount = 0;
 var hosts = {};
 
-exports.buildUser = function(userId, userDisplayName) {
+
+var buildUser = function(userId, userDisplayName) {
     return {
         userId: userId,
         userDisplayName: userDisplayName
     }
 };
 
-exports.buildGameParameters = function(
+var buildGameParameters = function(
     roomName, isPublic, maxPlayers, sizeX, sizeY, mineCount) {
 
     validation.validateRoomName(roomName);
@@ -28,7 +29,7 @@ exports.buildGameParameters = function(
     }
 }
 
-exports.buildGame = function(hostUser, gameParameters) {
+var buildGame = function(hostUser, gameParameters) {
     return {
         hostUser: hostUser,
         gameParameters: gameParameters,
@@ -44,7 +45,7 @@ exports.buildGame = function(hostUser, gameParameters) {
     }
 };
 
-exports.addGame = function(game) {
+var addGame = function(game) {
     if (gameCount > config.gameBoundaries.maxGames ||
             (hosts[game.hostUser.userId] >
                 config.gameBoundaries.maxGamesPerHost)) {
@@ -58,15 +59,15 @@ exports.addGame = function(game) {
     return createGame(game);
 };
 
-exports.getGame = function(gameId) {
+var getGame = function(gameId) {
     return games[gameId];
 };
 
-exports.updateGame = function(gameId, action) {
+var updateGame = function(gameId, action) {
     action(games[gameId]);
 };
 
-exports.getGames = function(includePrivate) {
+var getGames = function(includePrivate) {
     var gamesList = [];
 
     for (var property in games) {
@@ -93,6 +94,41 @@ exports.getGames = function(includePrivate) {
     return gamesList;
 };
 
+var isPlaying = function(gameId, userId) {
+    var game = games[gameId];
+
+    for (var i = 0; i < game.players.length; i++) {
+        if (game.players[i].id === userId) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+var hasFreePlayerSlots = function(gameId) {
+    var game = games[gameId];
+
+    if (game === undefined) {
+        return false;
+    }
+
+    return game.players.length < game.gameParameters.maxPlayers;
+}
+
+var addPlayer = function(user, gameId) {
+    validation.verifyEligibleToJoin(games, gameId, user.userId);
+
+    games[gameId].players.push({
+        name: user.userDisplayName,
+        id: user.userId,
+        alive: true,
+        score: 0
+    })
+};
+
+var addPlayer = addPlayer;
+
 var createGame = function(game) {
     var gameId = generateGameId();
 
@@ -106,6 +142,7 @@ var createGame = function(game) {
         addPlayer(game.hostUser, gameId);
     } catch(error) {
         // The user was not eligible to join their own game
+        console.log("Failed to add host to the game: " + error);
         delete games[gameId];
         throw error;
     }
@@ -151,13 +188,15 @@ var isGameIdTaken = function(id) {
     return games[id] != undefined;
 };
 
-var addPlayer = function(user, gameId) {
-    validation.verifyEligibleToJoin(games, gameId, user.userId);
+exports.buildUser = buildUser;
+exports.buildGameParameters = buildGameParameters;
+exports.buildGame = buildGame;
 
-    games[gameId].players.push({
-        name: user.userDisplayName,
-        id: user.userId,
-        alive: true,
-        score: 0
-    })
-}
+exports.addGame = addGame;
+exports.getGame = getGame;
+exports.getGames = getGames;
+exports.updateGame = updateGame;
+exports.hasFreePlayerSlots = hasFreePlayerSlots;
+
+exports.addPlayer = addPlayer;
+exports.isPlaying = isPlaying;

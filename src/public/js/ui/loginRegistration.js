@@ -15,7 +15,9 @@
         var displayName = $(constants.locators.register.name).val();
         var password = $(constants.locators.register.password).val();
 
-        loginApi.register(email, displayName, password);
+        loginApi.register(
+            email, displayName, password
+        );
     }
 
     // "Register" button on the register page - handle registration
@@ -31,13 +33,4 @@
 
         return password === passwordConfirmation;
     }
-
-    // Load the JWT into localStorage
-    $(document).ready(function() {
-        var jwtRaw = $(constants.locators.jwtContainer).val();
-
-        if (jwtRaw != undefined && jwtRaw.length > 0) {
-            localStorage.setItem("session", jwtRaw);
-        }
-    });
 })();

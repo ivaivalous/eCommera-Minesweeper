@@ -1,7 +1,8 @@
 var games = require('../games');
 
+
 // Get a list of all public games
-exports.listGames = function(request, response) {
+var listGames = function(request, response) {
     try {
         validateRequest(request);
     } catch (err) {
@@ -15,7 +16,7 @@ exports.listGames = function(request, response) {
 }
 
 // Create a new game room
-exports.createGame = function(request, response) {
+var createGame = function(request, response) {
     try {
         validateRequest(request);
     } catch (err) {
@@ -54,29 +55,66 @@ exports.createGame = function(request, response) {
 }
 
 // Join an existing game
-exports.joinGame = function(request, response) {
+var joinGame = function(request, response) {
+    var gameId = request.params.gameId;
+    var userId = request.session.userId;
+
+    // Verify the user has been authenticated
     try {
         validateRequest(request);
     } catch (err) {
-        response.status(401);
-        response.json({error: "Unauthorized"});
+        // TODO show a message you must login before you play
+        response.redirect('/login');
         return;
-    }  
+    }
+
+    // Check if the game exists
+    if (gameId == undefined || games.getGame(gameId) == undefined) {
+        // TODO show a message this game is not available
+        response.redirect('/dashboard');
+        return;
+    }
+
+    // Check if the user has already joined the game
+    if (games.isPlaying(gameId, userId)) {
+        // Don't add her once again, just return her to the game page
+        response.render('game/index', response.viewModel);
+        return;
+    }
+
+    // Check if the game has a free slot for another player
+    if (!games.hasFreePlayerSlots(gameId)) {
+        // TODO show a message the room is full
+        response.redirect('/dashboard');
+        return;
+    }
+
+    // Add the player to the game
+    try {
+        games.addPlayer(
+            games.buildUser(userId, request.session.userDisplayName),
+            gameId
+        );
+
+        response.render('game/index', response.viewModel);
+    } catch(err) {
+        console.log("Error joining game room: " + err);
+        response.redirect('/dashboard');
+    }
 }
 
 // Get the current status of the game
-exports.getStatus = function(request, response) {
+var getStatus = function(request, response) {
     validateRequest(request);
-
 }
 
 // Make a move on the game map
-exports.makeMove = function(request, response) {
+var makeMove = function(request, response) {
     validateRequest(request);
 
 }
 
-exports.setGameMap = function(gameId, map) {
+var setGameMap = function(gameId, map) {
     validateRequest(request);
 }
 
@@ -85,3 +123,10 @@ function validateRequest(request) {
         throw {error: 403};
     }    
 }
+
+exports.listGames = listGames;
+exports.createGame = createGame;
+exports.joinGame = joinGame;
+exports.getStatus = getStatus;
+exports.makeMove = makeMove;
+exports.setGameMap = setGameMap;
