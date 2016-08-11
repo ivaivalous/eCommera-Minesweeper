@@ -1,6 +1,7 @@
 var config = require('./config');
 var messages = require('./messages');
 var validation = require('./gameValidation');
+var timeManager = require('./timeManager');
 
 var games = {};
 var gameCount = 0;
@@ -38,10 +39,20 @@ var buildGame = function(hostUser, gameParameters) {
         hasStarted: false,
         gameStartsIn: config.gameBoundaries.defaultGameStartTimeMs,
         thinkTime: config.gameBoundaries.defaultThinkTimeMs,
+        difficulty: getGameDifficulty(
+            gameParameters.sizeX,
+            gameParameters.sizeY,
+            gameParameters.mineCount),
         map: {},
         currentPlayerTurn: {
             userId: null,
             thinkTimeLeft: null
+        },
+        timeControl: {
+            created: null,
+            started: null,
+            lastActed: null,
+            finished: null
         },
         players: []
     }
@@ -72,7 +83,11 @@ var getGameStatus = function(gameId, userId) {
         throw {error: messages.error.statusGetNotAllowed};
     }
 
+    // Update times stored in the game object
+    games[gameId] = timeManager.setLastActed(getGame(gameId));
+
     delete game.gameParameters.mineCount;
+    delete game.timeControl;
     game.map = getPublicMap(game.map);
 
     return game;
@@ -101,13 +116,30 @@ var getGames = function(includePrivate) {
                 id: property,
                 hostUser: game.hostUser,
                 gameParameters: game.gameParameters,
-                playersCount: game.players.length
+                playersCount: game.players.length,
+                difficulty: game.difficulty
             });
         }
     }
 
     return gamesList;
 };
+
+// Get a text-based description of how hard the game is
+var getGameDifficulty = function(x, y, mineCount) {
+    var fieldCount = x * y;
+    var mineRatio = (mineCount / fieldCount) * 100;
+    var difficulties = config.gameBoundaries.difficultyRanges;
+
+    for (var i = 0; i < difficulties.length; i++) {
+        if (mineRatio >= difficulties[i].start &&
+                mineRatio < difficulties[i].end) {
+            return difficulties[i].name;
+        }
+    }
+
+    return difficulties[0].name;
+}
 
 var isPlaying = function(gameId, userId) {
     var game = games[gameId];
@@ -140,6 +172,8 @@ var addPlayer = function(user, gameId) {
         alive: true,
         score: 0
     })
+
+    games[gameId] = timeManager.setLastActed(getGame(gameId));
 };
 
 var addPlayer = addPlayer;
@@ -151,6 +185,7 @@ var createGame = function(game) {
         gameId = generateGameId();
     }
 
+    game = timeManager.setCreated(game);
     games[gameId] = game;
 
     try {

@@ -20,7 +20,7 @@ module.exports = {
 	},
     session: {
         secret: "REPLACE ME",
-        cookieMaxAge: 300000
+        cookieMaxAge: 21600000
     },
 	passwordHashing: {
 		numberOfIterations: 1000,
@@ -49,6 +49,23 @@ module.exports = {
         maxGames: 200,
         maxGamesPerHost: 2,
         maxGamesToJoin: 2,
-        roomIdLength: 7
+        roomIdLength: 7,
+        difficultyRanges: [{
+            start: 0,
+            end: 20,
+            name: "Easy"
+        }, {
+            start: 20,
+            end: 40,
+            name: "Medium"
+        }, {
+            start: 40,
+            end: 65,
+            name: "Hard"
+        }, {
+            start: 65,
+            end: 100,
+            name: "Insane"
+        }]
     }
 };

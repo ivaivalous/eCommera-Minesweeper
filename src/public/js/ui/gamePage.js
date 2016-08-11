@@ -2,6 +2,8 @@
     'use strict';
     var TABLE_ROW = "tr";
     var TABLE_CELL = "td";
+    var MILLIS_IN_SECOND = 1000;
+    var timeToShow = 0;
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
@@ -9,9 +11,15 @@
 
             getGameStatus(gameId);
 
+            // Get the game's status every 5s
             setInterval(function () {
                 getGameStatus(gameId);
             }, 5000);
+
+            // Update the game timer every 1s for smoother experience
+            setInterval(function () {
+                updateTimer();
+            }, MILLIS_IN_SECOND);
         }
     });
 
@@ -20,6 +28,7 @@
     }
 
     function displayStatus(response) {
+        syncTimer(response);
         displayPlayerList(response.players);
     }
 
@@ -50,7 +59,50 @@
         return row;
     }
 
+    function syncTimer(game) {
+        var actionExpectedPanel = $(constants.locators.gamePage.actionExpected);
+        var timeLeftPanel = $(constants.locators.gamePage.timeLeft);
+
+        if (game.hasStarted) {
+            actionExpectedPanel.text(game.currentPlayerTurn.userId + "'s turn");
+            timeToShow = game.currentPlayerTurn.thinkTimeLeft;
+        } else {
+            actionExpectedPanel.text("The game starts in");
+            timeToShow = game.gameStartsIn;
+        }
+    }
+
+    function updateTimer() {
+        var timeLeftPanel = $(constants.locators.gamePage.timeLeft);
+        timeLeftPanel.text(millisecondsToTime(timeToShow));
+
+        if (timeToShow - MILLIS_IN_SECOND > 0) {
+            timeToShow -= MILLIS_IN_SECOND;
+        } else {
+            timeToShow = 0;
+        }
+    }
+
+    function millisecondsToTime(s) {
+        var ms = s % MILLIS_IN_SECOND;
+        s = (s - ms) / MILLIS_IN_SECOND;
+        var seconds = s % 60;
+        s = (s - seconds) / 60;
+        var minutes = s % 60;
+        var hrs = (s - minutes) / 60;
+
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+
+        return minutes + ':' + seconds;
+    }
+
     function handleError(response) {
-        
+        // Session has expired, have the user log in again
+        window.location.replace("/login");
     }
 })();

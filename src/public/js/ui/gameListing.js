@@ -36,10 +36,13 @@
             var host = buildHostCell(game);
             var players = buildPlayersCell(game);
             var mapSize = buildMapSizeCell(game);
+            var difficulty = buildDifficultyCell(game);
             var joinLink = buildJoinLinkCell(game);
 
             gamesTable.append(
-                buildRow(roomName, host, players, mapSize, joinLink));
+                buildRow(
+                    roomName, host, players,
+                    mapSize, difficulty, joinLink));
         }
     }
 
@@ -77,6 +80,12 @@
         return td;
     }
 
+    function buildDifficultyCell(game) {
+        var td = $(document.createElement(TABLE_CELL));
+        td.text(game.difficulty);
+        return td;
+    }
+
     function buildJoinLinkCell(game) {
         var td = $(document.createElement(TABLE_CELL));
         var joinButton = $(document.createElement("button"));
@@ -90,13 +99,17 @@
         return td;
     }
 
-    function buildRow(roomCell, hostCell, playersCell, mapSizeCell, joinLinkCell) {
+    function buildRow(
+            roomCell, hostCell, playersCell,
+            mapSizeCell, difficulty, joinLinkCell) {
+
         var tr = $(document.createElement(TABLE_ROW));
 
         tr.append(roomCell);
         tr.append(hostCell);
         tr.append(playersCell);
         tr.append(mapSizeCell);
+        tr.append(difficulty);
         tr.append(joinLinkCell);
 
         return tr;

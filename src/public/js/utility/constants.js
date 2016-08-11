@@ -39,7 +39,9 @@
         gamePage: {
             playerListing: {
                 table: "#players-list"
-            }
+            },
+            actionExpected: "#action-expected",
+            timeLeft: "#time-left"
         }
     };
 
