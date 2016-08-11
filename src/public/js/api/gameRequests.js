@@ -22,15 +22,15 @@
         }, callback, callbackOnError);
     };
 
-    gameApi.joinGame = function(gameId) {
-
-    };
-
-    gameApi.getStatus = function(gameId) {
-
+    gameApi.getStatus = function(gameId, callback, callbackOnError) {
+        request.requestGet(['', 'status', gameId], callback, callbackOnError);
     };
 
     gameApi.makeMove = function(gameId, x, y) {
-
+        request.requestPost(['move'], {
+            gameId: gameId,
+            x: x,
+            y: y
+        }, callback, callbackOnError);
     };
 })();

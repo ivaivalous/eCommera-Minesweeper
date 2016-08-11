@@ -1,9 +1,10 @@
 var config = require('./config');
+var messages = require('./messages');
 
 exports.validateRoomName = function(desiredName) {
     var re = config.regex.roomNameValidation;
     if (!re.test(desiredName)) {
-        throw {error: "Invalid room name"};
+        throw {error: messages.error.badRoomName};
     }
 };
 
@@ -16,18 +17,18 @@ exports.validateDimensions = function(x, y, mineCount) {
     var maxMinePercent = config.gameBoundaries.minePercentMax;
 
     if (x < minX || x > maxX) {
-        throw {error: "X dimension out of bounds"};
+        throw {error: messages.error.gameGridXDimensionOutOfRange};
     }
 
     if (y < minY || y > maxY) {
-        throw {error: "Y dimension out of bounds"};
+        throw {error: messages.error.gameGridYDimensionOutOfRange};
     }
 
     var fieldCount = x * y;
     var maxAllowedMines = fieldCount * maxMinePercent;
 
     if (mineCount < 1 || mineCount > maxAllowedMines) {
-        throw {error: "Mine count out of bounds"};
+        throw {error: messages.error.gameGridMineCountOutOfRange};
     }
 
     return true;
@@ -35,7 +36,7 @@ exports.validateDimensions = function(x, y, mineCount) {
 
 exports.validateMaxPlayers = function(maxPlayers) {
     if (maxPlayers < 2 || maxPlayers > config.gameBoundaries.maxPlayerCount) {
-        throw {error: "Too many or too few players"}; 
+        throw {error: messages.error.playersNumberOutOfRange}; 
     }
 };
 
@@ -46,7 +47,7 @@ exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
         // You cannot join a game room that is full
         // or one that does not exist at all
 
-        throw {error: "Could not join game room"};
+        throw {error: messages.error.gameRoomJoinGeneral};
     }
 
     if (countGamesParticipating(games, userId) >
@@ -55,7 +56,7 @@ exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
         // One user can only join a limited number of games
         // at the same time
 
-        throw {error: "Joined too many games"};
+        throw {error: messages.error.playerInTooManyGames};
     }
 };
 

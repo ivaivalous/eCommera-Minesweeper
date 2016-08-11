@@ -1,5 +1,7 @@
 var config = require('./config');
+var messages = require('./messages');
 var validation = require('./gameValidation');
+
 var games = {};
 var gameCount = 0;
 var hosts = {};
@@ -53,7 +55,7 @@ var addGame = function(game) {
         // Prevent taking the server down by hosting too many games
         // Prevent DOS by having one user occupy all game slots
 
-        throw {error: "Max games count reached"};
+        throw {error: messages.error.maxGameCountReached};
     }
 
     return createGame(game);
@@ -62,6 +64,19 @@ var addGame = function(game) {
 var getGame = function(gameId) {
     return games[gameId];
 };
+
+var getGameStatus = function(gameId, userId) {
+    var game = getGame(gameId);
+
+    if (game === undefined || !isPlaying(gameId, userId)) {
+        throw {error: messages.error.statusGetNotAllowed};
+    }
+
+    delete game.gameParameters.mineCount;
+    game.map = getPublicMap(game.map);
+
+    return game;
+}
 
 var updateGame = function(gameId, action) {
     action(games[gameId]);
@@ -188,6 +203,10 @@ var isGameIdTaken = function(id) {
     return games[id] != undefined;
 };
 
+var getPublicMap = function(map) {
+    return map;
+}
+
 exports.buildUser = buildUser;
 exports.buildGameParameters = buildGameParameters;
 exports.buildGame = buildGame;
@@ -197,6 +216,7 @@ exports.getGame = getGame;
 exports.getGames = getGames;
 exports.updateGame = updateGame;
 exports.hasFreePlayerSlots = hasFreePlayerSlots;
+exports.getGameStatus = getGameStatus;
 
 exports.addPlayer = addPlayer;
 exports.isPlaying = isPlaying;

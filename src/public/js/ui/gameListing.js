@@ -16,7 +16,7 @@
     });
 
     function getGamesList() {
-        gameApi.listGames(printGames);
+        gameApi.listGames(printGames, goToLoginPage);
     }
 
     function printGames(gamesList) {
@@ -41,6 +41,11 @@
             gamesTable.append(
                 buildRow(roomName, host, players, mapSize, joinLink));
         }
+    }
+
+    function goToLoginPage() {
+        // Session has expired, have the user log in again
+        window.location.replace("/login");
     }
 
     function buildRoomNameCell(game) {

@@ -1,4 +1,5 @@
 var games = require('../games');
+var messages = require('../messages');
 
 
 // Get a list of all public games
@@ -70,7 +71,7 @@ var joinGame = function(request, response) {
 
     // Check if the game exists
     if (gameId == undefined || games.getGame(gameId) == undefined) {
-        // TODO show a message this game is not available
+        response.viewModel.gameErrorMessage = messages.error.gameUnavailable;
         response.redirect('/dashboard');
         return;
     }
@@ -84,7 +85,7 @@ var joinGame = function(request, response) {
 
     // Check if the game has a free slot for another player
     if (!games.hasFreePlayerSlots(gameId)) {
-        // TODO show a message the room is full
+        response.viewModel.gameErrorMessage = messages.error.gameRoomFull;
         response.redirect('/dashboard');
         return;
     }
@@ -92,20 +93,43 @@ var joinGame = function(request, response) {
     // Add the player to the game
     try {
         games.addPlayer(
-            games.buildUser(userId, request.session.userDisplayName),
+            games.buildUser(userId, request.session.displayName),
             gameId
         );
 
         response.render('game/index', response.viewModel);
     } catch(err) {
         console.log("Error joining game room: " + err);
+        response.viewModel.gameErrorMessage = (
+            messages.error.gameRoomJoinGeneral);
+
         response.redirect('/dashboard');
     }
 }
 
 // Get the current status of the game
 var getStatus = function(request, response) {
-    validateRequest(request);
+    var gameId = request.params.gameId;
+    var userId = request.session.userId;
+
+    try {
+        validateRequest(request);
+    } catch (error) {
+        response.status(401);
+        response.json({error: 401});
+        return;
+    }
+
+    try {
+        var gameStatus = games.getGameStatus(gameId, userId);
+    } catch (error) {
+        response.status(403);
+        response.json(error.responseJSON);
+        return;
+    }
+
+    response.status(200);
+    response.json(gameStatus);
 }
 
 // Make a move on the game map
@@ -120,7 +144,7 @@ var setGameMap = function(gameId, map) {
 
 function validateRequest(request) {
     if(!request.session.isUserLogged){
-        throw {error: 403};
+        throw {error: 401};
     }    
 }
 

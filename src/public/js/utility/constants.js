@@ -35,6 +35,11 @@
             mineCount: "#game-mine-count",
             isPublic: "#game-public",
             errorContainer: "#game-create-error"
+        },
+        gamePage: {
+            playerListing: {
+                table: "#players-list"
+            }
         }
     };
 
