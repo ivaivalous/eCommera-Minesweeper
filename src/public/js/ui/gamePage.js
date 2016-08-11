@@ -28,7 +28,7 @@
     }
 
     function displayStatus(response) {
-        syncTimer(response);
+        setTimeDisplay(response);
         displayPlayerList(response.players);
     }
 
@@ -59,16 +59,25 @@
         return row;
     }
 
-    function syncTimer(game) {
+    function setTimeDisplay(game) {
         var actionExpectedPanel = $(constants.locators.gamePage.actionExpected);
         var timeLeftPanel = $(constants.locators.gamePage.timeLeft);
 
         if (game.hasStarted) {
-            actionExpectedPanel.text(game.currentPlayerTurn.userId + "'s turn");
+            var name = getCurrentUserDisplayName(game);
+            actionExpectedPanel.text(name + "'s turn");
             timeToShow = game.currentPlayerTurn.thinkTimeLeft;
         } else {
             actionExpectedPanel.text("The game starts in");
             timeToShow = game.gameStartsIn;
+        }
+    }
+
+    function getCurrentUserDisplayName(game) {
+        for (var i = 0; i < game.players.length; i++) {
+            if (game.players[i].id === game.currentPlayerTurn.userId) {
+                return game.players[i].name;
+            }
         }
     }
 
