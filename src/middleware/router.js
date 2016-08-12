@@ -38,6 +38,8 @@ router.post('/create', commControler.createGame);
 router.get('/play/:gameId', commControler.joinGame);
 router.get('/status/:gameId', commControler.getStatus);
 router.post('/move', commControler.makeMove);
+router.get('/game/update/:id', gameController.updateState);
+router.get('/game/click/:game_id/:x/:y', gameController.click);
 
 
 // Default handler for 404 requests:

@@ -7,7 +7,17 @@
 
 <div id="game-screen">
     <div id="game-grid-panel">
-        The game board shall be here
+       <form id="game" method="POST" action="game">
+		{{#each game}}{{this}}{{/each}}
+			<div class="game-board">
+			{{#each currentState}}
+				{{#each this}}
+					<input style="width: 50px; height: 50px; margin: 4px; padding: 5px;" type="submit" id="test" name="{{@../index}} {{@index}}" value="{{this}}">
+				{{/each}}
+				<br>
+			{{/each}}
+			</div>
+		</form>
     </div>
 
     <div id="players-list-panel">
