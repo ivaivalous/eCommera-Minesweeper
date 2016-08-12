@@ -1,3 +1,4 @@
+
 // Time manager controls games in time
 
 var config = require('./config');
@@ -80,23 +81,56 @@ var updateGameInProgress = function(game) {
     return game;
 };
 
+// Switch the game state to the next living player
+var nextPlayer = function(game) {
+    var newPlayer = getCurrentPlayer(
+        game.currentPlayerTurn.userId, game.players, 1);
+
+    game.currentPlayerTurn.userId = newPlayer.id;
+    game.currentPlayerTurn.thinkTimeLeft = game.thinkTime;
+
+    return game;
+}
+
+// Check if a game has reached the inactivity threshold;
+// use to find out when a game should be deleted from the games list.
+var inactivityThresholdReached = function(game) {
+    var timeSinceLastAction = getCurrentTime() - game.timeControl.lastActed;
+    return timeSinceLastAction > config.maxGameNonUpdatedInterval;
+}
+
 var getCurrentPlayer = function(currentPlayerId, players, hops) {
     var playerIndex = 0;
+    var livingPlayers = getLivingPlayers(players);
 
-    for (var i = 0; i < players.length; i++) {
-        if (players[i].id === currentPlayerId) {
+    for (var i = 0; i < livingPlayers.length; i++) {
+        if (livingPlayers[i].id === currentPlayerId) {
             playerIndex = i;
             break;
         }
     }
 
     var targetIndex = playerIndex + hops;
-    if (targetIndex < players.length) {
-        return players[targetIndex];
+    if (targetIndex < livingPlayers.length) {
+        return livingPlayers[targetIndex];
     }
-    return players[targetIndex % players.length];
+    return livingPlayers[targetIndex % livingPlayers.length];
+};
+
+var getLivingPlayers = function(players) {
+    var livingPlayers = [];
+
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].alive) {
+            livingPlayers.push(players[i]);
+        }
+    }
+
+    return livingPlayers;
 };
 
 exports.setCreated = setCreated;
 exports.startGame = startGame;
 exports.setLastActed = setLastActed;
+exports.nextPlayer = nextPlayer;
+exports.inactivityThresholdReached = inactivityThresholdReached;

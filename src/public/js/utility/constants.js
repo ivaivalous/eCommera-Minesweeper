@@ -51,7 +51,12 @@
 
     constants.classes = {
         hiddenContainer: "hidden",
-        centered: "centered"
+        centered: "centered",
+        playerInTurn: "now-playing",
+        playerAlive: "status-cell alive",
+        playerDead: "status-cell dead",
+        playerName: "player-name",
+        score: "score-cell"
     };
 
     constants.keys = {

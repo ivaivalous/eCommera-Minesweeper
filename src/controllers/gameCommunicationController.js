@@ -157,8 +157,27 @@ var startGame = function(request, response) {
 
 // Make a move on the game map
 var makeMove = function(request, response) {
-    validateRequest(request);
+    var gameId = request.body.gameId;
+    var x = request.body.x;
+    var y = request.body.y;
 
+    try {
+        validateRequest(request);
+    } catch (error) {
+        response.status(401);
+        response.json({error: 401});
+        return;
+    }
+
+    try {
+        games.makeMove(gameId, x, y);
+        response.status(200);
+        response.json({success: true});
+    } catch(error) {
+        // Invalid move
+        response.status(400);
+        response.json({error: messages.error.illegalMove})
+    }
 }
 
 var setGameMap = function(gameId, map) {

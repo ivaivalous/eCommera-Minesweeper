@@ -37,32 +37,46 @@
     function displayStatus(response) {
         setTimeDisplay(response);
         displayStartGameButton(response);
-        displayPlayerList(response.players);
+        displayPlayerList(
+            response.players, response.currentPlayerTurn.userId);
     }
 
-    function displayPlayerList(players) {
+    function displayPlayerList(players, currentPlayerId) {
         var playersTable = $(constants.locators.gamePage.playerListing.table);
         playersTable.empty();
 
         for (var i = 0; i < players.length; i++) {
-            var row = buildPlayerRow(players[i]);
+            var row = buildPlayerRow(
+                players[i], currentPlayerId === players[i].id);
+
             playersTable.append(row);
         }
     }
 
-    function buildPlayerRow(player) {
+    function buildPlayerRow(player, isOwnTurn) {
         var row = $(document.createElement(TABLE_ROW));
         var nameCell = $(document.createElement(TABLE_CELL));
         var statusCell = $(document.createElement(TABLE_CELL));
         var scoreCell = $(document.createElement(TABLE_CELL));
 
         nameCell.text(player.name);
-        statusCell.text(player.alive ? "Alive" : "Dead");
-        scoreCell.text(player.score);
+        nameCell.addClass(constants.classes.playerName);
 
-        row.append(nameCell);
+        statusCell.addClass(
+            player.alive ?
+                constants.classes.playerAlive :
+                constants.classes.playerDead);
+
+        scoreCell.text(player.score);
+        scoreCell.addClass(constants.classes.score);
+
         row.append(statusCell);
+        row.append(nameCell);
         row.append(scoreCell);
+
+        if (isOwnTurn) {
+            row.addClass(constants.classes.playerInTurn);
+        }
 
         return row;
     }

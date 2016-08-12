@@ -418,3 +418,33 @@ a.button:disabled,
     width: 30%;
     display: inline-block;
 }
+
+#players-table td {
+    padding: 6px;
+}
+
+tr.now-playing td {
+    font-weight: bold;
+}
+
+.status-cell {
+    width: 20px;
+    height: 20px;
+}
+
+.alive {
+    background-color: green;
+}
+
+.dead {
+    background-color: red;
+}
+
+.player-name {
+    text-align: left;
+}
+
+.score-cell {
+    text-align: right;
+    min-width: 60px;
+}

@@ -13,6 +13,7 @@ module.exports = {
         playersNumberOutOfRange: "Too many or too few players",
         badRoomName: "This room name is not valid",
         playerInTooManyGames: "Joined too many games",
-        statusGetNotAllowed: "Cannot get status of a game not participating in"
+        statusGetNotAllowed: "Cannot get status of a game not participating in",
+        illegalMove: "Illegal move"
     }
 };

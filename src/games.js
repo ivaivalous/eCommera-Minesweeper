@@ -131,18 +131,50 @@ var startGame = function(gameId, userId) {
     return false;
 }
 
+var makeMove = function(gameId, userId, x, y) {
+    var game = getGame(gameId);
+
+    if (game === undefined) {
+        return false;
+    } else {
+        // Update the game so it finds out who the current
+        // player is
+        games[gameId] = timeManager.setLastActed(game);
+        var game = getGame(gameId);
+    }
+
+    // Check if it is userId's turn
+    if (game.currentPlayerTurn.userId === userId) {
+        // TODO the actual move is done here: see gameController
+        games[gameId] = timeManager.nextPlayer(game);
+        return true;
+    } else {
+        // Not this player's turn
+        return false;
+    }
+}
+
 var updateGame = function(gameId, action) {
     action(games[gameId]);
 };
 
 var getGames = function(includePrivate) {
     var gamesList = [];
+    var gameIdsToRemove = [];
 
-    for (var property in games) {
-        if (games.hasOwnProperty(property) &&
-            !games[property].hasStarted) {
+    for (var gameId in games) {
+        if (games.hasOwnProperty(gameId) &&
+            !games[gameId].hasStarted) {
 
-            var game = games[property];
+            var game = games[gameId];
+
+            if (timeManager.inactivityThresholdReached(game)) {
+                // The game hasn't been active for a while
+                // Add it for removal
+                gameIdsToRemove.push({
+                    gameId: gameId, hostUserId: game.hostUser.id
+                });
+            }
 
             if (!game.gameParameters.isPublic && !includePrivate) {
                 continue;
@@ -151,7 +183,7 @@ var getGames = function(includePrivate) {
             delete game.gameParameters.mineCount;
 
             gamesList.push({
-                id: property,
+                id: gameId,
                 hostUser: game.hostUser,
                 gameParameters: game.gameParameters,
                 playersCount: game.players.length,
@@ -160,6 +192,7 @@ var getGames = function(includePrivate) {
         }
     }
 
+    removeGames(gameIdsToRemove);
     return gamesList;
 };
 
@@ -214,8 +247,6 @@ var addPlayer = function(user, gameId) {
     games[gameId] = timeManager.setLastActed(getGame(gameId));
 };
 
-var addPlayer = addPlayer;
-
 var createGame = function(game) {
     var gameId = generateGameId();
 
@@ -254,11 +285,19 @@ var registerGame = function(game) {
     }
 }
 
+// Delete and deregister games from memory, without saving them to DB
+var removeGames = function(gamesToRemove) {
+    for (var i = 0; i < gamesToRemove.length; i++) {
+        delete games[gamesToRemove[i].gameId];
+        deregisterGame(gamesToRemove[i].hostUserId);
+    }
+}
+
 // Once a game is over, deregister it from the active games list
 // Also reduce the number of games hosted by its host user
-var deregisterGame = function(game) {
+var deregisterGame = function(hostUserId) {
     gameCount--;
-    hosts[game.hostUser.userId] -= 1;
+    hosts[hostUserId] -= 1;
 }
 
 var generateGameId = function() {
@@ -294,3 +333,4 @@ exports.getGameStatus = getGameStatus;
 exports.addPlayer = addPlayer;
 exports.isPlaying = isPlaying;
 exports.startGame = startGame;
+exports.makeMove = makeMove;

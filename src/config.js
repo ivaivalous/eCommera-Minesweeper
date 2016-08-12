@@ -54,19 +54,37 @@ module.exports = {
         difficultyRanges: [{
             start: 0,
             end: 20,
-            name: "Easy"
+            name: "Easy",
+            bonusModifier: 0
         }, {
             start: 20,
             end: 40,
-            name: "Medium"
+            name: "Medium",
+            bonusModifier: 0.02
         }, {
             start: 40,
             end: 65,
-            name: "Hard"
+            name: "Hard",
+            bonusModifier: 0.05
         }, {
             start: 65,
             end: 100,
-            name: "Insane"
+            name: "Insane",
+            bonusModifier: 0.1
         }]
-    }
+    },
+    scoring: {
+        stepEmptyCell: 10,
+        stepNeighboringEach: 20,
+        stepOnNeighboringAll: 200,
+        stepMine: -300,
+        stepPerExpanded: 10,
+        stepPerExpandedMax: 120,
+        timeBonus: 10,
+        firstToStepMine: -200,
+        stepOnMineFirstTurn: -300,
+        lastStanding: 400,
+        gameBeaten: 200
+    },
+    maxGameNonUpdatedInterval: 30000
 };
