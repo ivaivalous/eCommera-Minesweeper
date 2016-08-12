@@ -68,7 +68,7 @@ var updateGameInProgress = function(game) {
         game.currentPlayerTurn.thinkTimeLeft -= timeSinceLastAction;
     } else {
         // Determine how many players to "jump over"
-        var hops = Math.floor(timeSinceLastAction / game.thinkTime);
+        var hops = Math.floor(timeSinceLastAction / game.thinkTime) + 1;
         var remainder = timeSinceLastAction % game.thinkTime;
         var newPlayer = getCurrentPlayer(
             game.currentPlayerTurn.userId, game.players, hops);

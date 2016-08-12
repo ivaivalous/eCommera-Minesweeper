@@ -3,18 +3,20 @@
     var TABLE_ROW = "tr";
     var TABLE_CELL = "td";
     var MILLIS_IN_SECOND = 1000;
+    var RELOAD_FROM_SERVER = 5000;
     var timeToShow = 0;
+    var gameId = null;
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
-            var gameId = location.pathname.replace("/play/", "");
+            gameId = location.pathname.replace("/play/", "");
 
             getGameStatus(gameId);
 
             // Get the game's status every 5s
             setInterval(function () {
-                getGameStatus(gameId);
-            }, 5000);
+                getGameStatus();
+            }, RELOAD_FROM_SERVER);
 
             // Update the game timer every 1s for smoother experience
             setInterval(function () {
@@ -23,7 +25,7 @@
         }
     });
 
-    function getGameStatus(gameId) {
+    function getGameStatus() {
         gameApi.getStatus(gameId, displayStatus, handleError);
     }
 
@@ -89,6 +91,7 @@
             timeToShow -= MILLIS_IN_SECOND;
         } else {
             timeToShow = 0;
+            getGameStatus();
         }
     }
 

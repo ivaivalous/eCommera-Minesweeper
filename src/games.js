@@ -78,19 +78,24 @@ var getGame = function(gameId) {
 
 var getGameStatus = function(gameId, userId) {
     var game = getGame(gameId);
+    var gameSummary = {};
 
     if (game === undefined || !isPlaying(gameId, userId)) {
         throw {error: messages.error.statusGetNotAllowed};
     }
 
     // Update times stored in the game object
-    games[gameId] = timeManager.setLastActed(getGame(gameId));
+    games[gameId] = timeManager.setLastActed(game);
 
-    delete game.gameParameters.mineCount;
-    delete game.timeControl;
-    game.map = getPublicMap(game.map);
+    // Build a smaller data set the user would get
+    gameSummary.currentPlayerTurn = game.currentPlayerTurn;
+    gameSummary.gameStartsIn = game.gameStartsIn;
+    gameSummary.hasStarted = game.hasStarted;
+    gameSummary.map = getPublicMap(game.map);
+    gameSummary.players = game.players;
+    gameSummary.thinkTime = game.thinkTime;
 
-    return game;
+    return gameSummary;
 }
 
 var updateGame = function(gameId, action) {
