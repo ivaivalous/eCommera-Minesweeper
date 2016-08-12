@@ -26,6 +26,11 @@
         request.requestGet(['', 'status', gameId], callback, callbackOnError);
     };
 
+    gameApi.startGame = function(gameId, callback, callbackOnError) {
+        request.requestPost(
+            ['', 'start'], {gameId: gameId,}, callback, callbackOnError);
+    };
+
     gameApi.makeMove = function(gameId, x, y) {
         request.requestPost(['move'], {
             gameId: gameId,

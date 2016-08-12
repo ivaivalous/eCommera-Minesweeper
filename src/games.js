@@ -91,11 +91,44 @@ var getGameStatus = function(gameId, userId) {
     gameSummary.currentPlayerTurn = game.currentPlayerTurn;
     gameSummary.gameStartsIn = game.gameStartsIn;
     gameSummary.hasStarted = game.hasStarted;
+    gameSummary.canBeStarted = canGameBeStarted(game),
     gameSummary.map = getPublicMap(game.map);
     gameSummary.players = game.players;
     gameSummary.thinkTime = game.thinkTime;
+    gameSummary.isHost = userId === game.hostUser.userId;
 
     return gameSummary;
+}
+
+var canGameBeStarted = function(game) {
+    return game.players.length >= config.gameBoundaries.minPlayersToStart;
+}
+
+var startGame = function(gameId, userId) {
+    var game = getGame(gameId);
+    var minPlayers = config.gameBoundaries.minPlayersToStart;
+
+    if (game === undefined) {
+        // Cannot start a non-existent game
+        return false;
+    }
+
+    // The game can be started under the following conditions:
+    // - It exists
+    // - The requesting user is the host
+    // - The game hasn't been already started
+    // - The game's players count is above the min players threshold
+    if (game.hostUser.userId === userId &&
+            !game.hasStarted &&
+                game.players.length >= minPlayers) {
+
+        game.gameStartsIn = 0;
+        games[gameId] = timeManager.setLastActed(game);
+
+        return true;
+    }
+
+    return false;
 }
 
 var updateGame = function(gameId, action) {
@@ -260,3 +293,4 @@ exports.getGameStatus = getGameStatus;
 
 exports.addPlayer = addPlayer;
 exports.isPlaying = isPlaying;
+exports.startGame = startGame;

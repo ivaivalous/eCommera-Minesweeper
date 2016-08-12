@@ -123,6 +123,7 @@ var getStatus = function(request, response) {
     try {
         var gameStatus = games.getGameStatus(gameId, userId);
     } catch (error) {
+        console.log(error);
         response.status(403);
         response.json(error.responseJSON);
         return;
@@ -130,6 +131,28 @@ var getStatus = function(request, response) {
 
     response.status(200);
     response.json(gameStatus);
+}
+
+// The host can start the game manually
+var startGame = function(request, response) {
+    var gameId = request.body.gameId;
+    var userId = request.session.userId;
+
+    try {
+        validateRequest(request);
+    } catch (error) {
+        response.status(401);
+        response.json({error: 401});
+        return;
+    }
+
+    if (games.startGame(gameId, userId)) {
+        response.status(200);
+        response.json({success: true});
+    } else {
+        response.status(500);
+        response.json({success: false});
+    }
 }
 
 // Make a move on the game map
@@ -154,3 +177,4 @@ exports.joinGame = joinGame;
 exports.getStatus = getStatus;
 exports.makeMove = makeMove;
 exports.setGameMap = setGameMap;
+exports.startGame = startGame;

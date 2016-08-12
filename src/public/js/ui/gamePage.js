@@ -25,12 +25,18 @@
         }
     });
 
+    // Click event for the Start game button
+    $(constants.locators.gamePage.startGame.button).click(function (event) {
+        gameApi.startGame(gameId, getGameStatus, handleError);
+    });
+
     function getGameStatus() {
         gameApi.getStatus(gameId, displayStatus, handleError);
     }
 
     function displayStatus(response) {
         setTimeDisplay(response);
+        displayStartGameButton(response);
         displayPlayerList(response.players);
     }
 
@@ -92,6 +98,28 @@
         } else {
             timeToShow = 0;
             getGameStatus();
+        }
+    }
+
+    function displayStartGameButton(game) {
+        var buttonContainer = $(
+            constants.locators.gamePage.startGame.container);
+        var hiddenClass = constants.classes.hiddenContainer;
+
+        // Only the game host should be able to see the Start game button
+        // and only when the game hasn't been started
+        if (!game.isHost || game.hasStarted) {
+            if (!buttonContainer.hasClass(hiddenClass)) {
+                buttonContainer.addClass(hiddenClass);
+            }
+            return;
+        }
+
+        buttonContainer.removeClass(hiddenClass);
+
+        if (game.canBeStarted) {
+            $(constants.locators.gamePage.startGame.button)
+                .removeAttr('disabled');
         }
     }
 

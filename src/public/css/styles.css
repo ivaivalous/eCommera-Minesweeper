@@ -272,6 +272,18 @@ a.button:active,
     outline: none;
 }
 
+button:disabled,
+input[type=button]:disabled,
+input[type=submit]:disabled,
+a.button:disabled,
+.button:disabled {
+    background: #777;
+    position: relative;
+    top: 1px;
+    outline: none;
+    cursor: not-allowed;
+}
+
 .error-message {
     font-family: monospace;
     padding: 20px;

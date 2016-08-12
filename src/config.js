@@ -44,11 +44,12 @@ module.exports = {
     	minePercentMax: 0.9,
     	maxPlayerCount: 100,
     	allowedGameIdCharacters: "BCDFJKLMNPQRSTVWXYXbcdfghjklmnpqrstvwxyz123456789",
-        defaultGameStartTimeMs: 300000,
+        defaultGameStartTimeMs: 60000,
         defaultThinkTimeMs: 30000,
         maxGames: 200,
         maxGamesPerHost: 2,
         maxGamesToJoin: 2,
+        minPlayersToStart: 2,
         roomIdLength: 7,
         difficultyRanges: [{
             start: 0,

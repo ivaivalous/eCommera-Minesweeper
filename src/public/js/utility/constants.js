@@ -41,7 +41,11 @@
                 table: "#players-list"
             },
             actionExpected: "#action-expected",
-            timeLeft: "#time-left"
+            timeLeft: "#time-left",
+            startGame: {
+                container: "#start-game",
+                button: "#start-game-button"
+            }
         }
     };
 
