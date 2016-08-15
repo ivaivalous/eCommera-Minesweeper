@@ -1,6 +1,6 @@
 <p>Here you can see a list of all games currently waiting for players to join. You can choose any one and join the fun! Or you can create a new game and invite your friends!</p>
 
-<h2 class="games-list-title">Available games:</h2>
+<h2 class="games-list-title">Available Games:</h2>
 
 <div class="item-list-wrapper" id="games-list">
     <button id="create-game" class="create-item-button button">Create a new game</a>
@@ -18,6 +18,38 @@
         <tbody id="games-list-body">
         </tbody>
     </table>
+</div>
+
+<h2>Game History</h2>
+<h3>Total score: {{totalScore}}</h3>
+<div class="item-list-wrapper">
+    {{#if gamesPlayed}}
+        <table class="item-list-table" cellspacing="0">
+            <thead>
+                <th>Game start time</th>
+                <th>Game end time</th>
+            </thead>
+            <tbody>
+
+                {{#each gamesPlayed}}
+                    <tr>
+                        <td>
+                            {{this.started}}
+                        </td>
+                        <td>
+                            {{this.ended}}
+                        </td>
+                        <td>
+                            {{this.score}}
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+    {{else}}
+        <p>You haven't played any games yet.</p>
+    {{/if}}
 </div>
 
 <div class="popup hidden" id="create-game-form">
@@ -56,3 +88,4 @@
         </button>
     </form>
 </div>
+
