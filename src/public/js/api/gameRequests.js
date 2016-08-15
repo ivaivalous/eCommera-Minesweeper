@@ -31,8 +31,8 @@
             ['', 'start'], {gameId: gameId,}, callback, callbackOnError);
     };
 
-    gameApi.makeMove = function(gameId, x, y) {
-        request.requestPost(['move'], {
+    gameApi.makeMove = function(gameId, x, y, callback, callbackOnError) {
+        request.requestPost(['', 'move'], {
             gameId: gameId,
             x: x,
             y: y

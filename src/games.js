@@ -3,6 +3,7 @@ var messages = require('./messages');
 var validation = require('./gameValidation');
 var state = require('./gameStateManager');
 var scoring = require('./scoring');
+var transfer = require('./gameTransfer.js');
 
 var games = {};
 var gameCount = 0;
@@ -94,8 +95,15 @@ var getGameStatus = function(gameId, userId) {
         games[gameId] = state.setLastActed(game);
     }
 
+    // TODO Remove once the actual mines map has been linked
+    game.map.x = game.gameParameters.sizeX;
+    game.map.y = game.gameParameters.sizeY;
+
     // Build a smaller data set the user would get
     gameSummary.currentPlayerTurn = game.currentPlayerTurn;
+    gameSummary.currentPlayerTurn.isRequestee = (
+        game.currentPlayerTurn.userId === userId);
+
     gameSummary.gameStartsIn = game.gameStartsIn;
     gameSummary.hasStarted = game.hasStarted;
     gameSummary.hasEnded = game.hasEnded;
@@ -145,6 +153,9 @@ var endGame = function(gameId) {
     // Calculate final game points
     game = scoring.applyDifficultyBonus(game);
 
+    // Save the game and player scores to database
+    transfer.transfer(game);
+
     // Transfer the game to database
     // Deregister the game
     deregisterGame(game.hostUser.userId);
@@ -154,8 +165,10 @@ var endGame = function(gameId) {
     // be purged eventually.
 };
 
-var makeMove = function(gameId, userId, x, y) {
+var makeMove = function(gameId, userId, xPos, yPos) {
     var game = getGame(gameId);
+    var x = parseInt(xPos);
+    var y = parseInt(yPos);
 
     if (game === undefined || game.hasEnded) {
         return false;
@@ -171,7 +184,14 @@ var makeMove = function(gameId, userId, x, y) {
             !game.hasEnded) {
         // TODO The actual move is done here: see gameController
         // TODO Calculate and add player bonus points here
+        game = updatePlayerScore(
+            game, userId, game.currentPlayerTurn.thinkTimeLeft);
+
         // TODO Mark player as "dead" if necessary.
+        // TODO Remove this, it's in for testing purposes
+        if (x === 0 && y === 0) {
+            game = markPlayerDead(game, userId);
+        }
 
         game = state.nextPlayer(game);
 
@@ -180,7 +200,7 @@ var makeMove = function(gameId, userId, x, y) {
         // TODO: The game may have also ended if all non-mine
         // or mine fields have been open, check this too
         if (game.hasEnded) {
-            endGame(game.gameId);
+            endGame(gameId);
         }
 
         games[gameId] = game;
@@ -191,10 +211,34 @@ var makeMove = function(gameId, userId, x, y) {
     }
 }
 
+// Call after each player's turn to calculate their new score
+var updatePlayerScore = function(game, playerId, thinkTimeLeft) {
+    for (var i = 0; i < game.players.length; i++) {
+        if (game.players[i].id === playerId) {
+            game.players[i] = scoring.addTimeScore(
+                game.players[i], thinkTimeLeft);
+        }
+    }
+
+    return game;
+};
+
+// Call when a player hits a mine
+var markPlayerDead = function(game, playerId) {
+    for (var i = 0; i < game.players.length; i++) {
+        if (game.players[i].id === playerId) {
+            game.players[i].alive = false;
+        }
+    }
+
+    return game;    
+};
+
 var updateGame = function(gameId, action) {
     action(games[gameId]);
 };
 
+// Use for games listing
 var getGames = function(includePrivate) {
     var gamesList = [];
     var gameIdsToRemove = [];

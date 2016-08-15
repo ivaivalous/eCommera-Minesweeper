@@ -158,6 +158,7 @@ var startGame = function(request, response) {
 // Make a move on the game map
 var makeMove = function(request, response) {
     var gameId = request.body.gameId;
+    var userId = request.session.userId;
     var x = request.body.x;
     var y = request.body.y;
 
@@ -170,9 +171,9 @@ var makeMove = function(request, response) {
     }
 
     try {
-        games.makeMove(gameId, x, y);
+        var sucess = games.makeMove(gameId, userId, x, y);
         response.status(200);
-        response.json({success: true});
+        response.json({success: sucess});
     } catch(error) {
         // Invalid move
         response.status(400);

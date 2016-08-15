@@ -45,6 +45,9 @@
             startGame: {
                 container: "#start-game",
                 button: "#start-game-button"
+            },
+            map: {
+                table: "#game-map-body"
             }
         }
     };
@@ -56,7 +59,14 @@
         playerAlive: "status-cell alive",
         playerDead: "status-cell dead",
         playerName: "player-name",
-        score: "score-cell"
+        score: "score-cell",
+        cell: {
+            cell: "cell",
+            closed: "closed",
+            open: "open",
+            mine: "mine",
+            number: "number"
+        }
     };
 
     constants.keys = {

@@ -10,17 +10,10 @@
 
 <div id="game-screen">
     <div id="game-grid-panel">
-       <form id="game" method="POST" action="game">
-		{{#each game}}{{this}}{{/each}}
-			<div class="game-board">
-			{{#each currentState}}
-				{{#each this}}
-					<input style="width: 50px; height: 50px; margin: 4px; padding: 5px;" type="submit" id="test" name="{{@../index}} {{@index}}" value="{{this}}">
-				{{/each}}
-				<br>
-			{{/each}}
-			</div>
-		</form>
+        <table id="game-map">
+            <tbody id="game-map-body">
+            </tbody>
+        </table>
     </div>
 
     <div id="players-list-panel">

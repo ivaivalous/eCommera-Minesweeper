@@ -6,6 +6,7 @@
     var RELOAD_FROM_SERVER = 5000;
     var timeToShow = 0;
     var gameId = null;
+    var initialMapDrawn = false;
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
@@ -39,6 +40,12 @@
         displayStartGameButton(response);
         displayPlayerList(
             response.players, response.currentPlayerTurn.userId);
+
+        // Draw the game area with the first Status request
+        if (!initialMapDrawn) {
+            drawInitialMap(response.map);
+            initialMapDrawn = true;
+        }
     }
 
     function displayPlayerList(players, currentPlayerId) {
@@ -87,7 +94,14 @@
 
         if (game.hasStarted) {
             var name = getCurrentUserDisplayName(game);
-            actionExpectedPanel.text(name + "'s turn");
+            var textToUse = name + "'s turn";
+
+            // Highlight it's the current user's turn
+            if (game.currentPlayerTurn.isRequestee) {
+                textToUse = "Your turn"
+            }
+
+            actionExpectedPanel.text(textToUse);
             timeToShow = game.currentPlayerTurn.thinkTimeLeft;
         } else {
             actionExpectedPanel.text("The game starts in");
@@ -153,6 +167,34 @@
         }
 
         return minutes + ':' + seconds;
+    }
+
+    function drawInitialMap(map) {
+        var mapX = parseInt(map.x);
+        var mapY = parseInt(map.y);
+        var table = $(constants.locators.gamePage.map.table);
+
+        for (var yIndex = 0; yIndex < mapY; yIndex++) {
+            var row = $(document.createElement(TABLE_ROW));
+
+            for (var xIndex = 0; xIndex < mapX; xIndex++) {
+                var cell = $(document.createElement(TABLE_CELL));
+                cell.addClass(constants.classes.cell.cell);
+                cell.addClass(constants.classes.cell.closed);
+                cell.bind('click', {x: xIndex, y: yIndex}, clickCell);
+
+                row.append(cell);
+            }
+
+            table.append(row);
+        }
+    }
+
+    var clickCell = function(data) {
+        var x = data.data.x;
+        var y = data.data.y;
+
+        gameApi.makeMove(gameId, x, y, getGameStatus, function () {});
     }
 
     function handleError(response) {

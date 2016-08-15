@@ -12,8 +12,8 @@ exports.queries = {
 
     saveGame: (
         "INSERT INTO games " +
-        "(private, host_user_id, game_start_time, game_finish_time) " +
-        "VALUES (?, ?, ?, ?)"),
+        "(private, host_user_id, number_of_players, game_start_time, game_finish_time) " +
+        "VALUES (?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?))"),
 
     registerPlayerScore: (
         "INSERT INTO games_played " +

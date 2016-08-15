@@ -448,3 +448,12 @@ tr.now-playing td {
     text-align: right;
     min-width: 60px;
 }
+
+.cell {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    background-color: #B5B5B5;
+    cursor: pointer;
+    border-radius: 1px;
+}

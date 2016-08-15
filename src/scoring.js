@@ -12,7 +12,7 @@ var applyDifficultyBonus = function(game) {
     var modifier = getDifficultyModifier(game.difficulty);
 
     for(var i = 0; i < game.players.length; i++) {
-        players[i].score *= modifier;
+        game.players[i].score += game.players[i].score * modifier;
     }
 
     return game;
@@ -127,6 +127,9 @@ var getDifficultyModifier = function(difficultySettingName) {
             return difficulty.bonusModifier;
         }
     }
+
+    // Ubknown difficulty setting
+    return 1;
 };
 
 // Score events to be applied at the end of the game
