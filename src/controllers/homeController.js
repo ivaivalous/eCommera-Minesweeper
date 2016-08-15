@@ -35,6 +35,7 @@ exports.dashboard = function (request, response) {
             response.viewModel.gamesPlayed.push({
                 started : row.started,
                 ended : row.ended,
+                players: row.players,
                 score : row.score
             });
         }

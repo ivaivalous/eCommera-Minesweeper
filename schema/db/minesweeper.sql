@@ -1,8 +1,10 @@
+CREATE DATABASE  IF NOT EXISTS `minesweeper` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `minesweeper`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: minesweeper
 -- ------------------------------------------------------
--- Server version	5.7.13-log
+-- Server version 5.7.13-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,12 +17,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- -----------------------------------------------------
--- Schema minesweeper
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `minesweeper` DEFAULT CHARACTER SET utf8 ;
-USE `minesweeper` ;
-
 --
 -- Table structure for table `games`
 --
@@ -32,8 +28,9 @@ CREATE TABLE `games` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'A unique ID for the game.',
   `private` tinyint(1) NOT NULL COMMENT 'Was this a private (listed) game room?',
   `host_user_id` int(10) unsigned NOT NULL COMMENT 'ID of the user who hosted this game.',
+  `number_of_players` int(10) NOT NULL DEFAULT '1',
   `game_start_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The time the game started at.',
-  `game_finish_time` datetime NOT NULL COMMENT 'Time the game ended.',
+  `game_finish_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Time the game ended.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `host_user_id_idx` (`host_user_id`),
@@ -105,12 +102,12 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL COMMENT 'The user''s email address. It must be unique and it can be changed.\nUsed for user validation/password reset.',
   `display_name` varchar(32) NOT NULL COMMENT 'A name the user will go by in the game/high scores/etc. Not unique, changeable.',
   `active` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether the user has activated their account via email.',
-  `password` char(128) NOT NULL COMMENT 'A password hash, used to verify against when the user logs in.',
+  `password` char(128) NOT NULL COMMENT 'A salt + password hash, used to verify against when the user logs in.',
   `salt` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -122,4 +119,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-15 18:12:29
+-- Dump completed on 2016-08-15 14:15:13
