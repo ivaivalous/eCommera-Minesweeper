@@ -1,7 +1,8 @@
 var config = require('./config');
 var messages = require('./messages');
 var validation = require('./gameValidation');
-var timeManager = require('./timeManager');
+var state = require('./gameStateManager');
+var scoring = require('./scoring');
 
 var games = {};
 var gameCount = 0;
@@ -37,6 +38,7 @@ var buildGame = function(hostUser, gameParameters) {
         hostUser: hostUser,
         gameParameters: gameParameters,
         hasStarted: false,
+        hasEnded: false,
         gameStartsIn: config.gameBoundaries.defaultGameStartTimeMs,
         thinkTime: config.gameBoundaries.defaultThinkTimeMs,
         difficulty: getGameDifficulty(
@@ -85,12 +87,18 @@ var getGameStatus = function(gameId, userId) {
     }
 
     // Update times stored in the game object
-    games[gameId] = timeManager.setLastActed(game);
+    if (!game.hasEnded) {
+        // Don't update ended games.
+        // This way they will eventually be removed from memory.
+
+        games[gameId] = state.setLastActed(game);
+    }
 
     // Build a smaller data set the user would get
     gameSummary.currentPlayerTurn = game.currentPlayerTurn;
     gameSummary.gameStartsIn = game.gameStartsIn;
     gameSummary.hasStarted = game.hasStarted;
+    gameSummary.hasEnded = game.hasEnded;
     gameSummary.canBeStarted = canGameBeStarted(game),
     gameSummary.map = getPublicMap(game.map);
     gameSummary.players = game.players;
@@ -123,7 +131,7 @@ var startGame = function(gameId, userId) {
                 game.players.length >= minPlayers) {
 
         game.gameStartsIn = 0;
-        games[gameId] = timeManager.setLastActed(game);
+        games[gameId] = state.setLastActed(game);
 
         return true;
     }
@@ -131,22 +139,51 @@ var startGame = function(gameId, userId) {
     return false;
 }
 
+var endGame = function(gameId) {
+    var game = getGame(gameId);
+
+    // Calculate final game points
+    game = scoring.applyDifficultyBonus(game);
+
+    // Transfer the game to database
+    // Deregister the game
+    deregisterGame(game.hostUser.userId);
+    // Don't delete the game from memory so players
+    // can all get its final state and score.
+    // As the game will no longer be updated, it will
+    // be purged eventually.
+};
+
 var makeMove = function(gameId, userId, x, y) {
     var game = getGame(gameId);
 
-    if (game === undefined) {
+    if (game === undefined || game.hasEnded) {
         return false;
     } else {
         // Update the game so it finds out who the current
         // player is
-        games[gameId] = timeManager.setLastActed(game);
+        games[gameId] = state.setLastActed(game);
         var game = getGame(gameId);
     }
 
-    // Check if it is userId's turn
-    if (game.currentPlayerTurn.userId === userId) {
-        // TODO the actual move is done here: see gameController
-        games[gameId] = timeManager.nextPlayer(game);
+    // Check if it is userId's turn and if the game hasn't ended
+    if (game.currentPlayerTurn.userId === userId &&
+            !game.hasEnded) {
+        // TODO The actual move is done here: see gameController
+        // TODO Calculate and add player bonus points here
+        // TODO Mark player as "dead" if necessary.
+
+        game = state.nextPlayer(game);
+
+        // Check if the game has ended as a result of the
+        // last player's move (= all players have died)
+        // TODO: The game may have also ended if all non-mine
+        // or mine fields have been open, check this too
+        if (game.hasEnded) {
+            endGame(game.gameId);
+        }
+
+        games[gameId] = game;
         return true;
     } else {
         // Not this player's turn
@@ -168,7 +205,7 @@ var getGames = function(includePrivate) {
 
             var game = games[gameId];
 
-            if (timeManager.inactivityThresholdReached(game)) {
+            if (state.inactivityThresholdReached(game)) {
                 // The game hasn't been active for a while
                 // Add it for removal
                 gameIdsToRemove.push({
@@ -244,7 +281,7 @@ var addPlayer = function(user, gameId) {
         score: 0
     })
 
-    games[gameId] = timeManager.setLastActed(getGame(gameId));
+    games[gameId] = state.setLastActed(getGame(gameId));
 };
 
 var createGame = function(game) {
@@ -254,7 +291,7 @@ var createGame = function(game) {
         gameId = generateGameId();
     }
 
-    game = timeManager.setCreated(game);
+    game = state.setCreated(game);
     games[gameId] = game;
 
     try {
@@ -333,4 +370,5 @@ exports.getGameStatus = getGameStatus;
 exports.addPlayer = addPlayer;
 exports.isPlaying = isPlaying;
 exports.startGame = startGame;
+exports.endGame = endGame;
 exports.makeMove = makeMove;

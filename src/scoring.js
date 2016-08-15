@@ -3,7 +3,7 @@
     each player throughout the game.
 **/
 
-var config = require('config');
+var config = require('./config');
 var difficulties = {};
 
 // At the end of the game, give out players bonuses
@@ -129,15 +129,17 @@ var getDifficultyModifier = function(difficultySettingName) {
     }
 };
 
+// Score events to be applied at the end of the game
 exports.applyDifficultyBonus = applyDifficultyBonus;
-exports.getDifficultyModifier = getDifficultyModifier;
 
+// Score events to be applied after each player's turm
 exports.addEmptyCellScore = addEmptyCellScore;
 exports.addEmptyCellNeighboursScore = addEmptyCellNeighboursScore;
 exports.addSteppedOnMineScore = addSteppedOnMineScore;
 exports.addEmptyFieldsExpandedScore = addEmptyFieldsExpandedScore;
 exports.addTimeScore = addTimeScore;
 
+// Score events to be applied when a certain event happens
 exports.addFirstToStepOnMineScore = addFirstToStepOnMineScore;
 exports.addSteppedOnMineOnFirstTurnBonus = addSteppedOnMineOnFirstTurnBonus;
 exports.addLastManStandingBonus = addLastManStandingBonus;

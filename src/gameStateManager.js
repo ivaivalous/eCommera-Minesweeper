@@ -1,5 +1,7 @@
-
-// Time manager controls games in time
+/*
+    Logic for managing a game's status
+    through time
+*/
 
 var config = require('./config');
 
@@ -56,6 +58,14 @@ var startGame = function(game) {
     return game;
 };
 
+var endGame = function(game) {
+    var currentTime = getCurrentTime();
+    game.timeControl.finished = currentTime;
+    game.hasEnded = true;
+
+    return game;
+};
+
 var updateGameInProgress = function(game) {
     var currentTime = getCurrentTime();
     var lastActedTime = game.timeControl.lastActed;
@@ -83,6 +93,12 @@ var updateGameInProgress = function(game) {
 
 // Switch the game state to the next living player
 var nextPlayer = function(game) {
+    // Check if there are any surviving players
+    if (!hasLivingPlayers(game.players)) {
+        // Finish the game off
+        return endGame(game);
+    }
+
     var newPlayer = getCurrentPlayer(
         game.currentPlayerTurn.userId, game.players, 1);
 
@@ -97,6 +113,10 @@ var nextPlayer = function(game) {
 var inactivityThresholdReached = function(game) {
     var timeSinceLastAction = getCurrentTime() - game.timeControl.lastActed;
     return timeSinceLastAction > config.maxGameNonUpdatedInterval;
+}
+
+var hasLivingPlayers = function(players) {
+    return getLivingPlayers(players).length;
 }
 
 var getCurrentPlayer = function(currentPlayerId, players, hops) {
@@ -134,3 +154,4 @@ exports.startGame = startGame;
 exports.setLastActed = setLastActed;
 exports.nextPlayer = nextPlayer;
 exports.inactivityThresholdReached = inactivityThresholdReached;
+exports.endGame = endGame;
