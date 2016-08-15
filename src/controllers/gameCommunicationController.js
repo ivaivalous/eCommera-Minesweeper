@@ -1,4 +1,4 @@
-var games = require('../games');
+var games = require('../game/games');
 var messages = require('../messages');
 
 

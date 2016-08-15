@@ -3,7 +3,7 @@
     each player throughout the game.
 **/
 
-var config = require('./config');
+var config = require('../config');
 var difficulties = {};
 
 // At the end of the game, give out players bonuses

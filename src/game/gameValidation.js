@@ -1,5 +1,5 @@
-var config = require('./config');
-var messages = require('./messages');
+var config = require('../config');
+var messages = require('../messages');
 
 exports.validateRoomName = function(desiredName) {
     var re = config.regex.roomNameValidation;

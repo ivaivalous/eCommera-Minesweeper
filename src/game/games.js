@@ -1,5 +1,5 @@
-var config = require('./config');
-var messages = require('./messages');
+var config = require('../config');
+var messages = require('../messages');
 var validation = require('./gameValidation');
 var state = require('./gameStateManager');
 var scoring = require('./scoring');

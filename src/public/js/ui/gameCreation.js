@@ -40,7 +40,6 @@
 
     function displayCreationFailureFeedback(error) {
         // Display feedback why game creation failed
-        console.log(error);
         var errorContainer = $(constants.locators.gameCreation.errorContainer);
         errorContainer.removeClass(constants.classes.hiddenContainer);
 

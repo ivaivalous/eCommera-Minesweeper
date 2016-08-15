@@ -3,7 +3,7 @@
     through time
 */
 
-var config = require('./config');
+var config = require('../config');
 
 var getCurrentTime = function() {
     var date = new Date();

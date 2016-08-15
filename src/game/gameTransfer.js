@@ -3,8 +3,8 @@
     to the database.
 */
 
-var db = require('./database');
-var queries = require('./queries');
+var db = require('../database');
+var queries = require('../queries');
 
 var transfer = function(game) {
     saveGameToDatabase(game);
