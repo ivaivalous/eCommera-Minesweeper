@@ -122,7 +122,7 @@
         td.text(
             "There are no games available to join. " +
             "You can create one.");
-        td.attr("colspan", "5");
+        td.attr("colspan", "6");
         td.addClass(constants.classes.centered);
 
         tr.append(td);

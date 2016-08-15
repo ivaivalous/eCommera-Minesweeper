@@ -1,26 +1,28 @@
 <div class="item-list-wrapper">
-	{{#if users}}
-		<table class="item-list-table" cellspacing="0">
-			<thead>
-				<th>Player</th>
-				<th>Score</th>
-			</thead>
-			<tbody>
+    {{#if users}}
+        <table class="item-list-table" cellspacing="0">
+            <thead>
+                <th>#</th>
+                <th>Player</th>
+                <th>Score</th>
+            </thead>
+            <tbody>
 
-				{{#each users}}
-					<tr>
-						<td>
-							<a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
-						</td>
-						<td>
-							{{this.score}}
-						</td>
-					</tr>
-				{{/each}}
+                {{#each users}}
+                    <tr>
+                        <td>{{@index}}</td>
+                        <td>
+                            <a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
+                        </td>
+                        <td>
+                            {{this.score}}
+                        </td>
+                    </tr>
+                {{/each}}
 
-			</tbody>
-		</table>
-	{{else}}
-		<p>There are no users yet :(</p>
-	{{/if}}
+            </tbody>
+        </table>
+    {{else}}
+        <p>There are no users yet :(</p>
+    {{/if}}
 </div>

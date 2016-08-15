@@ -33,8 +33,8 @@ exports.dashboard = function (request, response) {
             response.viewModel.totalScore += row.score;
 
             response.viewModel.gamesPlayed.push({
-                started : row["game_start_time"],
-                ended : row["game_finish_time"],
+                started : row.started,
+                ended : row.ended,
                 score : row.score
             });
         }
