@@ -48,6 +48,10 @@
             },
             map: {
                 table: "#game-map-body"
+            },
+            gameOver: {
+                popup: "#game-over-screen",
+                playerListing: "#players-table-game-over"
             }
         }
     };

@@ -457,3 +457,12 @@ tr.now-playing td {
     cursor: pointer;
     border-radius: 1px;
 }
+
+#players-list-game-over {
+    text-align: center;
+    padding: 20px;
+}
+
+#players-table-game-over {
+    margin: auto;
+}

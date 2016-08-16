@@ -12,7 +12,7 @@ var applyDifficultyBonus = function(game) {
     var modifier = getDifficultyModifier(game.difficulty);
 
     for(var i = 0; i < game.players.length; i++) {
-        game.players[i].score += game.players[i].score * modifier;
+        game.players[i].score += roundScore(game.players[i].score * modifier);
     }
 
     return game;
@@ -37,7 +37,7 @@ var addEmptyCellNeighboursScore = function(player, mineCount) {
             config.scoring.stepOnNeighboringAll :
             mineCount * config.scoring.stepNeighboringEach);
 
-    player.score += scoreToAdd;
+    player.score += roundScore(scoreToAdd);
     return player;
 };
 
@@ -62,7 +62,7 @@ var addEmptyFieldsExpandedScore = function(player, expandedFieldsCount) {
 
     var scoreToAdd = maxScore > calculatedScore ? calculatedScore : maxScore; 
 
-    player.score += scoreToAdd;
+    player.score += roundScore(scoreToAdd);
     return player;
 };
 
@@ -73,7 +73,7 @@ var addTimeScore = function(player, timeLeftMillis) {
     var unitsLeft = Math.floor(timeLeftMillis / timeUnit);
     var scorePerUnit = config.scoring.timeBonus;
 
-    player.score += unitsLeft * scorePerUnit;
+    player.score += roundScore(unitsLeft * scorePerUnit);
     return player;
 };
 
@@ -105,7 +105,7 @@ var applyGameBeatenBonus = function(game) {
     var bonus = config.scoring.gameBeaten;
 
     for(var i = 0; i < game.players.length; i++) {
-        players[i].score += bonus;
+        players[i].score += roundScore(bonus);
     }
 
     return game;
@@ -130,6 +130,10 @@ var getDifficultyModifier = function(difficultySettingName) {
 
     // Ubknown difficulty setting
     return 1;
+};
+
+var roundScore = function(input) {
+    return Math.round(input);
 };
 
 // Score events to be applied at the end of the game

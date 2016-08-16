@@ -3,10 +3,11 @@
     var TABLE_ROW = "tr";
     var TABLE_CELL = "td";
     var MILLIS_IN_SECOND = 1000;
-    var RELOAD_FROM_SERVER = 5000;
+    var RELOAD_FROM_SERVER = 2000;
     var timeToShow = 0;
     var gameId = null;
     var initialMapDrawn = false;
+    var hasGameEnded = false;
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
@@ -32,14 +33,22 @@
     });
 
     function getGameStatus() {
-        gameApi.getStatus(gameId, displayStatus, handleError);
+        if (!hasGameEnded) {
+            gameApi.getStatus(gameId, displayStatus, handleError);
+        }
     }
 
     function displayStatus(response) {
         setTimeDisplay(response);
         displayStartGameButton(response);
         displayPlayerList(
+            $(constants.locators.gamePage.playerListing.table),
             response.players, response.currentPlayerTurn.userId);
+
+        if (response.hasEnded) {
+            hasGameEnded = true;
+            handleGameOver(response);
+        }
 
         // Draw the game area with the first Status request
         if (!initialMapDrawn) {
@@ -48,8 +57,8 @@
         }
     }
 
-    function displayPlayerList(players, currentPlayerId) {
-        var playersTable = $(constants.locators.gamePage.playerListing.table);
+    function displayPlayerList(table, players, currentPlayerId) {
+        var playersTable = table;
         playersTable.empty();
 
         for (var i = 0; i < players.length; i++) {
@@ -188,6 +197,15 @@
 
             table.append(row);
         }
+    }
+
+    function handleGameOver(response) {
+        displayPlayerList(
+            $(constants.locators.gamePage.gameOver.playerListing),
+            response.players, response.currentPlayerTurn.userId);
+
+        $(constants.locators.gamePage.gameOver.popup).removeClass(
+            constants.classes.hiddenContainer);
     }
 
     var clickCell = function(data) {

@@ -64,15 +64,19 @@ var countGamesParticipating = function(games, userId) {
     var count = 0;
 
     for (var key in games) {
-       if (games.hasOwnProperty(key)) {
-          var game = games[key];
+        if (games.hasOwnProperty(key)) {
+            var game = games[key];
 
-          for (var i = 0; i < game.players.length; i++) {
-            if (game.players[i].id === userId) {
-                count++;
+            if (game.hasEnded) {
+                continue;
             }
-          }
-       }
+
+            for (var i = 0; i < game.players.length; i++) {
+                if (game.players[i].id === userId) {
+                    count++;
+                }
+            }
+        }
     }
 
     return count;
