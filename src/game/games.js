@@ -14,7 +14,7 @@ var buildUser = function(userId, userDisplayName) {
     return {
         userId: userId,
         userDisplayName: userDisplayName
-    }
+    };
 };
 
 var buildGameParameters = function(
@@ -31,8 +31,8 @@ var buildGameParameters = function(
         sizeX: sizeX,
         sizeY: sizeY,
         mineCount: mineCount
-    }
-}
+    };
+};
 
 var buildGame = function(hostUser, gameParameters) {
     return {
@@ -58,7 +58,7 @@ var buildGame = function(hostUser, gameParameters) {
             finished: null
         },
         players: []
-    }
+    };
 };
 
 var addGame = function(game) {
@@ -114,11 +114,11 @@ var getGameStatus = function(gameId, userId) {
     gameSummary.isHost = userId === game.hostUser.userId;
 
     return gameSummary;
-}
+};
 
 var canGameBeStarted = function(game) {
     return game.players.length >= config.gameBoundaries.minPlayersToStart;
-}
+};
 
 var startGame = function(gameId, userId) {
     var game = getGame(gameId);
@@ -145,7 +145,7 @@ var startGame = function(gameId, userId) {
     }
 
     return false;
-}
+};
 
 var endGame = function(gameId) {
     var game = getGame(gameId);
@@ -176,7 +176,7 @@ var makeMove = function(gameId, userId, xPos, yPos) {
         // Update the game so it finds out who the current
         // player is
         games[gameId] = state.setLastActed(game);
-        var game = getGame(gameId);
+        game = getGame(gameId);
     }
 
     // Check if it is userId's turn and if the game hasn't ended
@@ -209,7 +209,7 @@ var makeMove = function(gameId, userId, xPos, yPos) {
         // Not this player's turn
         return false;
     }
-}
+};
 
 // Call after each player's turn to calculate their new score
 var updatePlayerScore = function(game, playerId, thinkTimeLeft) {
@@ -291,7 +291,7 @@ var getGameDifficulty = function(x, y, mineCount) {
     }
 
     return difficulties[0].name;
-}
+};
 
 var isPlaying = function(gameId, userId) {
     var game = games[gameId];
@@ -313,7 +313,7 @@ var hasFreePlayerSlots = function(gameId) {
     }
 
     return game.players.length < game.gameParameters.maxPlayers;
-}
+};
 
 var addPlayer = function(user, gameId) {
     validation.verifyEligibleToJoin(games, gameId, user.userId);
@@ -323,7 +323,7 @@ var addPlayer = function(user, gameId) {
         id: user.userId,
         alive: true,
         score: 0
-    })
+    });
 
     games[gameId] = state.setLastActed(getGame(gameId));
 };
@@ -358,13 +358,13 @@ var registerGame = function(game) {
     var userId = game.hostUser.userId;
     var userHostedGames = hosts[userId];
 
-    if (userHostedGames == undefined) {
+    if (userHostedGames === undefined) {
         // The user wasn't hosting any games so far
         hosts[userId] = 1;
     } else {
         hosts[userId] += 1;
     }
-}
+};
 
 // Delete and deregister games from memory, without saving them to DB
 var removeGames = function(gamesToRemove) {
@@ -372,14 +372,14 @@ var removeGames = function(gamesToRemove) {
         delete games[gamesToRemove[i].gameId];
         deregisterGame(gamesToRemove[i].hostUserId);
     }
-}
+};
 
 // Once a game is over, deregister it from the active games list
 // Also reduce the number of games hosted by its host user
 var deregisterGame = function(hostUserId) {
     gameCount--;
     hosts[hostUserId] -= 1;
-}
+};
 
 var generateGameId = function() {
     var text = "";
@@ -393,12 +393,12 @@ var generateGameId = function() {
 };
 
 var isGameIdTaken = function(id) {
-    return games[id] != undefined;
+    return games[id] !== undefined;
 };
 
 var getPublicMap = function(map) {
     return map;
-}
+};
 
 exports.buildUser = buildUser;
 exports.buildGameParameters = buildGameParameters;

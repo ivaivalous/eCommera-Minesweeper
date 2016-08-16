@@ -82,7 +82,7 @@ var addTimeScore = function(player, timeLeftMillis) {
 var addFirstToStepOnMineScore = function(player) {
     player.score += conf.scoring.firstToStepMine;
     return player;
-}
+};
 
 // When a player steps a mine, the game is over for them.
 // If the player lands on a mine on their first turn, a points
@@ -90,14 +90,14 @@ var addFirstToStepOnMineScore = function(player) {
 var addSteppedOnMineOnFirstTurnBonus = function(player) {
     player.score += conf.scoring.stepOnMineFirstTurn;
     return player;
-}
+};
 
 // If all players have "died", award the last one standing
 // an additional number of points.
 var addLastManStandingBonus = function(player) {
     player.score += conf.scoring.lastStanding;
     return player;
-}
+};
 
 // At the end of the game, if no mine cells have been open
 // and all other cells have, call this to apply the Game Beaten bonus.

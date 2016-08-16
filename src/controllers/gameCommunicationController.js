@@ -14,10 +14,12 @@ var listGames = function(request, response) {
 
     response.status(200);
     response.json(games.getGames(false));
-}
+};
 
 // Create a new game room
 var createGame = function(request, response) {
+    var gameId = null;
+
     try {
         validateRequest(request);
     } catch (err) {
@@ -43,7 +45,7 @@ var createGame = function(request, response) {
             boardSizeX, boardSizeY, mineCount);
 
         var game = games.buildGame(user, gameParams);
-        var id = games.addGame(game);
+        gameId = games.addGame(game);
 
     } catch (err) {
         response.status(400);
@@ -52,8 +54,8 @@ var createGame = function(request, response) {
     }
 
     response.status(201);
-    response.json({success: true, gameId: id});
-}
+    response.json({success: true, gameId: gameId});
+};
 
 // Join an existing game
 var joinGame = function(request, response) {
@@ -70,7 +72,7 @@ var joinGame = function(request, response) {
     }
 
     // Check if the game exists
-    if (gameId == undefined || games.getGame(gameId) == undefined) {
+    if (gameId === undefined || games.getGame(gameId) === undefined) {
         response.viewModel.gameErrorMessage = messages.error.gameUnavailable;
         response.redirect('/dashboard');
         return;
@@ -105,12 +107,13 @@ var joinGame = function(request, response) {
 
         response.redirect('/dashboard');
     }
-}
+};
 
 // Get the current status of the game
 var getStatus = function(request, response) {
     var gameId = request.params.gameId;
     var userId = request.session.userId;
+    var gameStatus = null;
 
     try {
         validateRequest(request);
@@ -121,7 +124,7 @@ var getStatus = function(request, response) {
     }
 
     try {
-        var gameStatus = games.getGameStatus(gameId, userId);
+        gameStatus = games.getGameStatus(gameId, userId);
     } catch (error) {
         console.log(error);
         response.status(403);
@@ -131,7 +134,7 @@ var getStatus = function(request, response) {
 
     response.status(200);
     response.json(gameStatus);
-}
+};
 
 // The host can start the game manually
 var startGame = function(request, response) {
@@ -153,7 +156,7 @@ var startGame = function(request, response) {
         response.status(500);
         response.json({success: false});
     }
-}
+};
 
 // Make a move on the game map
 var makeMove = function(request, response) {
@@ -177,13 +180,13 @@ var makeMove = function(request, response) {
     } catch(error) {
         // Invalid move
         response.status(400);
-        response.json({error: messages.error.illegalMove})
+        response.json({error: messages.error.illegalMove});
     }
-}
+};
 
 var setGameMap = function(gameId, map) {
     validateRequest(request);
-}
+};
 
 function validateRequest(request) {
     if(!request.session.isUserLogged){

@@ -36,4 +36,4 @@ exports.queries = {
         "users.id = games_played.user_id " +
         "GROUP BY games_played.user_id " +
         "ORDER BY score DESC")
-}
+};

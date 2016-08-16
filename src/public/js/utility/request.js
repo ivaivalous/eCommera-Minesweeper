@@ -28,9 +28,9 @@
         $.ajax({
             url: buildUrl(urlArray),
             type: method,
-            data: (data == undefined ? {} : $.param(data)),
+            data: (data === undefined || data === null ? {} : $.param(data)),
             contentType: contentType,
-            headers: (headers == undefined ? {} : headers),
+            headers: (headers === undefined || data === null ? {} : headers),
             success: callback,
             error: callbackOnErrorToUse
         });
@@ -45,7 +45,7 @@
         }
 
         return url;
-    };
+    }
 
     function defaultErrorHandle(response) {
     }

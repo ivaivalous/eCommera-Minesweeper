@@ -106,18 +106,18 @@ var nextPlayer = function(game) {
     game.currentPlayerTurn.thinkTimeLeft = game.thinkTime;
 
     return game;
-}
+};
 
 // Check if a game has reached the inactivity threshold;
 // use to find out when a game should be deleted from the games list.
 var inactivityThresholdReached = function(game) {
     var timeSinceLastAction = getCurrentTime() - game.timeControl.lastActed;
     return timeSinceLastAction > config.maxGameNonUpdatedInterval;
-}
+};
 
 var hasLivingPlayers = function(players) {
     return getLivingPlayers(players).length;
-}
+};
 
 var getCurrentPlayer = function(currentPlayerId, players, hops) {
     var playerIndex = 0;

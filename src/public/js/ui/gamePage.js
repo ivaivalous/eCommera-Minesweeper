@@ -107,7 +107,7 @@
 
             // Highlight it's the current user's turn
             if (game.currentPlayerTurn.isRequestee) {
-                textToUse = "Your turn"
+                textToUse = "Your turn";
             }
 
             actionExpectedPanel.text(textToUse);
@@ -213,7 +213,7 @@
         var y = data.data.y;
 
         gameApi.makeMove(gameId, x, y, getGameStatus, function () {});
-    }
+    };
 
     function handleError(response) {
         // Session has expired, have the user log in again

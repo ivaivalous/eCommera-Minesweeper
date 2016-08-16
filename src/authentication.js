@@ -9,11 +9,11 @@ exports.hashPassword = function(password, salt) {
         password, salt, iterations, keyLength);
 
     return Buffer(hash, 'binary').toString('hex');
-}
+};
 
 // Generate a random salt.
 // Should be used on registration and password change.
 // On login, salt is retrieved from the DB.
 exports.generateSalt = function () {
     return crypto.randomBytes(16).toString('hex');
-}
+};

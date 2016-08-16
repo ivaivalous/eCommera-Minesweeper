@@ -92,7 +92,7 @@
 
         joinButton.text("Join");
         joinButton.on("click", function () {
-            joinGame(game.id)
+            joinGame(game.id);
         });
 
         td.append(joinButton);

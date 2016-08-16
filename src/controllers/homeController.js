@@ -110,4 +110,4 @@ exports.notFound = function (request, response) {
 
     // default to plain-text. send()
     response.type('txt').send('Not found');
-}
+};

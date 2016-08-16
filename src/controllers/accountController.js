@@ -26,7 +26,7 @@ function validateRegisterInput(data) {
 // otherwise execute callbackIfTaken
 function checkEmailAvailability(email, callback) {
     db.query(queries.queries.findEmail, [email], function (error, results) {
-        var emailIsFree = results && results[0] && results[0].count == 0;
+        var emailIsFree = results && results[0] && results[0].count === 0;
         callback(error, emailIsFree);
     });
 }
@@ -61,7 +61,7 @@ exports.loginPage = function (request, response) {
     response.viewModel.header.userMenuItems.login.current = true;
     response.viewModel.title = 'Log in to your account';
     response.render('login', response.viewModel);
-}
+};
 
 // Request the register page
 exports.registerPage = function (request, response) {
@@ -77,7 +77,7 @@ exports.registerPage = function (request, response) {
     // TODO: Have the title read off a config file
     response.viewModel.title = 'Create a new account';
     response.render('register', response.viewModel);
-}
+};
 
 // Perform the actual login - on success return a JWT and the dashboard page
 exports.login = function (request, response) {
@@ -121,7 +121,7 @@ exports.login = function (request, response) {
                 request.session.isUserLogged = true;
                 request.session.userEmail = email;
                 request.session.userId = result.id;
-                request.session.displayName = result["display_name"];
+                request.session.displayName = result.display_name;
                 
                 // TODO redirect to another page
                 response.redirect('/dashboard');
@@ -195,7 +195,7 @@ exports.profile = function (request, response) {
         
         connection.query(sql, [userid] , function(err, result) {
             
-            if(err || result.length == 0){
+            if(err || result.length === 0){
                 // render error page
                 response.viewModel.error = "This user doesn't exist!";
                 response.render('error/500', response.viewModel);
@@ -217,13 +217,13 @@ exports.profile = function (request, response) {
       });
 
     });
-}
+};
 
 exports.show = function (request, response) {
     response.viewModel.header.userMenuItems.account.current = true;
     response.viewModel.title = "Change your password ";
     response.render('login/account', response.viewModel);    
-}
+};
 
 exports.change = function (request, response) {
     var salt, currentPassword;
@@ -234,7 +234,8 @@ exports.change = function (request, response) {
         oldpassword : request.body.oldpassword,
         password : request.body.password,
         confirmpassword : request.body.confirmpassword
-    }
+    };
+
     if(isPasswordValid(input.password)){
          if(input.password == input.confirmpassword){
             db.connect(function (err, connection) {
@@ -250,7 +251,7 @@ exports.change = function (request, response) {
                         response.render('error/500', response.viewModel);
                         return;
                     }
-                    if(result.length == 0){
+                    if(result.length === 0){
                         response.viewModel.title = 'No user found try again';
                         response.redirect('/account');
                         return;
@@ -278,4 +279,4 @@ exports.change = function (request, response) {
         response.render('login/account', response.viewModel);
         return;
     }
-}
+};
