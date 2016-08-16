@@ -122,7 +122,6 @@ var canGameBeStarted = function(game) {
 
 var startGame = function(gameId, userId) {
     var game = getGame(gameId);
-    var minPlayers = config.gameBoundaries.minPlayersToStart;
 
     if (game === undefined) {
         // Cannot start a non-existent game
@@ -134,10 +133,7 @@ var startGame = function(gameId, userId) {
     // - The requesting user is the host
     // - The game hasn't been already started
     // - The game's players count is above the min players threshold
-    if (game.hostUser.userId === userId &&
-            !game.hasStarted &&
-                game.players.length >= minPlayers) {
-
+    if (validation.canGameBeStarted(game, userId)) {
         game.gameStartsIn = 0;
         games[gameId] = state.setLastActed(game);
 
@@ -239,42 +235,52 @@ var updateGame = function(gameId, action) {
 };
 
 // Use for games listing
-var getGames = function(includePrivate) {
+var getGames = function() {
     var gamesList = [];
     var gameIdsToRemove = [];
 
-    for (var gameId in games) {
-        if (games.hasOwnProperty(gameId) &&
-            !games[gameId].hasStarted) {
+    var listGames = function(gameId, game) {
+        if (state.inactivityThresholdReached(game)) {
+            // The game hasn't been active for a while
+            // Add it for removal
+            gameIdsToRemove.push({
+                gameId: gameId, hostUserId: game.hostUser.id
+            });
+        }
 
-            var game = games[gameId];
-
-            if (state.inactivityThresholdReached(game)) {
-                // The game hasn't been active for a while
-                // Add it for removal
-                gameIdsToRemove.push({
-                    gameId: gameId, hostUserId: game.hostUser.id
-                });
-            }
-
-            if (!game.gameParameters.isPublic && !includePrivate) {
-                continue;
-            }
-
-            delete game.gameParameters.mineCount;
+        if (game.gameParameters.isPublic && !game.hasStarted) {
+            // Private games and games that have already started
+            // should not be listed
 
             gamesList.push({
                 id: gameId,
                 hostUser: game.hostUser,
-                gameParameters: game.gameParameters,
+                gameParameters: filterGameParameters(game.gameParameters),
                 playersCount: game.players.length,
                 difficulty: game.difficulty
             });
         }
-    }
+    };
 
+    iterateGames(listGames);
     removeGames(gameIdsToRemove);
     return gamesList;
+};
+
+var iterateGames = function(action) {
+    for (var gameId in games) {
+        if (games.hasOwnProperty(gameId)) {
+            action(gameId, games[gameId]);
+        }
+    }
+};
+
+// Filter out game parameters that are not meant
+// to be viewed by users, such as the number of mines
+var filterGameParameters = function(gameParameters) {
+    var parameters = gameParameters;
+    delete parameters.mineCount;
+    return parameters;
 };
 
 // Get a text-based description of how hard the game is

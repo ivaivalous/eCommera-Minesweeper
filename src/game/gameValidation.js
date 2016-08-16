@@ -60,6 +60,14 @@ exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
     }
 };
 
+exports.canGameBeStarted = function (game, userId) {
+    var minPlayers = config.gameBoundaries.minPlayersToStart;
+
+    return (game.hostUser.userId === userId &&
+            !game.hasStarted &&
+                game.players.length >= minPlayers);
+};
+
 var countGamesParticipating = function(games, userId) {
     var count = 0;
 
