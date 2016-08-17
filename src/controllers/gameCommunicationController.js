@@ -4,14 +4,6 @@ var messages = require('../messages');
 
 // Get a list of all public games
 var listGames = function(request, response) {
-    try {
-        validateRequest(request);
-    } catch (err) {
-        response.status(401);
-        response.json({error: "Unauthorized"});
-        return;
-    }
-
     response.status(200);
     response.json(games.getGames(false));
 };
@@ -19,30 +11,12 @@ var listGames = function(request, response) {
 // Create a new game room
 var createGame = function(request, response) {
     var gameId = null;
-
-    try {
-        validateRequest(request);
-    } catch (err) {
-        response.status(401);
-        response.json({error: "Unauthorized"});
-        return;
-    }
-
-    var roomName = request.body.roomName;
-    var boardSizeX = request.body.boardSizeX;
-    var boardSizeY = request.body.boardSizeY;
-    var maxPlayers = request.body.maxPlayers;
-    var mineCount = request.body.mineCount;
-    var isPublic = request.body.isPublic === "true";
-
     var userId = request.session.userId;
     var userDisplayName = request.session.displayName;
 
     try {
         var user = games.buildUser(userId, userDisplayName);
-        var gameParams = games.buildGameParameters(
-            roomName, isPublic, maxPlayers,
-            boardSizeX, boardSizeY, mineCount);
+        var gameParams = buildCreateGameParams(request);
 
         var game = games.buildGame(user, gameParams);
         gameId = games.addGame(game);
@@ -57,22 +31,26 @@ var createGame = function(request, response) {
     response.json({success: true, gameId: gameId});
 };
 
+var buildCreateGameParams = function(request) {
+    var isPublic = request.body.isPublic === "true";
+
+    return games.buildGameParameters(
+        request.body.roomName,
+        isPublic,
+        request.body.maxPlayers,
+        request.body.boardSizeX,
+        request.body.boardSizeY,
+        request.body.mineCount
+    );
+};
+
 // Join an existing game
 var joinGame = function(request, response) {
     var gameId = request.params.gameId;
     var userId = request.session.userId;
 
-    // Verify the user has been authenticated
-    try {
-        validateRequest(request);
-    } catch (err) {
-        // TODO show a message you must login before you play
-        response.redirect('/login');
-        return;
-    }
-
     // Check if the game exists
-    if (gameId === undefined || games.getGame(gameId) === undefined) {
+    if (!games.exists(gameId) || !games.hasFreePlayerSlots(gameId)) {
         response.viewModel.gameErrorMessage = messages.error.gameUnavailable;
         response.redirect('/dashboard');
         return;
@@ -82,13 +60,6 @@ var joinGame = function(request, response) {
     if (games.isPlaying(gameId, userId)) {
         // Don't add her once again, just return her to the game page
         response.render('game/index', response.viewModel);
-        return;
-    }
-
-    // Check if the game has a free slot for another player
-    if (!games.hasFreePlayerSlots(gameId)) {
-        response.viewModel.gameErrorMessage = messages.error.gameRoomFull;
-        response.redirect('/dashboard');
         return;
     }
 
@@ -116,14 +87,6 @@ var getStatus = function(request, response) {
     var gameStatus = null;
 
     try {
-        validateRequest(request);
-    } catch (error) {
-        response.status(401);
-        response.json({error: 401});
-        return;
-    }
-
-    try {
         gameStatus = games.getGameStatus(gameId, userId);
     } catch (error) {
         console.log(error);
@@ -140,14 +103,6 @@ var getStatus = function(request, response) {
 var startGame = function(request, response) {
     var gameId = request.body.gameId;
     var userId = request.session.userId;
-
-    try {
-        validateRequest(request);
-    } catch (error) {
-        response.status(401);
-        response.json({error: 401});
-        return;
-    }
 
     if (games.startGame(gameId, userId)) {
         response.status(200);
@@ -166,14 +121,6 @@ var makeMove = function(request, response) {
     var y = request.body.y;
 
     try {
-        validateRequest(request);
-    } catch (error) {
-        response.status(401);
-        response.json({error: 401});
-        return;
-    }
-
-    try {
         var sucess = games.makeMove(gameId, userId, x, y);
         response.status(200);
         response.json({success: sucess});
@@ -188,12 +135,13 @@ var setGameMap = function(gameId, map) {
     validateRequest(request);
 };
 
-function validateRequest(request) {
+var validateRequest = function(request) {
     if(!request.session.isUserLogged){
         throw {error: 401};
     }    
-}
+};
 
+exports.validateRequest = validateRequest;
 exports.listGames = listGames;
 exports.createGame = createGame;
 exports.joinGame = joinGame;

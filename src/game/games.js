@@ -79,6 +79,10 @@ var getGame = function(gameId) {
     return games[gameId];
 };
 
+var exists = function(gameId) {
+    return getGame(gameId) !== undefined;
+}
+
 var getGameStatus = function(gameId, userId) {
     var game = getGame(gameId);
     var gameSummary = {};
@@ -412,6 +416,7 @@ exports.buildGame = buildGame;
 
 exports.addGame = addGame;
 exports.getGame = getGame;
+exports.exists = exists;
 exports.getGames = getGames;
 exports.updateGame = updateGame;
 exports.hasFreePlayerSlots = hasFreePlayerSlots;

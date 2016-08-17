@@ -1,54 +1,59 @@
 var config = require('../config');
 var messages = require('../messages');
 
-exports.validateRoomName = function(desiredName) {
+var validateRoomName = function(desiredName) {
     var re = config.regex.roomNameValidation;
     if (!re.test(desiredName)) {
         throw {error: messages.error.badRoomName};
     }
 };
 
-exports.validateDimensions = function(x, y, mineCount) {
-    var minX = config.gameBoundaries.x.minX;
-    var maxX = config.gameBoundaries.x.maxX;
-    var minY = config.gameBoundaries.y.minY;
-    var maxY = config.gameBoundaries.y.maxY;
+var validateDimensions = function(x, y, mineCount) {
+
 
     var maxMinePercent = config.gameBoundaries.minePercentMax;
+
+    validateXDimension(x);
+    validateYDimension(y);
+    validateMineRatio(x, y, mineCount);
+};
+
+function validateXDimension(x) {
+    var minX = config.gameBoundaries.x.minX;
+    var maxX = config.gameBoundaries.x.maxX;
 
     if (x < minX || x > maxX) {
         throw {error: messages.error.gameGridXDimensionOutOfRange};
     }
+}
+
+function validateYDimension(y) {
+    var minY = config.gameBoundaries.y.minY;
+    var maxY = config.gameBoundaries.y.maxY;
 
     if (y < minY || y > maxY) {
         throw {error: messages.error.gameGridYDimensionOutOfRange};
     }
+}
 
+function validateMineRatio(x, y, mineCount) {
+    var maxMinePercent = config.gameBoundaries.minePercentMax;
     var fieldCount = x * y;
     var maxAllowedMines = fieldCount * maxMinePercent;
 
     if (mineCount < 1 || mineCount > maxAllowedMines) {
         throw {error: messages.error.gameGridMineCountOutOfRange};
     }
+}
 
-    return true;
-};
-
-exports.validateMaxPlayers = function(maxPlayers) {
+var validateMaxPlayers = function(maxPlayers) {
     if (maxPlayers < 2 || maxPlayers > config.gameBoundaries.maxPlayerCount) {
         throw {error: messages.error.playersNumberOutOfRange}; 
     }
 };
 
-exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
-    if (games[targetGameId] === undefined ||
-            (games[targetGameId].players.length ===
-                games[targetGameId].gameParameters.maxPlayers)) {
-        // You cannot join a game room that is full
-        // or one that does not exist at all
-
-        throw {error: messages.error.gameRoomJoinGeneral};
-    }
+var verifyEligibleToJoin = function(games, targetGameId, userId) {
+    verifyGameJoinable(games[targetGameId]);
 
     if (countGamesParticipating(games, userId) >
             config.gameBoundaries.maxGamesToJoin) {
@@ -60,7 +65,18 @@ exports.verifyEligibleToJoin = function(games, targetGameId, userId) {
     }
 };
 
-exports.canGameBeStarted = function (game, userId) {
+// A game is joinable if it exists and the number of users currently joined
+// does not exceed the max players configured by the game's host.
+function verifyGameJoinable(game) {
+    if (game === undefined ||
+            (game.players.length ===
+                game.gameParameters.maxPlayers)) {
+
+        throw {error: messages.error.gameRoomJoinGeneral};
+    }
+}
+
+var canGameBeStarted = function (game, userId) {
     var minPlayers = config.gameBoundaries.minPlayersToStart;
 
     return (game.hostUser.userId === userId &&
@@ -68,24 +84,39 @@ exports.canGameBeStarted = function (game, userId) {
                 game.players.length >= minPlayers);
 };
 
+// Count all games a user is participating in
 var countGamesParticipating = function(games, userId) {
     var count = 0;
 
+    var countGames = function(game) {
+        if (game.hasEnded) {
+            // Don't include games that have finished
+            return;
+        }
+
+        for (var i = 0; i < game.players.length; i++) {
+            if (game.players[i].id === userId) {
+                count++;
+                return;
+            }
+        }
+    };
+
+    iterateGames(games, countGames);
+    return count;
+};
+
+function iterateGames(games, action) {
     for (var key in games) {
         if (games.hasOwnProperty(key)) {
             var game = games[key];
-
-            if (game.hasEnded) {
-                continue;
-            }
-
-            for (var i = 0; i < game.players.length; i++) {
-                if (game.players[i].id === userId) {
-                    count++;
-                }
-            }
+            action(game);
         }
-    }
+    }    
+}
 
-    return count;
-};
+exports.validateRoomName = validateRoomName;
+exports.validateDimensions = validateDimensions;
+exports.validateMaxPlayers = validateMaxPlayers;
+exports.verifyEligibleToJoin = verifyEligibleToJoin;
+exports.canGameBeStarted = canGameBeStarted;
