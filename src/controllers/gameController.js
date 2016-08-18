@@ -1,295 +1,151 @@
-var db = require('../database');
-var auth = require('../authentication');
-var queries = require('../queries');
-var config = require('../config');
+var games = require('../game/games');
+var messages = require('../messages');
 
-var initialStateMaster = [];
 
-exports.create = function (request, response) {
-	response.viewModel.title = '@TODO: create a new game';
-	response.render('game/index', response.viewModel);
-
-	// DEBUG
-	response.viewModel.debug(response.viewModel);
+// Get a list of all public games
+var listGames = function(request, response) {
+    response.status(200);
+    response.json(games.getGames(false));
 };
 
-exports.join = function (request, response) {
-	response.viewModel.title = '@TODO: join a game with ID ' + request.params.id;
-	response.render('game/index', response.viewModel);
+// Create a new game room
+var createGame = function(request, response) {
+    var gameId = null;
+    var userId = request.session.userId;
+    var userDisplayName = request.session.displayName;
 
-	// DEBUG
-	response.viewModel.debug(response.viewModel);
+    try {
+        var user = games.buildUser(userId, userDisplayName);
+        var gameParams = buildCreateGameParams(request);
+
+        var game = games.buildGame(user, gameParams);
+        gameId = games.addGame(game);
+
+    } catch (err) {
+        response.status(400);
+        response.json(err);
+        return;
+    }
+
+    response.status(201);
+    response.json({success: true, gameId: gameId});
 };
 
-// Creates initial & current board and saves it in the DB
-// @TODO don't save it in the DB
-function createGame(request, response) {
+var buildCreateGameParams = function(request) {
+    var isPublic = request.body.isPublic === "true";
 
-	// @TODO make these either customer-configurable or choise options
-	var gridWidth = 10;
-	var gridHeight = 10;
-	var minesCount = 10;
-	response.viewModel.title = "Welcome player!";	
-	
-
-	response.viewModel.currentState = generateInitialBoard(gridWidth, gridHeight, minesCount);
-	
-	response.render('game', response.viewModel);
-	// response.viewModel.debug(response.viewModel);
-}
-
-
-// initial board
-function generateInitialBoard(a, b, n) {
-
-	var initialGrid = createMinedGrid(a, b, n);
-	
-	return createInitialBoard(a, b, initialGrid);
-}
-
-// creates initial grid with mines only
-function createMinedGrid(a, b, n) {
-
-	var x, y = 0;
-	var grid = [];
-
-	// create empty matrix
-	for(var i = 0; i < a; i++){
-		grid[i] = [];
-		for(var j = 0; j < b; j++){
-			grid[i][j] = 0;
-		}
-	}
-
-	// set mines at random spots
-	// keeps generating until n 
-	// different spots are set
-	while(n) {
-		x = getRandomInt(0, a);
-		y = getRandomInt(0, b);
-
-		if(grid[x][y] == 0) {
-			grid[x][y] = 9;
-			n--;
-		}
-	}
-	initialStateMaster = grid;
-	return grid;
-}
-
-// creates game board
-// 9 means mine
-// 1-8 indicates nearby mines
-// 0 means no nearby mines
-// -1 means not opened
-function createInitialBoard(a, b, grid) {
-	var nearbyMinesCount = 0;
-	var currentState = [];
-
-	for(var i = 0; i < a; i++) {
-		currentState[i] = [];
-		for(var j = 0; j < b; j++) {
-				
-			// reset mines counter
-			nearbyMinesCount = 0;
-			currentState[i][j] = -1;
-
-			if(grid[i][j] != 9) {
-				
-				// @TODO check if parseInt necessary for i+1
-				for(var n = i-1; n <= i+1; n++) {
-					for(var m = j-1; m <= j+1; m++) {
-						if(typeof grid[n] != 'undefined' && grid[n][m] == 9) {
-							nearbyMinesCount++;
-						} 
-					}
-				} 
-				grid[i][j] = nearbyMinesCount;
-			}
-		}
-	}
-
-	var params = [
-		JSON.stringify(grid),
-		JSON.stringify(currentState)
-	]
-
-	// save in DB
-	// @TODO uncomment to create game record in the DB
-	/*
-	startGame(params, function(err) {
-		if(err) {
-			console.log(err);
-            return;
-        }
-
-        console.log("game is created");
-	});
-	*/
-	
-	return currentState;
-}
-
-// random int generator for mines spots
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-
-// @TODO: create JSON with current board state based on initial board, current state and click coordinates
-function updateCurrentState(initialBoard, currentState, clickCoord) {
-
-}
-
-function update(request, response) {
-	var gameID = request.params.id;
-
-    getGameByID(gameID, function(err, result) {
-            
-		if(err || result.length == 0) {
-			// render error page
-			response.viewModel.error = "This game doesn't exist!";
-			response.render('error/500', response.viewModel);
-			return;
-		}
-
-		var currentStateString = result[0].current_state;
-		
-		response.viewModel.currentState = JSON.parse(currentStateString);
-		response.render('game', response.viewModel);
-	});
-}
-
-function startGame(data, callback) {
-	db.query(queries.queries.startGame, data, callback);
+    return games.buildGameParameters(
+        request.body.roomName,
+        isPublic,
+        request.body.maxPlayers,
+        request.body.boardSizeX,
+        request.body.boardSizeY,
+        request.body.mineCount
+    );
 };
 
-function click(request, response) {
-	var gameID = request.params.game_id;
-	var xCoord = request.params.x;
-	var yCoord = request.params.y;
+// Join an existing game
+var joinGame = function(request, response) {
+    var gameId = request.params.gameId;
+    var userId = request.session.userId;
 
-	getGameByID(gameID, function(err, result) {
-		response.viewModel.title = "Update after click";
+    // Check if the game exists
+    if (!games.exists(gameId) || !games.hasFreePlayerSlots(gameId)) {
+        response.viewModel.gameErrorMessage = messages.error.gameUnavailable;
+        response.redirect('/dashboard');
+        return;
+    }
 
-		if(err || result.length == 0) {
-			// render error page
-			console.log(err);
-			response.viewModel.error = "This game doesn't exist!";
-			response.render('error/500', response.viewModel);
-			return;
-		}
+    // Check if the user has already joined the game
+    if (games.isPlaying(gameId, userId)) {
+        // Don't add her once again, just return her to the game page
+        response.render('game/index', response.viewModel);
+        return;
+    }
 
-		if(result) {
-			var initialState = JSON.parse(result[0].initial_state);
-			var currentState = JSON.parse(result[0].current_state);
-			var gameEnded = Date.parse(result[0].game_finish_time) || 0;
-			
-			if(!gameEnded) {
-				switch(initialState[xCoord][yCoord]) {
-					case 9: // mine, stop game
-						// endGame();
-						currentState[xCoord][yCoord] = initialState[xCoord][yCoord];
-						currentState = mapCurrentState(initialState, currentState);
-						response.viewModel.title = "Game Over! You just stepped on a mine!";
-						break;
-					case 0: // open wide & update
-						currentState = openEmptySector(initialState, currentState, xCoord, yCoord);
-						currentState = mapCurrentState(initialState, currentState);
-						
-						response.viewModel.title = "Lucky U! Large sector is opened!";
-						break;
-					default: // update
-						currentState[xCoord][yCoord] = initialState[xCoord][yCoord];
-						currentState = mapCurrentState(initialState, currentState);
+    // Add the player to the game
+    try {
+        games.addPlayer(
+            games.buildUser(userId, request.session.displayName),
+            gameId
+        );
 
-						// updateGame(gameID, JSON.stringify(currentState), function(err, result) {
-		
-						// 	if(err || result.length == 0) {
-						// 		// render error page
-						// 		response.viewModel.title = "This game doesn't exist!";
-						// 		// response.render('error/500', response.viewModel);
-						// 		return;
-						// 	}
-							
-						// });
-				}
-			}
-		}
-		response.viewModel.currentState = currentState;
-		response.render('game', response.viewModel);
-	} );
-}
+        response.render('game/index', response.viewModel);
+    } catch(err) {
+        console.log("Error joining game room: " + err);
+        response.viewModel.gameErrorMessage = (
+            messages.error.gameRoomJoinGeneral);
 
-function getGameByID(gameID, callback) {
-	return db.query(queries.queries.getGameByID, gameID, callback);
-}
+        response.redirect('/dashboard');
+    }
+};
 
-function endGame(gameID, currentState) {
-	
-	return db.query(queries.queries.endGame, gameID, function(err, result) {
-		
-		if(err || result.length == 0) {
-			// render error page
-			response.viewModel.error = "This game doesn't exist!";
-			response.render('error/500', response.viewModel);
-			return;
-		}
+// Get the current status of the game
+var getStatus = function(request, response) {
+    var gameId = request.params.gameId;
+    var userId = request.session.userId;
+    var gameStatus = null;
 
-		if(result) {
-			console.log("game ended");
-		}
-	});
-}
+    try {
+        gameStatus = games.getGameStatus(gameId, userId);
+    } catch (error) {
+        console.log(error);
+        response.status(403);
+        response.json(error.responseJSON);
+        return;
+    }
 
-function updateGame(currentState, gameID, callback) {
+    response.status(200);
+    response.json(gameStatus);
+};
 
-	// console.log(initialStateMaster);
-	var params = [gameID, currentState];
+// The host can start the game manually
+var startGame = function(request, response) {
+    var gameId = request.body.gameId;
+    var userId = request.session.userId;
 
-	return db.query(queries.queries.updateGameCurrStatus, params, callback);
-}
+    if (games.startGame(gameId, userId)) {
+        response.status(200);
+        response.json({success: true});
+    } else {
+        response.status(500);
+        response.json({success: false});
+    }
+};
 
-function openEmptySector(initialState, currentState, xCoord, yCoord) {
+// Make a move on the game map
+var makeMove = function(request, response) {
+    var gameId = request.body.gameId;
+    var userId = request.session.userId;
+    var x = parseInt(request.body.x);
+    var y = parseInt(request.body.y);
 
-	var x = parseInt(xCoord);
-	var y = parseInt(yCoord);
+    try {
+        var sucess = games.makeMove(gameId, userId, x, y);
+        response.status(200);
+        response.json({success: sucess});
+    } catch(error) {
+        // Invalid move
+        response.status(400);
+        response.json({error: messages.error.illegalMove});
+    }
+};
 
-	for (var xIndex = x - 1; xIndex <= x + 1; xIndex++) {
-		for (var yIndex = y - 1; yIndex <= y + 1; yIndex++) {
-			if (typeof initialState[xIndex] != 'undefined' && typeof initialState[xIndex][yIndex] != 'undefined') {
+var setGameMap = function(gameId, map) {
+    validateRequest(request);
+};
 
-				if (initialState[xIndex][yIndex] == 0) {
-					if(currentState[xIndex][yIndex] < 0) {
-						currentState[xIndex][yIndex] = 1;
-						openEmptySector(initialState, currentState, xIndex, yIndex);
-					}
-				} else {
-					currentState[xIndex][yIndex] = 1;
-				}
-			}
-		}
-	}
+var validateRequest = function(request) {
+    if(!request.session.isUserLogged){
+        throw {error: 401};
+    }    
+};
 
-	return currentState;
-}
-
-function mapCurrentState(initialState, currentState) {
-	
-	for(var i = 0; i < initialState.length; i++) {
-
-		for(var j = 0; j < initialState[i].length; j++) {
-			if(currentState[i][j] > 0) {
-				currentState[i][j] = initialState[i][j];
-			}
-		}
-	}
-
-	return currentState;
-}
-
+exports.validateRequest = validateRequest;
+exports.listGames = listGames;
 exports.createGame = createGame;
-exports.click = click;
-exports.updateState = update;
-
-// @TODO: create game start form with options
+exports.joinGame = joinGame;
+exports.getStatus = getStatus;
+exports.makeMove = makeMove;
+exports.setGameMap = setGameMap;
+exports.startGame = startGame;

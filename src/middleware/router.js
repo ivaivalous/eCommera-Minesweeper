@@ -4,7 +4,6 @@ var router = express.Router();
 var homeController = require('../controllers/homeController');
 var accountController = require('../controllers/accountController');
 var gameController = require('../controllers/gameController');
-var commControler = require('../controllers/gameCommunicationController');
 
 // load/require controller files and bind them to specific paths/routes and HTTP methods
 
@@ -26,25 +25,19 @@ router.get('/user/:id', accountController.profile); // visit a user's public pro
 router.get('/account', accountController.show); //change password page
 router.post('/account', accountController.change); //the actual change of password 
 
-// game
-router.get('/host', gameController.create);
-
 // game communication
-router.get('/list', authenticated(commControler.listGames));
-router.post('/create', authenticated(commControler.createGame));
-router.get('/play/:gameId', authenticated(commControler.joinGame));
-router.post('/start', authenticated(commControler.startGame));
-router.get('/status/:gameId', authenticated(commControler.getStatus));
-router.post('/move', authenticated(commControler.makeMove));
-
-router.get('/game/update/:id', gameController.updateState);
-router.get('/game/click/:game_id/:x/:y', gameController.click);
+router.get('/list', authenticated(gameController.listGames));
+router.post('/create', authenticated(gameController.createGame));
+router.get('/play/:gameId', authenticated(gameController.joinGame));
+router.post('/start', authenticated(gameController.startGame));
+router.get('/status/:gameId', authenticated(gameController.getStatus));
+router.post('/move', authenticated(gameController.makeMove));
 
 // Verify that the user issuing a request has been authenticated
 function authenticated(fn) {
     return function (request, response) {
         try {
-            commControler.validateRequest(request);
+            gameController.validateRequest(request);
             fn(request, response);
 
         } catch (error) {

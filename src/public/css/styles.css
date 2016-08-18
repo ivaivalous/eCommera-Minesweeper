@@ -458,6 +458,19 @@ tr.now-playing td {
     border-radius: 1px;
 }
 
+.open {
+    background-color: #E5E5E5;
+}
+
+.mine {
+    background-color: red;
+}
+
+.number {
+    background-color: #E5E5E5;
+    font-weight: bold;
+}
+
 #players-list-game-over {
     text-align: center;
     padding: 20px;

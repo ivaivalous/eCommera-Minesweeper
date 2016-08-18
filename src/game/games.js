@@ -3,7 +3,8 @@ var messages = require('../messages');
 var validation = require('./gameValidation');
 var state = require('./gameStateManager');
 var scoring = require('./scoring');
-var transfer = require('./gameTransfer.js');
+var transfer = require('./gameTransfer');
+var grid = require('./grid');
 
 var games = {};
 var gameCount = 0;
@@ -35,6 +36,9 @@ var buildGameParameters = function(
 };
 
 var buildGame = function(hostUser, gameParameters) {
+    var map = grid.generateMap(
+        gameParameters.sizeX, gameParameters.sizeY, gameParameters.mineCount);
+
     return {
         hostUser: hostUser,
         gameParameters: gameParameters,
@@ -46,7 +50,7 @@ var buildGame = function(hostUser, gameParameters) {
             gameParameters.sizeX,
             gameParameters.sizeY,
             gameParameters.mineCount),
-        map: {},
+        map: map,
         currentPlayerTurn: {
             userId: null,
             thinkTimeLeft: null
@@ -99,10 +103,6 @@ var getGameStatus = function(gameId, userId) {
         games[gameId] = state.setLastActed(game);
     }
 
-    // TODO Remove once the actual mines map has been linked
-    game.map.x = game.gameParameters.sizeX;
-    game.map.y = game.gameParameters.sizeY;
-
     // Build a smaller data set the user would get
     gameSummary.currentPlayerTurn = game.currentPlayerTurn;
     gameSummary.currentPlayerTurn.isRequestee = (
@@ -112,7 +112,7 @@ var getGameStatus = function(gameId, userId) {
     gameSummary.hasStarted = game.hasStarted;
     gameSummary.hasEnded = game.hasEnded;
     gameSummary.canBeStarted = canGameBeStarted(game),
-    gameSummary.map = getPublicMap(game.map);
+    gameSummary.map = getGameMap(game);
     gameSummary.players = game.players;
     gameSummary.thinkTime = game.thinkTime;
     gameSummary.isHost = userId === game.hostUser.userId;
@@ -182,8 +182,10 @@ var makeMove = function(gameId, userId, xPos, yPos) {
     // Check if it is userId's turn and if the game hasn't ended
     if (game.currentPlayerTurn.userId === userId &&
             !game.hasEnded) {
-        // TODO The actual move is done here: see gameController
+        
+        game.map = grid.makeMove(game.map, xPos, yPos);
         // TODO Calculate and add player bonus points here
+
         game = updatePlayerScore(
             game, userId, game.currentPlayerTurn.thinkTimeLeft);
 
@@ -406,9 +408,15 @@ var isGameIdTaken = function(id) {
     return games[id] !== undefined;
 };
 
-var getPublicMap = function(map) {
+var getGameMap = function(game) {
+    var map = {};
+
+    map.x = game.gameParameters.sizeX;
+    map.y = game.gameParameters.sizeY;
+    map.cells = grid.getUserMapRepresentation(game.map);
+
     return map;
-};
+}
 
 exports.buildUser = buildUser;
 exports.buildGameParameters = buildGameParameters;

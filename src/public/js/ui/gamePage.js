@@ -54,6 +54,8 @@
         if (!initialMapDrawn) {
             drawInitialMap(response.map);
             initialMapDrawn = true;
+        } else {
+            updateMap(response.map.cells);
         }
     }
 
@@ -196,6 +198,24 @@
             }
 
             table.append(row);
+        }
+    }
+
+    function updateMap(openCells) {
+        for (var i = 0; i < openCells.length; i++) {
+            var cell = openCells[i];
+            var classToAdd = constants.classes.cell.open;
+            var row = $($(constants.locators.gamePage.map.table + " tr")[cell.y]);
+            var td = $(row.find("td")[cell.x]);
+
+            if (cell.isMine) {
+                classToAdd = constants.classes.cell.mine;
+            } else if (cell.neighboringMineCount > 0) {
+                classToAdd = constants.classes.cell.number;
+                td.text(cell.neighboringMineCount);
+            }
+
+            td.addClass(classToAdd);
         }
     }
 
