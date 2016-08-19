@@ -4,6 +4,8 @@
 */
 
 var config = require('../config');
+var grid = require('./grid');
+var scoring = require('./scoring');
 
 var getCurrentTime = function() {
     var date = new Date();
@@ -58,7 +60,7 @@ var startGame = function(game) {
     return game;
 };
 
-var endGame = function(game) {
+var markGameEnded = function(game) {
     var currentTime = getCurrentTime();
     game.timeControl.finished = currentTime;
     game.hasEnded = true;
@@ -93,11 +95,7 @@ var updateGameInProgress = function(game) {
 
 // Switch the game state to the next living player
 var nextPlayer = function(game) {
-    // Check if there are any surviving players
-    if (!hasLivingPlayers(game.players)) {
-        // Finish the game off
-        return endGame(game);
-    }
+    endGame(game);
 
     var newPlayer = getCurrentPlayer(
         game.currentPlayerTurn.userId, game.players, 1);
@@ -106,6 +104,51 @@ var nextPlayer = function(game) {
     game.currentPlayerTurn.thinkTimeLeft = game.thinkTime;
 
     return game;
+};
+
+// The game is over - all players have hit a mine.
+var actOnNoPlayersLeft = function(game) {
+    console.log("Game over: No players left alive");
+    // Mark the games as being over
+    return markGameEnded(game);
+};
+
+// The game is over - all mines have been open but there are surviving players
+var actOnNoMinesLeft = function(game) {
+    console.log("Game over: All mine fields have been open");
+    // Mark the games as being over
+    return markGameEnded(game);
+};
+
+// The game is over - all non-mine cells have been open - the game is beaten
+var actOnNoCellsLeft = function(game) {
+    console.log("Game over: Game beaten");
+
+    game = scoring.applyGameBeatenBonus(game);
+
+    // Mark the games as being over
+    return markGameEnded(game);
+};
+
+var endGame = function(game) {
+    var unopenCells = grid.countUnopenCells(game.map);
+
+    // The game shall end in three cases:
+
+    // 1. There are no surviving players
+    if (!hasLivingPlayers(game.players)) {
+        game = actOnNoPlayersLeft(game);
+    }
+
+    // 2. All cells containing a mine have been open (possible if players > mines)
+    else if (unopenCells.mineCount === 0) {
+        game = actOnNoMinesLeft(game);
+    }
+
+    // 3. All cells not containing a mine have been open (=game beaten)
+    else if (unopenCells.emptyCellCount === 0) {
+        game = actOnNoCellsLeft(game);
+    }
 };
 
 // Check if a game has reached the inactivity threshold;
@@ -154,4 +197,4 @@ exports.startGame = startGame;
 exports.setLastActed = setLastActed;
 exports.nextPlayer = nextPlayer;
 exports.inactivityThresholdReached = inactivityThresholdReached;
-exports.endGame = endGame;
+exports.markGameEnded = markGameEnded;

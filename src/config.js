@@ -77,14 +77,14 @@ module.exports = {
         stepEmptyCell: 10,
         stepNeighboringEach: 20,
         stepOnNeighboringAll: 200,
-        stepMine: -300,
+        stepMine: -100,
         stepPerExpanded: 10,
         stepPerExpandedMax: 120,
         timeBonus: 10,
         firstToStepMine: -200,
         stepOnMineFirstTurn: -300,
-        lastStanding: 400,
-        gameBeaten: 200
+        lastStanding: 200,
+        gameBeaten: 400
     },
     maxGameNonUpdatedInterval: 30000
 };

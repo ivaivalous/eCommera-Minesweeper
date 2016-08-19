@@ -134,7 +134,9 @@ var applyGameBeatenBonus = function(game) {
     var bonus = config.scoring.gameBeaten;
 
     for(var i = 0; i < game.players.length; i++) {
-        players[i].score += roundScore(bonus);
+        if (game.players[i].alive) {
+            game.players[i].score += roundScore(bonus);
+        }
     }
 
     return game;

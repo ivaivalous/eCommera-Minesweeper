@@ -191,6 +191,36 @@ var countEmptyOpenCells = function(grid) {
     return emptyOpenCount;
 };
 
+// Count unopen mine cells
+var countUnopenCells = function(grid) {
+    var mineCount = 0;
+    var emptyCellCount = 0;
+
+    // Iterate rows
+    for (var yIndex = 0; yIndex < grid.length; yIndex++) {
+        // Iterate columns
+        for (var xIndex = 0; xIndex < grid[yIndex].length; xIndex++) {
+            var cell = grid[yIndex][xIndex];
+
+            if (cell.isOpen) {
+                // Ignoring open cells
+                continue;
+            }
+
+            if (cell.isMine) {
+                mineCount++;
+            } else {
+                emptyCellCount++;
+            }
+        }
+    }
+
+    return {
+        mineCount: mineCount,
+        emptyCellCount: emptyCellCount
+    };
+};
+
 // Users should view all unopened cells as closed, containing no mine
 // and with zero neighboring mines.
 var addUserViewCell = function(grid, safeGrid, x, y) {
@@ -240,4 +270,5 @@ var getUserMapRepresentation = function(grid) {
 exports.generateMap = generateMap;
 exports.makeMove = makeMove;
 exports.getUserMapRepresentation = getUserMapRepresentation;
+exports.countUnopenCells = countUnopenCells;
 exports.countEmptyOpenCells = countEmptyOpenCells;
