@@ -67,7 +67,7 @@ var verifyEligibleToJoin = function(games, targetGameId, userId) {
 
 // A game is joinable if it exists and the number of users currently joined
 // does not exceed the max players configured by the game's host.
-function verifyGameJoinable(game) {
+var verifyGameJoinable = function(game) {
     if (game === undefined ||
             (game.players.length ===
                 game.gameParameters.maxPlayers)) {
@@ -115,8 +115,16 @@ function iterateGames(games, action) {
     }    
 }
 
+var verifyPlayerTurn = function(game, playerId) {
+    if (game.hasEnded || game.currentPlayerTurn.userId !== playerId) {
+        throw {error: "Not this player's turn"};
+    }
+};
+
 exports.validateRoomName = validateRoomName;
 exports.validateDimensions = validateDimensions;
 exports.validateMaxPlayers = validateMaxPlayers;
 exports.verifyEligibleToJoin = verifyEligibleToJoin;
 exports.canGameBeStarted = canGameBeStarted;
+exports.verifyGameJoinable = verifyGameJoinable;
+exports.verifyPlayerTurn = verifyPlayerTurn;

@@ -85,7 +85,7 @@ var getGame = function(gameId) {
 
 var exists = function(gameId) {
     return getGame(gameId) !== undefined;
-}
+};
 
 var getGameStatus = function(gameId, userId) {
     var game = getGame(gameId);
@@ -166,51 +166,89 @@ var endGame = function(gameId) {
 };
 
 var makeMove = function(gameId, userId, xPos, yPos) {
+    var game = null;
+    var openEmptyCellsPriorMove = 0;
+    var openEmptyCellsAfterMove = 0;
+
+    try {
+        // Prepare the game's state and make sure it is indeed
+        // the requestee's turn to make a move.
+        game = updateGameToMakeMove(gameId);
+        validation.verifyPlayerTurn(game, userId);
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+    // Payload to execute if the player lands on a mine.
+    var handlePlayerDead = function() {
+        game = markPlayerDead(game, userId);
+    };
+
+    // Count how many cells have been open before the move was made
+    openEmptyCellsPriorMove = grid.countEmptyOpenCells(game.map);
+    
+    // Make the actual move  
+    game.map = grid.makeMove(game.map, xPos, yPos, handlePlayerDead);
+
+    // Count how many cells have been open after the move was made
+    openEmptyCellsAfterMove = grid.countEmptyOpenCells(game.map);
+
+    // Give the player a bonus for being quick to play
+    game = updatePlayerScore(
+        game, userId, game.currentPlayerTurn.thinkTimeLeft);
+
+    // Apply additional scoring
+    updatePlayer(game, userId, applyScoringAfterTurn(
+        game, xPos, yPos, openEmptyCellsAfterMove - openEmptyCellsPriorMove));
+
+    // Give control to the next player
+    game = state.nextPlayer(game);
+
+    // Check if the game has ended as a result of the
+    // last player's move (= all players have died)
+    // TODO: The game may have also ended if all non-mine
+    // or mine fields have been open, check this too
+    if (game.hasEnded) {
+        endGame(gameId);
+    }
+
+    games[gameId] = game;
+    return true;
+};
+
+// Apply after-turn player scoring
+var applyScoringAfterTurn = function(game, xPos, yPos, numberOfOpenCells) {
+
+    return function(player, playerIndex) {
+        if (player.alive && numberOfOpenCells === 0) {
+            // The player has stepped on a cell that neighbours mines
+            var neighbouring = game.map[yPos][xPos].neighboringMineCount;
+
+            game.players[playerIndex] = scoring.addEmptyCellNeighboursScore(
+                player, neighbouring);
+
+        } else if (player.alive) {
+            // The player has expanded some empty cells
+            game.players[playerIndex] = scoring.addEmptyFieldsExpandedScore(
+                player, numberOfOpenCells);
+        }
+    }
+};
+
+// Prior to letting the player make a move,
+// update the game to determine who the current player is.
+var updateGameToMakeMove = function(gameId) {
     var game = getGame(gameId);
-    var x = parseInt(xPos);
-    var y = parseInt(yPos);
 
     if (game === undefined || game.hasEnded) {
-        return false;
-    } else {
-        // Update the game so it finds out who the current
-        // player is
-        games[gameId] = state.setLastActed(game);
-        game = getGame(gameId);
+        throw {};
     }
 
-    // Check if it is userId's turn and if the game hasn't ended
-    if (game.currentPlayerTurn.userId === userId &&
-            !game.hasEnded) {
-        
-        game.map = grid.makeMove(game.map, xPos, yPos);
-        // TODO Calculate and add player bonus points here
-
-        game = updatePlayerScore(
-            game, userId, game.currentPlayerTurn.thinkTimeLeft);
-
-        // TODO Mark player as "dead" if necessary.
-        // TODO Remove this, it's in for testing purposes
-        if (x === 0 && y === 0) {
-            game = markPlayerDead(game, userId);
-        }
-
-        game = state.nextPlayer(game);
-
-        // Check if the game has ended as a result of the
-        // last player's move (= all players have died)
-        // TODO: The game may have also ended if all non-mine
-        // or mine fields have been open, check this too
-        if (game.hasEnded) {
-            endGame(gameId);
-        }
-
-        games[gameId] = game;
-        return true;
-    } else {
-        // Not this player's turn
-        return false;
-    }
+    // Update the game so it finds out who the current
+    // player is
+    games[gameId] = state.setLastActed(game);
+    return getGame(gameId);
 };
 
 // Call after each player's turn to calculate their new score
@@ -230,6 +268,9 @@ var markPlayerDead = function(game, playerId) {
     for (var i = 0; i < game.players.length; i++) {
         if (game.players[i].id === playerId) {
             game.players[i].alive = false;
+
+            game.players = scoring.updatePlayersOnMine(
+                game.players, playerId);
         }
     }
 
@@ -277,6 +318,15 @@ var iterateGames = function(action) {
     for (var gameId in games) {
         if (games.hasOwnProperty(gameId)) {
             action(gameId, games[gameId]);
+        }
+    }
+};
+
+// Update a game's player by its userId
+var updatePlayer = function(game, playerId, action) {
+    for (var i = 0; i < game.players.length; i++) {
+        if (game.players[i].id === playerId) {
+            action(game.players[i], i);
         }
     }
 };
@@ -416,7 +466,7 @@ var getGameMap = function(game) {
     map.cells = grid.getUserMapRepresentation(game.map);
 
     return map;
-}
+};
 
 exports.buildUser = buildUser;
 exports.buildGameParameters = buildGameParameters;
@@ -431,6 +481,7 @@ exports.hasFreePlayerSlots = hasFreePlayerSlots;
 exports.getGameStatus = getGameStatus;
 
 exports.addPlayer = addPlayer;
+exports.updatePlayer = updatePlayer;
 exports.isPlaying = isPlaying;
 exports.startGame = startGame;
 exports.endGame = endGame;

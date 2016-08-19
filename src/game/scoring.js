@@ -44,8 +44,37 @@ var addEmptyCellNeighboursScore = function(player, mineCount) {
 // When a user steps on a mine, the game end for them.
 // Apply points (usually a negative amount) to the person's score.
 var addSteppedOnMineScore = function(player) {
-    player.score += conf.scoring.stepMine;
+    player.score += config.scoring.stepMine;
     return player;
+};
+
+var updatePlayersOnMine = function(players, playerSteppedOnMineId) {
+    var deadPlayersCount = 0;
+    var playerIndex = 0;
+
+    for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+
+        // Count dead players
+        if (!player.isAlive) {
+            deadPlayersCount++;
+        }
+
+        if (player.id === playerSteppedOnMineId) {
+            // This player has just hit the mine
+            // Take points away for stepping on a mine
+            players[i] = addSteppedOnMineScore(player);
+            playerIndex = i;
+        }
+    }
+
+    if (deadPlayersCount === 1) {
+        // This was the first player to step on a mine
+        players[playerIndex] = addFirstToStepOnMineScore(
+                players[playerIndex]);
+    }
+
+    return players;
 };
 
 // At each turn, if the user has just clicked an empty cell
@@ -78,9 +107,9 @@ var addTimeScore = function(player, timeLeftMillis) {
 };
 
 // When a player steps a mine, the game is over for them.
-// Being the first player to "die" gives a special bonus.
+// Being the first player to "die" gives a "special bonus".
 var addFirstToStepOnMineScore = function(player) {
-    player.score += conf.scoring.firstToStepMine;
+    player.score += config.scoring.firstToStepMine;
     return player;
 };
 
@@ -88,14 +117,14 @@ var addFirstToStepOnMineScore = function(player) {
 // If the player lands on a mine on their first turn, a points
 // bonus is applied.
 var addSteppedOnMineOnFirstTurnBonus = function(player) {
-    player.score += conf.scoring.stepOnMineFirstTurn;
+    player.score += config.scoring.stepOnMineFirstTurn;
     return player;
 };
 
 // If all players have "died", award the last one standing
 // an additional number of points.
 var addLastManStandingBonus = function(player) {
-    player.score += conf.scoring.lastStanding;
+    player.score += config.scoring.lastStanding;
     return player;
 };
 
@@ -139,12 +168,13 @@ var roundScore = function(input) {
 // Score events to be applied at the end of the game
 exports.applyDifficultyBonus = applyDifficultyBonus;
 
-// Score events to be applied after each player's turm
+// Score events to be applied after each player's turn
 exports.addEmptyCellScore = addEmptyCellScore;
 exports.addEmptyCellNeighboursScore = addEmptyCellNeighboursScore;
 exports.addSteppedOnMineScore = addSteppedOnMineScore;
 exports.addEmptyFieldsExpandedScore = addEmptyFieldsExpandedScore;
 exports.addTimeScore = addTimeScore;
+exports.updatePlayersOnMine = updatePlayersOnMine;
 
 // Score events to be applied when a certain event happens
 exports.addFirstToStepOnMineScore = addFirstToStepOnMineScore;

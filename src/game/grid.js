@@ -108,15 +108,14 @@ var countNeighbourMines = function(grid, x, y) {
     }
   
     return mineCount;
-}
+};
 
 // random int generator for mines spots
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-var clickCell = function(grid, x, y) {
-    console.log("Doing click for x=" + x + ", y=" + y);
+var clickCell = function(grid, x, y, handleMineClick) {
     var neighbouringMineCount = 0;
 
     // Don't let a player open a cell that has already been opened
@@ -126,7 +125,8 @@ var clickCell = function(grid, x, y) {
     grid[y][x].isOpen = true;
 
     if (grid[y][x].isMine) {
-        // TODO
+        // Let the caller execute custom logic such as scoring and game over
+        handleMineClick();
     }
     else {
         neighbouringMineCount = countNeighbourMines(grid, x, y);
@@ -151,7 +151,7 @@ var openAdjacentSpaces = function(grid, x, y) {
 
     for (var yIndex = startingYIndex; yIndex <= endingYIndex; yIndex++) {
         for (var xIndex = startingXIndex; xIndex <= endingXIndex; xIndex++) {
-            if (!grid[yIndex, xIndex].isOpen) {
+            if (!grid[yIndex][xIndex].isOpen) {
                 grid = clickCell(grid, xIndex, yIndex);
             }
         }
@@ -176,6 +176,21 @@ var getUserViewGrid = function(grid) {
     return safeGrid;
 };
 
+// Count the number of open cells that do not neighbor a mine.
+// Used in score calculation.
+var countEmptyOpenCells = function(grid) {
+    var simpleGrid = getUserViewGrid(grid);
+    var emptyOpenCount = 0;
+
+    for (var i = 0; i < simpleGrid.length; i++) {
+        if (simpleGrid[i].neighboringMineCount === 0) {
+            emptyOpenCount++;
+        }
+    }
+
+    return emptyOpenCount;
+};
+
 // Users should view all unopened cells as closed, containing no mine
 // and with zero neighboring mines.
 var addUserViewCell = function(grid, safeGrid, x, y) {
@@ -190,7 +205,7 @@ var addUserViewCell = function(grid, safeGrid, x, y) {
 
     safeGrid.push(gameCell);
     return safeGrid;
-}
+};
 
 var getEmptyCell = function() {
     return cell(false, false);
@@ -198,7 +213,7 @@ var getEmptyCell = function() {
 
 var getMineCell = function() {
     return cell(true, false);
-}
+};
 
 // Map cell representation
 var cell = function(isMine, isOpen) {
@@ -210,11 +225,11 @@ var cell = function(isMine, isOpen) {
 };
 
 var generateMap = function(sizeX, sizeY, numberOfMines) {
-    return generateInitialMap(sizeX, sizeY, numberOfMines);;
+    return generateInitialMap(sizeX, sizeY, numberOfMines);
 };
 
-var makeMove = function(grid, posX, posY) {
-    return clickCell(grid, posX, posY);
+var makeMove = function(grid, posX, posY, handleMineClick) {
+    return clickCell(grid, posX, posY, handleMineClick);
 };
 
 var getUserMapRepresentation = function(grid) {
@@ -225,3 +240,4 @@ var getUserMapRepresentation = function(grid) {
 exports.generateMap = generateMap;
 exports.makeMove = makeMove;
 exports.getUserMapRepresentation = getUserMapRepresentation;
+exports.countEmptyOpenCells = countEmptyOpenCells;
