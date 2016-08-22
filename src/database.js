@@ -7,6 +7,8 @@ var _credentials = {
   database : ''
 };
 
+var reconnectDelay = 2000;
+
 function setCredentials (newCredentials) {
     _credentials.host = newCredentials.host || '';
     _credentials.user = newCredentials.user || '';
@@ -23,7 +25,25 @@ function connect (callback) {
     });
 
     connection.connect(function (err) {
-        callback(err, connection);
+        if (err) {
+            console.log("Error connecting to DB: ", err);
+            
+            setTimeout(function () {
+                connect(callback);
+            }, reconnectDelay);
+        } else {
+            callback(err, connection);
+        }
+    });
+
+    connection.on("error", function(err) {
+        console.log("DB communication error: ", err);
+
+        if (err.code === "PROTOCOL_CONNECTION_LOST") {
+            connect(callback);
+        } else {
+            throw err;
+        }
     });
 }
 

@@ -95,7 +95,11 @@ var updateGameInProgress = function(game) {
 
 // Switch the game state to the next living player
 var nextPlayer = function(game) {
-    endGame(game);
+    game = verifyGameEndConditions(game);
+
+    if (game.hasEnded) {
+        return game;
+    }
 
     var newPlayer = getCurrentPlayer(
         game.currentPlayerTurn.userId, game.players, 1);
@@ -123,32 +127,33 @@ var actOnNoMinesLeft = function(game) {
 // The game is over - all non-mine cells have been open - the game is beaten
 var actOnNoCellsLeft = function(game) {
     console.log("Game over: Game beaten");
-
     game = scoring.applyGameBeatenBonus(game);
 
     // Mark the games as being over
     return markGameEnded(game);
 };
 
-var endGame = function(game) {
+var verifyGameEndConditions = function(game) {
     var unopenCells = grid.countUnopenCells(game.map);
 
     // The game shall end in three cases:
 
     // 1. There are no surviving players
     if (!hasLivingPlayers(game.players)) {
-        game = actOnNoPlayersLeft(game);
+        return actOnNoPlayersLeft(game);
     }
 
     // 2. All cells containing a mine have been open (possible if players > mines)
     else if (unopenCells.mineCount === 0) {
-        game = actOnNoMinesLeft(game);
+        return actOnNoMinesLeft(game);
     }
 
     // 3. All cells not containing a mine have been open (=game beaten)
     else if (unopenCells.emptyCellCount === 0) {
-        game = actOnNoCellsLeft(game);
+        return actOnNoCellsLeft(game);
     }
+
+    return game;
 };
 
 // Check if a game has reached the inactivity threshold;
@@ -160,7 +165,8 @@ var inactivityThresholdReached = function(game) {
 
 var hasLivingPlayers = function(players) {
     return getLivingPlayers(players).length;
-};
+}; 
+
 
 var getCurrentPlayer = function(currentPlayerId, players, hops) {
     var playerIndex = 0;

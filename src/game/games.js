@@ -202,15 +202,12 @@ var makeMove = function(gameId, userId, xPos, yPos) {
     updatePlayer(game, userId, applyScoringAfterTurn(
         game, xPos, yPos, openEmptyCellsAfterMove - openEmptyCellsPriorMove));
 
-    // Give control to the next player
-    game = state.nextPlayer(game);
-
     // Check if the game has ended as a result of the
-    // last player's move (= all players have died)
-    // TODO: The game may have also ended if all non-mine
-    // or mine fields have been open, check this too
+    // last player's move
     if (game.hasEnded) {
         endGame(gameId);
+    } else {
+        game = state.nextPlayer(game);
     }
 
     games[gameId] = game;
@@ -291,7 +288,7 @@ var getGames = function() {
             // The game hasn't been active for a while
             // Add it for removal
             gameIdsToRemove.push({
-                gameId: gameId, hostUserId: game.hostUser.id
+                gameId: gameId, hostUserId: game.hostUser.userId
             });
         }
 
