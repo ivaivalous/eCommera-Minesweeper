@@ -21,6 +21,16 @@ function validateRegisterInput(data) {
 
 }
 
+function whatWentWrong(data){
+    if(!isEmailValid(data.email)){
+        return 'email';
+    } else if (!isDisplayNameValid(data.name)){
+        return 'name';
+    } else {
+        return 'password';
+    }
+}
+
 // Check if an email is already in use for another account:
 // if free, run callback,
 // otherwise execute callbackIfTaken
@@ -132,6 +142,13 @@ exports.login = function (request, response) {
 
 // Perform user registration. Return {success: true} if it went well
 exports.register = function (request, response) {
+    
+    var error = {
+        email : 'Yo man check if your email is correct, cuz it cant pass the validation!',
+        password : 'Hey bro, your password must have special, lower and upper chars in to be more strong!',
+        name : 'Yo Yo, your name must be atleast 2 chars long, dont slack over there!'
+    };
+
     var input = {
         email : request.body.email,
         name : request.body.displayName,
@@ -139,17 +156,17 @@ exports.register = function (request, response) {
     };
 
     if (!validateRegisterInput(input)) {
-        response.status(400);
+        response.status(200);
         response.send({
             success : false,
-            message : 'Invalid input'
+            message : error[whatWentWrong(input)]
         });
         return;
     }
 
     checkEmailAvailability(input.email, function(error, isFree) {
         if (error || !isFree) {
-            response.status(400);
+            response.status(200);
             response.send({
                 success : false,
                 message : 'Email is already taken'
@@ -165,10 +182,10 @@ exports.register = function (request, response) {
                     message : 'Other error'
                 });
                 return;
-            }
-
+            }            
             response.status(200);
-            response.send({ success: true });
+            response.send({success: true, message : 'Superb, now you can go to the login page and play some games!'});
+
         });
     });
 };
@@ -266,7 +283,10 @@ exports.change = function (request, response) {
                                 response.viewModel.error = err;
                                 response.render('error/500', response.viewModel);
                             }
-                            response.redirect('/dashboard');
+                            response.viewModel.title = "Change your password ";
+                            response.viewModel.wrongpasswordtitle = 'Password changed';
+                            response.render('login/account', response.viewModel);
+                            return;
                         });
                     }
                 });

@@ -1,5 +1,5 @@
 {{#if wrongpasswordtitle}}
-    <h2> {{wrongpasswordtitle}}</h2>
+    <h2 class='successful'> {{wrongpasswordtitle}}</h2>
 {{/if}}
 <form action="/account" method="POST">
     <input type="email" name="email" value="{{session.userEmail}}" disabled/>

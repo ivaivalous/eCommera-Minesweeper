@@ -479,3 +479,13 @@ tr.now-playing td {
 #players-table-game-over {
     margin: auto;
 }
+
+#invalidsuccess{
+    color: darkred;
+    font-size: 14px;
+}
+
+.successful{    
+    color: darkred;
+    font-size: 14px;
+}
