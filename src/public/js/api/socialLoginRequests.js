@@ -7,12 +7,12 @@
         FB.login(function(response) {
             if (response.authResponse) {
                 FB.api('/me?fields=email,name', function(meResponse) {
-                    // TODO What if the user changes email?
                     var name = meResponse.name;
                     var email = buildUserEmail(response, meResponse.email);
+                    var userId = response.authResponse.userID;
                     var token = response.authResponse.accessToken;
 
-                    loginApi.facebookLogin(name, email, token);
+                    loginApi.facebookLogin(name, email, userId, token);
                 });
             } else {
                 // User cancelled logging in

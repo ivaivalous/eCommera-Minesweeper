@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `minesweeper` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `minesweeper`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: minesweeper
@@ -57,40 +55,6 @@ CREATE TABLE `games_played` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `user_activation_tokens`
---
-
-DROP TABLE IF EXISTS `user_activation_tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_activation_tokens` (
-  `user_id` int(10) unsigned NOT NULL COMMENT 'The ID of the user the token applies to.',
-  `token` varchar(128) DEFAULT NULL COMMENT 'A generated token for user activation.',
-  `issued_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Time the token was issued at, to allow checking for validity.',
-  PRIMARY KEY (`user_id`),
-  KEY `fk_password_reset_tokens_users_idx` (`user_id`),
-  CONSTRAINT `fk_password_reset_tokens_users0` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user_password_reset_tokens`
---
-
-DROP TABLE IF EXISTS `user_password_reset_tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_password_reset_tokens` (
-  `user_id` int(10) unsigned NOT NULL COMMENT 'The ID of the user the token applies to.',
-  `token` varchar(45) DEFAULT NULL COMMENT 'A generated token for password reset.',
-  `issued_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Time the token was issued at, to allow checking for validity.',
-  PRIMARY KEY (`user_id`),
-  KEY `fk_password_reset_tokens_users_idx` (`user_id`),
-  CONSTRAINT `fk_password_reset_tokens_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `users`
 --
 
@@ -104,10 +68,13 @@ CREATE TABLE `users` (
   `active` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether the user has activated their account via email.',
   `password` char(128) NOT NULL COMMENT 'A salt + password hash, used to verify against when the user logs in.',
   `salt` char(32) NOT NULL,
+  `social_network_id` varchar(90) DEFAULT NULL COMMENT 'Use if the user is authenticated via a social network account, e.g. Facebook',
+  `social_network_user` tinyint(1) DEFAULT '0' COMMENT 'Whether the user is using his or her social network account instead of the normal email/password login combination. Social network users are unable to login using a password.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `social_network_id_UNIQUE` (`social_network_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -119,4 +86,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-15 14:15:13
+-- Dump completed on 2016-09-08 18:01:17

@@ -13,6 +13,24 @@ queries.register = (
     "VALUES (?, ?, ?, ?, 1)"
 );
 
+queries.getSocialNetworkUser = "SELECT * FROM users WHERE social_network_id = ?";
+
+queries.registerSocialNetworkUser = (
+    "INSERT INTO users (email, password, salt, " +
+    "display_name, active, social_network_user, social_network_id) " +
+    "VALUES (?, ?, ?, ?, 1, 1, ?)"
+);
+
+queries.transformToSocialNetworkUser = (
+    "UPDATE user SET display_name = ?, social_network_id = ?, " +
+    "social_network_user = 1 WHERE email = ?"
+);
+
+queries.updateUserBasicInfo = (
+    "UPDATE user SET email = ?, display_name = ? " +
+    "WHERE email = ?"
+);
+
 queries.findEmail = "SELECT COUNT(*) as count FROM users WHERE email = ?";
 queries.getSalt = "SELECT salt FROM users WHERE email = ?";
 queries.getGameByID = "SELECT * FROM games WHERE id = ?";

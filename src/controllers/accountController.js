@@ -8,6 +8,7 @@ var db = require('../database');
 var auth = require('../authentication');
 var queries = require('../queries');
 var config = require('../config');
+var fb = require('../social/facebook');
 
 function createUser(data, callback) {
     var salt = auth.generateSalt();
@@ -107,33 +108,51 @@ exports.login = function (request, response) {
         return;
     }
 
-    // check if the user exists based on email
-    db.query(queries.queries.getCustomer, [email], function (error, results) {
-        if(error || results.length === 0) {
-            // render error page
+    runLoginQuery(request, response, email, password, false);
+};
+
+var runLoginQuery = function(
+        request, response, email, password, socialNetworkLogin) {
+
+    db.query(
+            queries.queries.getCustomer,
+            [email],
+            function (error, results) {
+
+        if (error || results.length === 0) {
+            // Render error page
             response.send({
                 success: false,
                 message: 'Database issue'
             });
             return;
+
         } else {
             var result = results[0];
             var salt = result.salt;
             var pass = result.password;
+            var hash = auth.hashPassword(password, salt);
 
-             if(auth.hashPassword(password, salt) != pass ) {
-      	       // render error page
-               response.viewModel.loginError = true;
-               exports.loginPage(request, response);
-             } else {
+            // A user may only log in under two conditions:
+            // 1. She is not a social network user and the password is correct
+            // 2. She is a social network user and socialNetworkLogin is true
+            // socialNetworkLogin is used so that verification with the SN API
+            // is done in advance
+            if ((hash === pass && !result.social_network_user) ||
+                    (socialNetworkLogin && result.social_network_user)) {
+
                 request.session.isUserLogged = true;
                 request.session.userEmail = email;
                 request.session.userId = result.id;
                 request.session.displayName = result.display_name;
-                
+
                 // TODO redirect to another page
                 response.redirect('/dashboard');
-             }
+            } else {
+                // Render error page
+                response.viewModel.loginError = true;
+                exports.loginPage(request, response);
+            }
         }
     });
 };
@@ -143,6 +162,7 @@ exports.facebookLogin = function (request, response) {
     // Extract variables
     var name = request.body.name;
     var email = request.body.email;
+    var userId = request.body.userId;
     var accessToken = request.body.accessToken;
 
     // Email must be valid
@@ -153,10 +173,126 @@ exports.facebookLogin = function (request, response) {
     }
 
     // Verify access token against Facebook to prevent impersonation
-    // Check if this user is already registered
-    // If not registered, register
-    // Login user and create session
-}
+    var verifyAccessToken = function(request, response, userId) {
+        // TODO request and response shouldn't be parameters here
+        return function(fbResponse) {
+            if (fbResponse.data.user_id === userId) {
+                logInVerifiedFacebookUser(
+                    request, response, name, email, userId);
+            } else {
+                response.viewModel.loginError = true;
+                exports.loginPage(request, response);
+            }
+        };
+    };
+
+    // The user access token the user provided was not valid
+    var actOnTokenVerificationFailed = function(errorResponse, error) {
+        console.log(JSON.errorResponse);
+        response.viewModel.loginError = true;
+        response.render('login/index', response.viewModel);
+        return;
+    };
+
+    fb.actOnDebugData(
+        accessToken,
+        verifyAccessToken(request, response, userId),
+        actOnTokenVerificationFailed
+    );
+};
+
+var logInVerifiedFacebookUser = function(
+        request, response, name, email, userId) {
+    // TODO request and response shouldn't be parameters here
+
+    db.query(
+            queries.queries.getSocialNetworkUser,
+            [userId],
+            function (error, results) {
+
+
+        if (results.length) {
+            // A user with this social ID already exists
+            var result = results[0];
+            var currentEmail = result.email;
+            var currentDisplayName = result.display_name;
+
+            // If the email or display name from Facebook
+            // don't match the database, update the database
+            if (currentEmail !== email || currentDisplayName !== name) {
+                updateUserBasicInfo(currentEmail, email, name);
+            }
+        } else {
+            // No user with this social ID exists
+            // Check if a user with this email address exists
+            db.query(
+                    queries.queries.getCustomer,
+                    [email],
+                    function (error, results) {
+
+                if (results.length) {
+                    // Such a user already exists and should be merged
+                    transformUserToSocialNetworkUser(name, userId, email);
+                } else {
+                    // No user with this email address exists -
+                    // create one
+                    createSocialNetworkUser(email, name, userId);
+                }
+            });
+        }
+
+        runLoginQuery(request, response, email, "", true);
+    });
+};
+
+// Update a user's email address and display name
+var updateUserBasicInfo = function(oldEmail, newEmail, newDisplayName) {
+    db.query(
+            queries.queries.updateUserBasicInfo,
+            [newEmail, newDisplayName, oldEmail],
+            function (error, results) {
+                console.log("Updated user");
+                // TODO checks
+            }
+    );
+};
+
+// After a successful Facebook login, update the user as externally
+// managed. After this operation the user will no longer be able
+// to log in using their email and password combination.
+var transformUserToSocialNetworkUser = function(
+        displayName, socialNetworkId, email) {
+
+
+    db.query(
+            queries.queries.transformToSocialNetworkUser,
+            [displayName, socialNetworkId, email],
+            function (error, results) {
+                console.log("User " + email + " is now a SN user");
+                // TODO checks
+            }
+    );
+};
+
+// Create a user account that can only be logged into via
+// a social network's API.
+// Password and salt will be generated automatically but can't be used to
+// gain access.
+var createSocialNetworkUser = function(email, displayName, socialNetworkId) {
+    var password = auth.generatePassword();
+    var salt = auth.generateSalt();
+
+    password = auth.hashPassword(password, salt);
+
+    db.query(
+        queries.queries.registerSocialNetworkUser,
+        [email, password, salt, displayName, socialNetworkId],
+        function (error, results) {
+            console.log("SN user " + email + " has been created.");
+            // TODO checks
+        }
+    );
+};
 
 // Perform user registration. Return {success: true} if it went well
 exports.register = function (request, response) {

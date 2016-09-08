@@ -27,10 +27,11 @@
 
     // Authenticate a user who has authenticated with Facebook with
     // the Minesweeper backend
-    loginApi.facebookLogin = function(name, email, accessToken) {
+    loginApi.facebookLogin = function(name, email, userId, accessToken) {
         $.post('facebookLogin', {
             name: name,
             email: email,
+            userId: userId,
             accessToken: accessToken
         })
         .done(function(data) {

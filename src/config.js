@@ -86,5 +86,10 @@ module.exports = {
         lastStanding: 200,
         gameBeaten: 400
     },
-    maxGameNonUpdatedInterval: 30000
+    maxGameNonUpdatedInterval: 30000,
+    social: {
+        facebook: {
+            applicationSecret: ""
+        }
+    }
 };
