@@ -1,3 +1,9 @@
+/*
+    Handle user login, registration and account detail changes.
+*/
+
+"use strict";
+
 var db = require('../database');
 var auth = require('../authentication');
 var queries = require('../queries');
@@ -92,7 +98,6 @@ exports.registerPage = function (request, response) {
 // Perform the actual login - on success return a JWT and the dashboard page
 exports.login = function (request, response) {
     // Login a user
-    // Issue and return a JWT
     var email = request.body.email;
     var password = request.body.password;
 
@@ -101,13 +106,6 @@ exports.login = function (request, response) {
         response.render('login/index', response.viewModel);
         return;
     }
-
-    // @TODO: single query login:
-    // - get * fields for user based on email
-    // - if no result - invalid email - user does not exist
-    // - use salt to hash input password
-    // - compare hashed input with hashed database passwords
-    // - if they match - user can log in
 
     // check if the user exists based on email
     db.query(queries.queries.getCustomer, [email], function (error, results) {
@@ -123,7 +121,7 @@ exports.login = function (request, response) {
             var salt = result.salt;
             var pass = result.password;
 
-             if(auth.hashPassword(password, salt) != pass ){
+             if(auth.hashPassword(password, salt) != pass ) {
       	       // render error page
                response.viewModel.loginError = true;
                exports.loginPage(request, response);
@@ -138,7 +136,27 @@ exports.login = function (request, response) {
              }
         }
     });
-},
+};
+
+// Login or register a Facebook user
+exports.facebookLogin = function (request, response) {
+    // Extract variables
+    var name = request.body.name;
+    var email = request.body.email;
+    var accessToken = request.body.accessToken;
+
+    // Email must be valid
+    if (!isEmailValid(email)) {
+        response.viewModel.loginError = true;
+        response.render('login/index', response.viewModel);
+        return;
+    }
+
+    // Verify access token against Facebook to prevent impersonation
+    // Check if this user is already registered
+    // If not registered, register
+    // Login user and create session
+}
 
 // Perform user registration. Return {success: true} if it went well
 exports.register = function (request, response) {

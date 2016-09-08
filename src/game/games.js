@@ -1,3 +1,10 @@
+/*
+    Maintain a list of all current games and provide means
+    for player intecation with them.
+*/
+
+"use strict";
+
 var config = require('../config');
 var messages = require('../messages');
 var validation = require('./gameValidation');

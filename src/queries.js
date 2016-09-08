@@ -1,3 +1,7 @@
+/*
+    A list of MySQL queries used throughout the game.
+*/
+
 'use strict';
 
 var queries = {};

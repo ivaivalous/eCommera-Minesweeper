@@ -1,3 +1,11 @@
+/*
+    Validate various aspects of the game -
+    whether proposed dimensions are valid, whether there are enough mines
+    set up, if a game is join-able and whether a specific player may join it.
+*/
+
+"use strict";
+
 var config = require('../config');
 var messages = require('../messages');
 

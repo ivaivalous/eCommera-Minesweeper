@@ -3,6 +3,8 @@
     to the database.
 */
 
+"use strict";
+
 var db = require('../database');
 var queries = require('../queries');
 
@@ -11,14 +13,14 @@ var transfer = function(game) {
 };
 
 var saveGameToDatabase = function(game) {
-    var private = game.gameParameters.isPublic;
+    var isPrivate = game.gameParameters.isPublic;
     var hostUserId = game.hostUser.userId;
     var numberOfPlayers = game.players.length;
     var gameStartTime = game.timeControl.created / 1000;
     var gameEndTime = game.timeControl.finished / 1000;
 
     var params = [
-        private, hostUserId, numberOfPlayers,
+        isPrivate, hostUserId, numberOfPlayers,
         gameStartTime, gameEndTime
     ];
 

@@ -1,3 +1,10 @@
+/*
+    Handle user security functionality such as
+    generating hashesm salts and passwords.
+*/
+
+"use strict";
+
 var crypto = require('crypto');
 var config = require('./config');
 
@@ -17,3 +24,15 @@ exports.hashPassword = function(password, salt) {
 exports.generateSalt = function () {
     return crypto.randomBytes(16).toString('hex');
 };
+
+// When Facebook-registering a user, a random password
+// ought to be generated as the user would be logging in without
+// an actual password.
+exports.generatePassword = function () {
+    var minLength = 32;
+    var maxLength = 64;
+
+    return crypto.randomBytes(
+        ~~(Math.random() * (maxLength - minLength + 1) + minLength)
+    ).toString('utf8');
+}

@@ -1,7 +1,11 @@
 /*
-    Logic for managing a game's status
-    through time
+    Logic for managing a game's status through time.
+    There is no supporting thread to handle games -
+    rather, when a player makes a move, the current game state
+    is re-calculated.
 */
+
+"use strict";
 
 var config = require('../config');
 var grid = require('./grid');

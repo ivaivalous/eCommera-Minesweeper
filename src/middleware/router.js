@@ -16,6 +16,7 @@ router.get('/ranking', homeController.ranking);
 // Login
 router.get('/login', accountController.loginPage);
 router.post('/login', accountController.login);
+router.post('/facebookLogin', accountController.facebookLogin);
 
 // Registration
 router.get('/register', accountController.registerPage);

@@ -1,7 +1,9 @@
-/**
+/*
     The scoring module determines points awarded to
     each player throughout the game.
-**/
+*/
+
+"use strict";
 
 var config = require('../config');
 var difficulties = {};
