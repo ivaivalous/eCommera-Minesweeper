@@ -3,56 +3,64 @@
 
     var constants = window.constants || (window.constants = {});
 
-    constants.locators = {
-        login: {
-            email: "#login-email",
-            password: "#login-password",
-            submit: "#login-submit",
-            container: "#login"
+    constants.locators = {};
+
+    constants.locators.login = {
+        email: "#login-email",
+        password: "#login-password",
+        submit: "#login-submit",
+        container: "#login",
+        facebook: {
+            button: "#login-facebook"
+        }
+    };
+
+    constants.locators.register = {
+        email: "#register-email",
+        name: "#register-name",
+        password: "#register-password",
+        passwordConfirmation: "#register-password-confirm",
+        submit: "#submit-registration",
+        container: "#register",
+        error: "#invalidsuccess"
+    };
+
+    constants.locators.gameListing = {
+        button: "#reload-games",
+        gamesTable: "#games-list",
+        gameListBody: "#games-list-body"
+    };
+
+    constants.locators.gameCreation = {
+        form: "#create-game-form",
+        openFormButton: "#create-game",
+        cancelButton: "#cancel-create",
+        submitButton: "#create-game-submit",
+        roomName: "#game-name",
+        maxPlayers: "#game-players",
+        sizeX: "#game-map-x",
+        sizeY: "#game-map-y",
+        mineCount: "#game-mine-count",
+        isPublic: "#game-public",
+        errorContainer: "#game-create-error"
+    };
+
+    constants.locators.gamePage = {
+        playerListing: {
+            table: "#players-list"
         },
-        register: {
-            email: "#register-email",
-            name: "#register-name",
-            password: "#register-password",
-            passwordConfirmation: "#register-password-confirm",
-            submit: "#submit-registration",
-            container: "#register"
+        actionExpected: "#action-expected",
+        timeLeft: "#time-left",
+        startGame: {
+            container: "#start-game",
+            button: "#start-game-button"
         },
-        gameListing: {
-            button: "#reload-games",
-            gamesTable: "#games-list",
-            gameListBody: "#games-list-body"
+        map: {
+            table: "#game-map-body"
         },
-        gameCreation: {
-            form: "#create-game-form",
-            openFormButton: "#create-game",
-            cancelButton: "#cancel-create",
-            submitButton: "#create-game-submit",
-            roomName: "#game-name",
-            maxPlayers: "#game-players",
-            sizeX: "#game-map-x",
-            sizeY: "#game-map-y",
-            mineCount: "#game-mine-count",
-            isPublic: "#game-public",
-            errorContainer: "#game-create-error"
-        },
-        gamePage: {
-            playerListing: {
-                table: "#players-list"
-            },
-            actionExpected: "#action-expected",
-            timeLeft: "#time-left",
-            startGame: {
-                container: "#start-game",
-                button: "#start-game-button"
-            },
-            map: {
-                table: "#game-map-body"
-            },
-            gameOver: {
-                popup: "#game-over-screen",
-                playerListing: "#players-table-game-over"
-            }
+        gameOver: {
+            popup: "#game-over-screen",
+            playerListing: "#players-table-game-over"
         }
     };
 
@@ -72,6 +80,8 @@
             number: "number"
         }
     };
+
+    constants.facebookAppId = "325243901154450";
 
     constants.keys = {
         enter: 13

@@ -9,6 +9,12 @@
         loginApi.login(email, password);
     }
 
+    // "Login With Facebook" button on the login page
+    $(constants.locators.login.facebook.button).click(function (event) {
+        event.preventDefault();
+        loginWithFacebook();
+    });
+
     // Submit registration information to the API
     function register() {
         var email = $(constants.locators.register.email).val();
@@ -18,6 +24,10 @@
         loginApi.register(
             email, displayName, password
         );
+    }
+
+    function loginWithFacebook() {
+        socialLoginApi.login();
     }
 
     // "Register" button on the register page - handle registration

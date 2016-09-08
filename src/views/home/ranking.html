@@ -10,7 +10,7 @@
 
                 {{#each users}}
                     <tr>
-                        <td>{{@index}}</td>
+                        <td>{{increment @index}}</td>
                         <td>
                             <a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
                         </td>
@@ -23,6 +23,6 @@
             </tbody>
         </table>
     {{else}}
-        <p>There are no users yet :(</p>
+        <p>Nobody has played a game yet. Why don't you start one?</p>
     {{/if}}
 </div>
