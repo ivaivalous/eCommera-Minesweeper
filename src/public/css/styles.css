@@ -3,6 +3,8 @@ body {
     color: #555;
     background: #f4f4f4;
     font-family: sans-serif;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 a,
@@ -111,10 +113,12 @@ a:active {
 }
 
 .main-header {
-    padding: 10px;
+    padding: 10px 0px;
     background: white;
     border-bottom: 1px solid #f74902;
     box-shadow: 0 0 5px rgba(0,0,0,.3);
+    width: calc(100% - 280px);
+    min-width: 280px;
 }
 
 .main-header .navigation-trigger {
@@ -123,6 +127,7 @@ a:active {
     height: 12px;
     width: 20px;
     margin-top: 2px;
+    margin-left: 10px;
     border-top: 2px solid #888;
     border-bottom: 2px solid #888;
     cursor: pointer;
@@ -151,7 +156,8 @@ a:active {
 }
 
 .main-content {
-    max-width: 1000px;
+    width: calc(100% - 280px);
+    min-width: 280px;
 }
 
 .page-container {
@@ -162,7 +168,7 @@ a:active {
     border: 1px solid #eee;
     border-radius: 4px;
     box-shadow: 0 5px 5px -5px rgba(0,0,0,.3);
-    width: 100%;
+    min-width: 280px;
 }
 
 .page-header {
@@ -207,6 +213,58 @@ a:active {
         -webkit-transform: translate(0,0);
         transform: translate(0,0);
     }
+
+    #game-grid-panel {
+        width: 65%;
+        display: inline-block;
+    }
+
+    #players-list-panel {
+        width: 30%;
+        display: inline-block;
+    }
+
+    .profile-info {
+        margin-left: 30px;
+    }
+}
+
+@media screen and (max-width: 799px) {
+    .main-header {
+        width: 100%;
+    }
+
+    .main-content {
+        width: 95%;
+        margin: auto;
+    }
+
+    .page-container {
+        margin: 10px 4px;
+    }
+
+    #game-grid-panel {
+        display: block;
+        width: 100%;
+        margin: auto;
+    }
+
+    #game-grid-panel table {
+        margin: auto;
+    }
+
+    #players-list-panel {
+        width: 80%;
+        margin: auto;
+    }
+
+    .profile-info {
+        margin-left: 10px;
+    }
+}
+
+#players-list-panel table {
+    margin: auto;
 }
 
 /* reusables */
@@ -221,6 +279,8 @@ input[type=password] {
     max-width: 300px;
     box-sizing: border-box;
     padding: 10px 20px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 10px;
     border: 1px solid #eee;
     border-left: 2px solid #aaa;
@@ -284,6 +344,14 @@ a.button:disabled,
     cursor: not-allowed;
 }
 
+input#login-facebook {
+    background-color: #3b5998;
+}
+
+input#login-facebook:hover {
+    background-color: #555555;
+}
+
 .error-message {
     font-family: monospace;
     padding: 20px;
@@ -338,14 +406,12 @@ a.button:disabled,
 /* profile page */
 
 .profile-info{
-    text-align: right;
-    margin-left: 30px;
+    text-align: left;
 }
 
 .profile-info > p {
     line-height: 20px;
-    margin:0px;
-    font-family: 
+    margin: 0px;
 }
 
 .profile-info,
@@ -370,6 +436,7 @@ a.button:disabled,
     top: 50px;
     width: 40%;
     max-width: 400px;
+    min-width: 320px;
     z-index: 10;
 
     background-color: #FFF;
@@ -383,6 +450,16 @@ a.button:disabled,
 
 .popup form {
     padding: 20px;
+}
+
+.popup label {
+    display: block;
+    padding: 10px 0px 5px 0px;
+}
+
+.popup input {
+    margin: 0px;
+    text-align: left;
 }
 
 .form-actions {
@@ -412,16 +489,6 @@ a.button:disabled,
 #game-screen {
     vertical-align: top;
     text-align: center;
-}
-
-#game-grid-panel {
-    width: 65%;
-    display: inline-block;
-}
-
-#players-list-panel {
-    width: 30%;
-    display: inline-block;
 }
 
 #players-table td {
@@ -498,4 +565,25 @@ tr.now-playing td {
 table.player-stats th {
     font-weight: normal;
     padding-right: 20px;
+}
+
+.error {
+    background-color: #FFCCCC;
+    padding: 20px;
+    border-left: 2px solid #F74902;
+    max-width: 800px;
+}
+
+.error h2 {
+    color: #062037;
+}
+
+div#login-error {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-screen {
+    text-align: center;
+    max-width: 500px;
 }

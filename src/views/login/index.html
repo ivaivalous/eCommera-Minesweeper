@@ -1,16 +1,33 @@
-{{#if loginError}}
-<div class="error" id="login-error">
-    Email or password don't match.
+<div class="login-screen">
+    {{#if loginError}}
+    <div class="error" id="login-error">
+        <h2>We couldn't log you in</h2>
+        <p>
+            We're sorry but we couldn't recognize your email or password.
+        </p>
+        <p>
+            Please make sure they are the correct ones and try again.
+        </p>
+        <p>
+            If you have used your <i>Facebook</i> account to play, use the
+            <i>Login With Facebook</i> button.
+        </p>
+    </div>
+    {{/if}}
+    <h1>Sign into your account to start playing</h1>
+
+    <form id="login" class="user-form" method="POST" action="login">
+
+        <input id="login-email" name="email" type="email" placeholder="Your email" required />
+        <input id="login-password" name="password" type="password" placeholder="Password" required />
+        <input type="submit" id="login-submit" class="positive-action" value="Log In" />
+    </form>
+    <p>
+        <a href="/register">Sign Up</a>
+    </p>
+    <p>
+        OR
+    </p>
+
+    <input type="submit" id="login-facebook" class="positive-action" value="Login With Facebook" />
 </div>
-{{/if}}
-
-<form id="login" class="user-form" method="POST" action="login">
-
-<div id="status">
-</div>
-
-    <input id="login-email" name="email" type="email" placeholder="Your email" required />
-    <input id="login-password" name="password" type="password" placeholder="Password" required />
-    <input type="submit" id="login-submit" class="positive-action" value="Log In" /> OR
-    <input type="submit" id="login-facebook" class="positive-action" value="Log In With Facebook" />
-</form>

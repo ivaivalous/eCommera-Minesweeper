@@ -10,6 +10,7 @@ var queries = require('../queries');
 var config = require('../config');
 var fb = require('../social/facebook');
 var gravatar = require('../social/gravatar');
+var messages = require('../messages');
 
 function createUser(data, callback) {
     var salt = auth.generateSalt();
@@ -122,10 +123,8 @@ var runLoginQuery = function(
 
         if (error || results.length === 0) {
             // Render error page
-            response.send({
-                success: false,
-                message: 'Database issue'
-            });
+            response.viewModel.loginError = true;
+            exports.loginPage(request, response);
             return;
 
         } else {
@@ -299,9 +298,9 @@ var createSocialNetworkUser = function(email, displayName, socialNetworkId) {
 exports.register = function (request, response) {
     
     var error = {
-        email : 'Yo man check if your email is correct, cuz it cant pass the validation!',
-        password : 'Hey bro, your password must have special, lower and upper chars in to be more strong!',
-        name : 'Yo Yo, your name must be atleast 2 chars long, dont slack over there!'
+        email : messages.validation.registrationEmail,
+        password : messages.validation.registrationPassword,
+        name : messages.validation.registrationName
     };
 
     var input = {
