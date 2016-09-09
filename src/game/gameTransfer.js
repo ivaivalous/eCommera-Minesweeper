@@ -13,7 +13,7 @@ var transfer = function(game) {
 };
 
 var saveGameToDatabase = function(game) {
-    var isPrivate = game.gameParameters.isPublic;
+    var isPrivate = !game.gameParameters.isPublic;
     var hostUserId = game.hostUser.userId;
     var numberOfPlayers = game.players.length;
     var gameStartTime = game.timeControl.created / 1000;

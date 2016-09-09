@@ -22,11 +22,11 @@ function getMenuItems (loggedIn) {
 	}
 }
 
-function getUserMenuItems (loggedIn) {
+function getUserMenuItems (loggedIn, userDisplayName) {
 	if(loggedIn){
 		return {
 			account : {
-				label: 'My account',
+				label: userDisplayName,
 				href: '/account'
 			},
 			logout : {
@@ -55,7 +55,9 @@ module.exports = function(request, response, next){
 		},
 		header : {
 			title : 'eCommera Minesweeper',
-			userMenuItems : getUserMenuItems(request.session.isUserLogged),
+			userMenuItems : getUserMenuItems(
+				request.session.isUserLogged, request.session.displayName
+			),
 			menuItems : getMenuItems(request.session.isUserLogged),
 		},
 		footer : {

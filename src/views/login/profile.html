@@ -3,9 +3,25 @@
 		<img src="../../img/Mario-Profile-icon.png" width="100px" height="100px">
 	</div>
 	<div class="profile-info">
-		<p>profile id ---> {{userProfile.id}}</p>
-		<p>players email ---> {{userProfile.email}}</p>
-		<p>players name ---> {{userProfile.name}}</p>
+        <h2>{{userProfile.name}}</h2>
+        <table class="player-stats">
+            <tr>
+                <th>Number of games played</th>
+                <td>{{userProfile.gamesPlayed}}</td>
+            </tr>
+            <tr>
+                <th>Average score</th>
+                <td>{{userProfile.averageScore}}</td>
+            </tr>
+            <tr>
+                <th>All-time BEST score</th>
+                <td>{{userProfile.bestScore}}</td>
+            </tr>
+            <tr>
+                <th>All-time WORST score</th>
+                <td>{{userProfile.worstScore}}</td>
+            </tr>
+        </table>
 	</div>
 </div>
 

@@ -489,3 +489,8 @@ tr.now-playing td {
     color: darkred;
     font-size: 14px;
 }
+
+table.player-stats th {
+    font-weight: normal;
+    padding-right: 20px;
+}

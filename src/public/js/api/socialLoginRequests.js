@@ -6,14 +6,7 @@
     socialLoginApi.login = function login() {
         FB.login(function(response) {
             if (response.authResponse) {
-                FB.api('/me?fields=email,name', function(meResponse) {
-                    var name = meResponse.name;
-                    var email = buildUserEmail(response, meResponse.email);
-                    var userId = response.authResponse.userID;
-                    var token = response.authResponse.accessToken;
-
-                    loginApi.facebookLogin(name, email, userId, token);
-                });
+                socialLoginApi.getUserDetails(response);
             } else {
                 // User cancelled logging in
                 console.log("Login cancelled");
@@ -21,6 +14,17 @@
         },{
             scope: 'email,public_profile',
             return_scopes: true
+        });
+    };
+
+    socialLoginApi.getUserDetails = function getUserDetails(loginResponse) {
+        FB.api('/me?fields=email,name', function(meResponse) {
+            var name = meResponse.name;
+            var email = buildUserEmail(loginResponse , meResponse.email);
+            var userId = loginResponse.authResponse.userID;
+            var token = loginResponse.authResponse.accessToken;
+
+            loginApi.facebookLogin(name, email, userId, token);
         });
     };
 
@@ -43,16 +47,14 @@
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
         // Logged into your app and Facebook.
-            testAPI();
+            // socialLoginApi.getUserDetails();
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                'into this app.';
+            console.log("User is logged into Facebook but not Minesweeper");
         } else {
             // The person is not logged into Facebook, so we're not sure if
             // they are logged into this app or not.
-            document.getElementById('status').innerHTML = 'Please log ' +
-              'into Facebook.';
+            console.log("User is not logged into Facebook");
         }
     }
 
@@ -106,14 +108,4 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-    // Here we run a very simple test of the Graph API after login is
-    // successful.  See statusChangeCallback() for when this call is made.
-    function testAPI() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-            console.log('Successful login for: ' + response.name);
-            document.getElementById('status').innerHTML =
-                'Thanks for logging in, ' + response.name + '!';
-        });
-    }
 })();

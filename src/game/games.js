@@ -209,12 +209,11 @@ var makeMove = function(gameId, userId, xPos, yPos) {
     updatePlayer(game, userId, applyScoringAfterTurn(
         game, xPos, yPos, openEmptyCellsAfterMove - openEmptyCellsPriorMove));
 
-    // Check if the game has ended as a result of the
-    // last player's move
+    // Switch to the next player
+    game = state.nextPlayer(game);
+
     if (game.hasEnded) {
         endGame(gameId);
-    } else {
-        game = state.nextPlayer(game);
     }
 
     games[gameId] = game;

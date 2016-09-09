@@ -353,7 +353,7 @@ exports.profile = function (request, response) {
     }
 
     var userid = request.params.id;
-    var sql = 'SELECT * FROM users WHERE id = ?';
+    var sql = queries.queries.getPlayerStats;
     
     db.connect(function (err, connection) {
        
@@ -375,14 +375,18 @@ exports.profile = function (request, response) {
             // @TODO:
             // Gather more information 
 
-            // The information that will be displayed on profile page 
+            // The information that will be displayed on profile page
+            var player = result[0];
+
             response.viewModel.userProfile = {
-                id : result[0].id,
-                email : result[0].email,
-                name : result[0].display_name
+                name : player.displayName,
+                gamesPlayed: player.gamesPlayed,
+                averageScore: player.averageScore,
+                bestScore: player.bestScore,
+                worstScore: player.worstScore
             };
 
-            response.viewModel.title = "Profile Page of " + result[0].display_name;
+            response.viewModel.title = "Profile Page of " + result[0].displayName;
             
             response.render('login/profile', response.viewModel);
       });

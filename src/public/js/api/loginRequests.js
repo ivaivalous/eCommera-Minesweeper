@@ -34,10 +34,8 @@
             userId: userId,
             accessToken: accessToken
         })
-        .done(function(data) {
-            if(data.success === true) {
-                // Handle success
-            }
+        .done(function() {
+            window.location = '/dashboard';
         });
     };
 })();

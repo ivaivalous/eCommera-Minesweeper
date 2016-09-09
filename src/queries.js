@@ -31,6 +31,18 @@ queries.updateUserBasicInfo = (
     "WHERE email = ?"
 );
 
+queries.getPlayerStats = (
+    "SELECT DISTINCT " +
+    "    users.display_name AS displayName, " +
+    "    count(games_played.score) AS gamesPlayed, " +
+    "    ROUND(AVG(games_played.score)) AS averageScore, " +
+    "    MAX(games_played.score) AS bestScore, " +
+    "    MIN(games_played.score) AS worstScore " +
+    "FROM users JOIN games_played " +
+    "ON users.id=games_played.user_id " +
+    "WHERE id = ?;"
+);
+
 queries.findEmail = "SELECT COUNT(*) as count FROM users WHERE email = ?";
 queries.getSalt = "SELECT salt FROM users WHERE email = ?";
 queries.getGameByID = "SELECT * FROM games WHERE id = ?";
