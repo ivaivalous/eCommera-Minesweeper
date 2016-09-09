@@ -46,8 +46,9 @@
         // Full docs on the response object can be found in the documentation
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-            // socialLoginApi.getUserDetails();
+            // According to Facebook, the user is logged in both in Facebook
+            // and in the game. You can use this to implement auto-login
+            // in the future.
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
             console.log("User is logged into Facebook but not Minesweeper");
