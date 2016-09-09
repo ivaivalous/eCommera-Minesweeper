@@ -17,3 +17,10 @@ handlebars.registerHelper('increment', function(value) {
     }
     return 0;
 });
+
+handlebars.registerHelper('gravatar', function(uri, width) {
+    return new handlebars.SafeString(
+        '<img src="https://www.gravatar.com/avatar/' +
+        uri + '" width="' + width + 'px" />'
+    );
+});

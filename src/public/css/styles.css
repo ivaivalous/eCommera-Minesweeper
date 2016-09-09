@@ -315,6 +315,11 @@ a.button:disabled,
 .item-list-table td {
     border-top: 1px solid #ddd;
     padding: 20px 10px;
+    vertical-align: middle;
+}
+
+.item-list-table td.user-large {
+    font-size: 20px;
 }
 
 .item-list-table tr:first-child td {

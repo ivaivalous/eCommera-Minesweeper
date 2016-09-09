@@ -36,3 +36,8 @@ exports.generatePassword = function () {
         ~~(Math.random() * (maxLength - minLength + 1) + minLength)
     ).toString('utf8');
 }
+
+// Get the MD5 hash of a string
+exports.md5 = function(input) {
+    return crypto.createHash('md5').update(input).digest("hex");
+};

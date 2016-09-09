@@ -90,6 +90,9 @@ module.exports = {
     social: {
         facebook: {
             applicationSecret: ""
+        },
+        gravatar: {
+            defaultImageUrl: "identicon"
         }
     }
 };

@@ -9,6 +9,7 @@ var auth = require('../authentication');
 var queries = require('../queries');
 var config = require('../config');
 var fb = require('../social/facebook');
+var gravatar = require('../social/gravatar');
 
 function createUser(data, callback) {
     var salt = auth.generateSalt();
@@ -380,6 +381,7 @@ exports.profile = function (request, response) {
 
             response.viewModel.userProfile = {
                 name : player.displayName,
+                avatarUri: gravatar.getGravatarUri(player.email),
                 gamesPlayed: player.gamesPlayed,
                 averageScore: player.averageScore,
                 bestScore: player.bestScore,

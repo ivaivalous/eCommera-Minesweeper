@@ -75,6 +75,9 @@ exports.ranking = function (request, response) {
             response.viewModel.users.push({
                 id : row.id,
                 name : row.display_name,
+                avatarUri: require('../social/gravatar').getGravatarUri(
+                    row.email
+                ),
                 score : row.score
             });
         }

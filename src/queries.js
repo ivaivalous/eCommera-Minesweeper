@@ -34,6 +34,7 @@ queries.updateUserBasicInfo = (
 queries.getPlayerStats = (
     "SELECT DISTINCT " +
     "    users.display_name AS displayName, " +
+    "    users.email, " +
     "    count(games_played.score) AS gamesPlayed, " +
     "    ROUND(AVG(games_played.score)) AS averageScore, " +
     "    MAX(games_played.score) AS bestScore, " +
@@ -81,7 +82,7 @@ queries.getPlayedGames = (
 
 queries.getPlayersByScore = (
     "SELECT SUM(games_played.score) AS score, " +
-    "users.id, users.display_name " +
+    "users.id, users.display_name, users.email " +
     "FROM games_played JOIN users ON " +
     "users.id = games_played.user_id " +
     "GROUP BY games_played.user_id " +

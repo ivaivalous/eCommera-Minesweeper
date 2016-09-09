@@ -11,7 +11,8 @@
                 {{#each users}}
                     <tr>
                         <td>{{increment @index}}</td>
-                        <td>
+                        <td class="user-large">
+                            {{gravatar this.avatarUri "20"}}
                             <a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
                         </td>
                         <td>
