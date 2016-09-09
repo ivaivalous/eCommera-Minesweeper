@@ -163,7 +163,6 @@ a:active {
 .page-container {
     margin: 10px;
     padding: 10px;
-    overflow: hidden;
     background: white;
     border: 1px solid #eee;
     border-radius: 4px;
@@ -481,14 +480,29 @@ input#login-facebook:hover {
 #timer {
     margin-left: auto;
     margin-right: auto;
+    margin-top: -15px;
+    padding: 10px;
     width: 300px;
 
     text-align: center;
+    border-radius: 0px 0px 2px 2px;
+    color: #fff;
+    font-size: 1.2em;
+    background-color: #F85800;
+    box-shadow: 0px 7px 11px -6px rgba(0, 0, 0, 0.75);
 }
 
 #game-screen {
-    vertical-align: top;
     text-align: center;
+    padding-bottom: 30px;
+}
+
+#game-screen div {
+    vertical-align: top;
+}
+
+#game-screen h2 {
+    margin-top: 0px;
 }
 
 #players-table td {
@@ -532,15 +546,18 @@ tr.now-playing td {
 
 .open {
     background-color: #E5E5E5;
+    cursor: default;
 }
 
 .mine {
     background-color: red;
+    cursor: default;
 }
 
 .number {
     background-color: #E5E5E5;
     font-weight: bold;
+    cursor: default;
 }
 
 #players-list-game-over {
