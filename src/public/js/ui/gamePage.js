@@ -1,13 +1,15 @@
 (function () {
     'use strict';
-    var TABLE_ROW = "tr";
-    var TABLE_CELL = "td";
-    var MILLIS_IN_SECOND = 1000;
-    var RELOAD_FROM_SERVER = 2000;
+    const TABLE_ROW = "tr";
+    const TABLE_CELL = "td";
+    const MILLIS_IN_SECOND = 1000;
+    const RELOAD_FROM_SERVER = 2000;
+    const VIBRATION_LENGTH_MS = 1000;
     var timeToShow = 0;
     var gameId = null;
     var initialMapDrawn = false;
     var hasGameEnded = false;
+    var supportsVibration = "vibrate" in navigator;
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
@@ -232,7 +234,12 @@
         var x = data.data.x;
         var y = data.data.y;
 
-        gameApi.makeMove(gameId, x, y, getGameStatus, function () {});
+        gameApi.makeMove(gameId, x, y, function(response) {
+            if (supportsVibration && response.success && response.hitMine) {
+                navigator.vibrate(VIBRATION_LENGTH_MS);
+            }
+            getGameStatus();
+        });
     };
 
     function handleError(response) {

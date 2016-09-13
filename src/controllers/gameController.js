@@ -116,9 +116,9 @@ var makeMove = function(request, response) {
     var y = parseInt(request.body.y);
 
     try {
-        var sucess = games.makeMove(gameId, userId, x, y);
+        var success = games.makeMove(gameId, userId, x, y);
         response.status(200);
-        response.json({success: sucess});
+        response.json(success);
     } catch(error) {
         // Invalid move
         console.log(error);

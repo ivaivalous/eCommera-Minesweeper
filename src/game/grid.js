@@ -21,6 +21,10 @@ function generateInitialMap(sizeX, sizeY, minesCount) {
 function buildEmptyGrid(sizeX, sizeY) {
     var grid = [];
 
+    Array.prototype.isMine = function(x, y) {
+        return grid[y][x].isMine;
+    };
+
     for(var y = 0; y < sizeY; y++) {
         grid[y] = [];
 

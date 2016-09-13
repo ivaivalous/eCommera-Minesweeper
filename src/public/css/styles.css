@@ -226,6 +226,19 @@ a:active {
     .profile-info {
         margin-left: 30px;
     }
+
+    .popup {
+        top: 50px;
+        width: 40%;
+        max-width: 400px;
+        min-width: 320px;
+        border-radius: 4px;
+    }
+
+    .item-list-table {
+        width: 100%;
+        text-align: left;
+    }
 }
 
 @media screen and (max-width: 799px) {
@@ -260,6 +273,33 @@ a:active {
     .profile-info {
         margin-left: 10px;
     }
+
+    .popup {
+        top: 40px;
+        max-width: 400px;
+        min-width: 250px;
+        max-height: calc(100vh - 20px);
+    }
+
+    .item-list-table {
+        max-width: 100%;
+        min-width: 300px;
+        text-align: left;
+    }
+}
+
+.popup {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: fixed;
+    z-index: 10;
+
+    overflow: auto;
+
+    background-color: #FFF;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 #players-list-panel table {
@@ -369,11 +409,6 @@ input#login-facebook:hover {
     margin-bottom: 10px;
 }
 
-.item-list-table {
-    width: 100%;
-    text-align: left;
-}
-
 .item-list-table th {
     padding: 10px;
     font-weight: normal;
@@ -424,23 +459,6 @@ input#login-facebook:hover {
 
 .hidden {
     display: none;
-}
-
-.popup {
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    position: fixed;
-    top: 50px;
-    width: 40%;
-    max-width: 400px;
-    min-width: 320px;
-    z-index: 10;
-
-    background-color: #FFF;
-    border-radius: 4px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .popup .header {

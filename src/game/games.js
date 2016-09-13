@@ -172,6 +172,13 @@ var endGame = function(gameId) {
     // be purged eventually.
 };
 
+var getMoveFeedback = function(isMoveLegal, hitMine) {
+    return {
+        success: isMoveLegal,
+        hitMine: hitMine
+    }
+};
+
 var makeMove = function(gameId, userId, xPos, yPos) {
     var game = null;
     var openEmptyCellsPriorMove = 0;
@@ -184,7 +191,7 @@ var makeMove = function(gameId, userId, xPos, yPos) {
         validation.verifyPlayerTurn(game, userId);
     } catch (error) {
         console.log(error);
-        return false;
+        return getMoveFeedback(false, false);
     }
 
     // Payload to execute if the player lands on a mine.
@@ -217,7 +224,7 @@ var makeMove = function(gameId, userId, xPos, yPos) {
     }
 
     games[gameId] = game;
-    return true;
+    return getMoveFeedback(true, game.map.isMine(xPos, yPos));;
 };
 
 // Apply after-turn player scoring
