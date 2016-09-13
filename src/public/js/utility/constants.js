@@ -19,7 +19,7 @@
         email: "#register-email",
         name: "#register-name",
         password: "#register-password",
-        passwordConfirmation: "#register-password-confirm",
+        passwordConfirm: "#register-password-confirm",
         submit: "#submit-registration",
         container: "#register",
         error: "#invalidsuccess"
@@ -78,7 +78,8 @@
             open: "open",
             mine: "mine",
             number: "number"
-        }
+        },
+        validationError: "validation-error"
     };
 
     constants.facebookAppId = "325243901154450";
@@ -90,6 +91,16 @@
     constants.regex = {
         emailValidation: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         displayNameValidation: /^.{2,64}$/,
-        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^\w])).{8,100}$/
+        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*([^\w])).{8,100}$/
+    };
+
+    constants.validationMessages = {
+        passwordsNoMatch: "Passwords don't match",
+        invalidEmail: "Please make sure to submit a valid email",
+        invalidName: "We'd be happy accept any name between 2 and 64 characters in length",
+        invalidPassword: (
+            "Your password has to be no shorter than 8 characters, " +
+            "with small and capital letters, and special characters. " +
+            "Tough, yes, but it keeps you safe.")
     };
 })();

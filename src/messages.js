@@ -20,7 +20,7 @@ var error = {
 var validation = {
     registrationEmail: "Please check if this is the right email address",
     registrationPassword: (
-        "Please make seure your password contains " + 
+        "Please make sure your password contains " + 
         "lower and uppercase letters, as well as digits and " +
         "special characters"
     ),

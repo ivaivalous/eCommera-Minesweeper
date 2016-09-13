@@ -239,6 +239,10 @@ a:active {
         width: 100%;
         text-align: left;
     }
+
+    .item-list-table td {
+        padding: 20px 10px;
+    }
 }
 
 @media screen and (max-width: 799px) {
@@ -282,9 +286,12 @@ a:active {
     }
 
     .item-list-table {
-        max-width: 100%;
-        min-width: 300px;
+        width: 100%;
         text-align: left;
+    }
+
+    .item-list-table td {
+        padding: 20px 4px;
     }
 }
 
@@ -416,7 +423,6 @@ input#login-facebook:hover {
 
 .item-list-table td {
     border-top: 1px solid #ddd;
-    padding: 20px 10px;
     vertical-align: middle;
 }
 
@@ -611,6 +617,41 @@ table.player-stats th {
 
 .error h2 {
     color: #062037;
+}
+
+.validation-error {
+    display: block;
+    position: relative;
+    background: #FFCCCC;
+    border: 1px solid #F85800;
+    border-radius: 1px;
+    margin: 20px auto 14px auto;
+    padding: 4px 10px;
+    box-shadow: 0 0 2px rgba(0,0,0,.3);
+    max-width: 300px;
+}
+
+.validation-error:after, .validation-error:before {
+    top: 100%;
+    right: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.validation-error:after {
+    border-color: border: 4px solid #c2e1f5;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.validation-error:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-top-color: #F85800;
+    border-width: 12px;
+    margin-left: -12px;
 }
 
 div#login-error {
