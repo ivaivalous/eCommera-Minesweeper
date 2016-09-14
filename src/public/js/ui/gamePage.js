@@ -81,7 +81,7 @@
 
         nameCell.text(player.name);
         nameCell.addClass(constants.classes.playerName);
-
+        nameCell.addClass(player.alive ? '' : constants.classes.linethrough );
         statusCell.addClass(
             player.alive ?
                 constants.classes.playerAlive :
@@ -185,8 +185,10 @@
     function drawInitialMap(map) {
         var mapX = parseInt(map.x);
         var mapY = parseInt(map.y);
-        var table = $(constants.locators.gamePage.map.table);
+        var table = $(constants.locators.gamePage.map.table_body);
+        var tb = $(constants.locators.gamePage.map.table);
 
+        tb.width((mapX*23).toString() + "px");
         for (var yIndex = 0; yIndex < mapY; yIndex++) {
             var row = $(document.createElement(TABLE_ROW));
 
@@ -230,7 +232,10 @@
             constants.classes.hiddenContainer);
     }
 
-    var clickCell = function(data) {
+    var clickCell = function(data , event) {
+        if(data.target.className != "cell closed"){
+            return
+        }
         var x = data.data.x;
         var y = data.data.y;
 

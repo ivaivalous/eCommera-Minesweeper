@@ -49,6 +49,7 @@ a:active {
     position: relative;
     padding-top: 140px;
     background: url(../img/banner.jpg) #0d314b;
+
 }
 
 .navigation-logo {
@@ -194,6 +195,14 @@ a:active {
     color: #888;
 }
 
+#game-map-body{
+    width: 100%;
+}
+    #game-grid-panel {
+
+        overflow: auto;
+
+    }
 @media screen and (min-width: 800px) {
     body {
         padding-left: 280px;
@@ -246,7 +255,8 @@ a:active {
 }
 
 @media screen and (max-width: 799px) {
-    .main-header {
+    .main-header,
+    #players-list-panel {
         width: 100%;
     }
 
@@ -260,9 +270,9 @@ a:active {
     }
 
     #game-grid-panel {
+        margin-bottom: 10px;
         display: block;
         width: 100%;
-        margin: auto;
     }
 
     #game-grid-panel table {
@@ -270,7 +280,8 @@ a:active {
     }
 
     #players-list-panel {
-        width: 80%;
+        width: 100%;
+        margin-top: 10px;
         margin: auto;
     }
 
@@ -312,6 +323,13 @@ a:active {
 #players-list-panel table {
     margin: auto;
 }
+
+#list-wrapper{
+    background: #f4f4f4;
+    padding: 15px 0px;
+}
+/*dashboard*/
+
 
 /* reusables */
 
@@ -467,7 +485,23 @@ input#login-facebook:hover {
     display: none;
 }
 
-.popup .header {
+.popup{
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: fixed;
+    width: 40%;
+    max-width: 400px;
+    min-width: 320px;
+    z-index: 10;
+    background-color: rgba(255,255,255,0.87);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.popup .header ,
+#players-list-panel .header {
     background: #0d314b url("../img/banner.jpg") repeat scroll 0 0;
 }
 
@@ -504,7 +538,7 @@ input#login-facebook:hover {
 #timer {
     margin-left: auto;
     margin-right: auto;
-    margin-top: -15px;
+    margin-bottom: 10px;
     padding: 10px;
     width: 300px;
 
@@ -546,8 +580,25 @@ tr.now-playing td {
     background-color: green;
 }
 
+/*#triangle-right {
+	width: 0;
+	height: 0;
+	border-top: 50px solid transparent;
+	border-left: 100px solid red;
+	border-bottom: 50px solid transparent;
+}*/
+#list-wrapper .lie_decoration{
+    text-decoration: line-through;
+
+}
+ #players-list-panel .dead {
+        background-size: 30px;
+        
+}
 .dead {
-    background-color: red;
+    background: url(../img/skull2.png) no-repeat;
+    background-size: 20px;
+
 }
 
 .player-name {
@@ -574,7 +625,14 @@ tr.now-playing td {
 }
 
 .mine {
-    background-color: red;
+    background-image: url(../img/mine-4.png) ;
+    background-size: 18px;
+    background-position: center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    box-sizing: border-box;
     cursor: default;
 }
 
@@ -591,6 +649,10 @@ tr.now-playing td {
 
 #players-table-game-over {
     margin: auto;
+}
+
+#start-new-game {
+    margin-top: 15px;
 }
 
 #invalidsuccess{

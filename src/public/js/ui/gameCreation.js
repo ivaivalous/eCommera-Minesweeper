@@ -6,7 +6,10 @@
         $(constants.locators.gameCreation.form).removeClass(
             constants.classes.hiddenContainer);
     });
-
+    //Click event for open the dashboard when the game is over
+    $(constants.locators.gamePage.gameOver.startNew).click(function (event) {
+        window.location = '/dashboard';
+    });
     // Click event for closing the game creation form popup upon
     // clicking cancel
     $(constants.locators.gameCreation.cancelButton).click(function (event) {

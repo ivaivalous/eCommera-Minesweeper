@@ -56,11 +56,13 @@
             button: "#start-game-button"
         },
         map: {
-            table: "#game-map-body"
+            table_body: "#game-map-body",
+            table: "#game-map"
         },
         gameOver: {
             popup: "#game-over-screen",
-            playerListing: "#players-table-game-over"
+            playerListing: "#players-table-game-over",
+            startNew: "#start-new-game"
         }
     };
 
@@ -71,6 +73,7 @@
         playerAlive: "status-cell alive",
         playerDead: "status-cell dead",
         playerName: "player-name",
+        linethrough: "lie_decoration",
         score: "score-cell",
         cell: {
             cell: "cell",
