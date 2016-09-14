@@ -29,7 +29,7 @@ module.exports = {
 	regex: {
         emailValidation: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         displayNameValidation: /^.{2,64}$/,
-        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w])).{8,100}$/,
+        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w]).{8,100}$/,
         roomNameValidation: /^.{3,32}$/
     },
     gameBoundaries: {
