@@ -623,12 +623,11 @@ table.player-stats th {
     display: block;
     position: relative;
     background: #FFCCCC;
-    border: 1px solid #F85800;
-    border-radius: 1px;
+    border-radius: 2px;
     margin: 20px auto 14px auto;
     padding: 4px 10px;
-    box-shadow: 0 0 2px rgba(0,0,0,.3);
     max-width: 300px;
+    text-align: justify;
 }
 
 .validation-error:after, .validation-error:before {
@@ -649,7 +648,7 @@ table.player-stats th {
 }
 .validation-error:before {
     border-color: rgba(194, 225, 245, 0);
-    border-top-color: #F85800;
+    border-top-color: #FFCCCC;
     border-width: 12px;
     margin-left: -12px;
 }

@@ -97,7 +97,7 @@
     constants.validationMessages = {
         passwordsNoMatch: "Passwords don't match",
         invalidEmail: "Please make sure to submit a valid email",
-        invalidName: "We'd be happy accept any name between 2 and 64 characters in length",
+        invalidName: "We'll happily accept any name between 2 and 64 characters in length",
         invalidPassword: (
             "Your password has to be no shorter than 8 characters, " +
             "with small and capital letters, and special characters. " +

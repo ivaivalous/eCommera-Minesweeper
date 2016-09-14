@@ -24,44 +24,55 @@
 
         clearValidationErrors();
 
+        try {
+            validateRegistrationForm();
+        } catch (e) {
+            displayValidationError(e.locator, e.message);
+            return;
+        }
+
+        loginApi.register(email, displayName, password);
+    }
+
+    function validateRegistrationForm() {
+        var email = $(constants.locators.register.email).val();
+        var displayName = $(constants.locators.register.name).val();
+        var password = $(constants.locators.register.password).val();
+
+        // Build an error object for displaying validation errors
+        var buildError = function(locator, message) {
+            return {
+                locator: locator,
+                message: message
+            };
+        };
+
         // Is the display name the user chose valid?
         if (!isDisplayNameValid(displayName)) {
-            displayValidationError(
+            throw buildError(
                 constants.locators.register.name,
                 constants.validationMessages.invalidName);
-
-            return;
         }
 
         // Is the email the user submitted valid?
         if (!isEmailValid(email)) {
-            displayValidationError(
+            throw buildError(
                 constants.locators.register.email,
                 constants.validationMessages.invalidEmail);
-
-            return;
         }
 
         if (!passwordValid(password)) {
-            displayValidationError(
+            throw buildError(
                 constants.locators.register.password,
                 constants.validationMessages.invalidPassword);
-
-            return;
         }
 
         // Do the password and its confirmation match?
         if (!passwordsMatch()) {
-            displayValidationError(
-                constants.locators.register.email,
+            throw buildError(
+                constants.locators.register.passwordConfirm,
                 constants.validationMessages.passwordsNoMatch);
-
-            return;
         }
-
-        loginApi.register(
-            email, displayName, password
-        );
     }
 
     function loginWithFacebook() {
