@@ -22,7 +22,7 @@
         passwordConfirm: "#register-password-confirm",
         submit: "#submit-registration",
         container: "#register",
-        error: "#invalidsuccess"
+        successContainer: "#registration-success"
     };
 
     constants.locators.gameListing = {
@@ -101,6 +101,10 @@
         invalidPassword: (
             "Your password has to be no shorter than 8 characters, " +
             "with small and capital letters, and special characters. " +
-            "Tough, yes, but it keeps you safe.")
+            "Tough, yes, but it keeps you safe."),
+        registrationSuccess: (
+            "Registration went A-OK! " +
+            "You can now log into your account. " +
+            "You will be redirected to the login page in 5 seconds")
     };
 })();

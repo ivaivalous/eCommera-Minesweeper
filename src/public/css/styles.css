@@ -593,11 +593,6 @@ tr.now-playing td {
     margin: auto;
 }
 
-#invalidsuccess{
-    color: darkred;
-    font-size: 14px;
-}
-
 .successful{    
     color: darkred;
     font-size: 14px;
@@ -617,6 +612,15 @@ table.player-stats th {
 
 .error h2 {
     color: #062037;
+}
+
+.success-message {
+    background-color: rgba(92, 224, 125, 0.3);
+    padding: 20px;
+    border-left: 2px solid #5DA16A;
+    max-width: 800px;
+    text-align: left;
+    margin-bottom: 20px;   
 }
 
 .validation-error {
@@ -653,7 +657,7 @@ table.player-stats th {
     margin-left: -12px;
 }
 
-div#login-error {
+div#login-error, div#registration-error {
     margin-bottom: 20px;
     text-align: left;
 }

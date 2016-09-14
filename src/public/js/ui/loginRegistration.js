@@ -22,17 +22,42 @@
         var password = $(constants.locators.register.password).val();
         var confirmation =  $(constants.locators.register.passwordConfirm).val();
 
+        // Clear any validation errors that might've occured during
+        // previous submissions
         clearValidationErrors();
 
         try {
+            // Make sure all user-supplied data is valid
             validateRegistrationForm();
         } catch (e) {
+            // If any issues were discovered with user data,
+            // let the user know and halt the registration process
             displayValidationError(e.locator, e.message);
             return;
         }
 
-        loginApi.register(email, displayName, password);
+        // Proceed with actual registration; display an error
+        // message if the server has found any issue with the data
+        loginApi.register(
+            email, displayName, password,
+            displayRegistrationSuccessMessage,
+            displayRegistrationBackendError
+        );
     }
+
+    // Call when registration was successful to provide the user with feedback.
+    function displayRegistrationSuccessMessage(response) {
+        displaySuccessMessage(
+            constants.validationMessages.registrationSuccess);
+    };
+
+    // Even though there is front-end validation of user-supplied data
+    // no input from the user can really be trusted to have passed validation.
+    // Display any validation errors discovered by the server.
+    function displayRegistrationBackendError(error) {
+        displayValidationError(
+            constants.locators.register.email, error.message);
+    };
 
     function validateRegistrationForm() {
         var email = $(constants.locators.register.email).val();
@@ -106,6 +131,12 @@
     function isDisplayNameValid(displayName) {
         var re = constants.regex.displayNameValidation;
         return re.test(displayName);
+    }
+
+    // Display a success message on the register page
+    function displaySuccessMessage(message) {
+        $(constants.locators.register.successContainer).removeClass(
+            constants.classes.hiddenContainer).text(message);
     }
 
     function displayValidationError(locator, errorMessage) {
