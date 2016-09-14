@@ -145,6 +145,8 @@ var runLoginQuery = function(
                 request.session.userEmail = email;
                 request.session.userId = result.id;
                 request.session.displayName = result.display_name;
+                request.session.socialNetworkUser = (
+                    result.social_network_user === 1);
 
                 // TODO redirect to another page
                 response.redirect('/dashboard');
@@ -338,7 +340,7 @@ exports.register = function (request, response) {
                 return;
             }            
             response.status(200);
-            response.send({success: true, message : 'Superb, now you can go to the login page and play some games!'});
+            response.send({success: true});
 
         });
     });
@@ -396,8 +398,16 @@ exports.profile = function (request, response) {
 };
 
 exports.show = function (request, response) {
+    if (!request.session.isUserLogged) {
+        response.redirect('/');
+        return;
+    }
+
+    console.log(response.viewModel);
+
+    response.viewModel.socialNetworkUser = true;
     response.viewModel.header.userMenuItems.account.current = true;
-    response.viewModel.title = "Change your password ";
+    response.viewModel.title = "Update your account";
     response.render('login/account', response.viewModel);    
 };
 

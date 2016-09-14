@@ -8,7 +8,6 @@
 
 var db = require('../database');
 var auth = require('../authentication');
-var queries = require('../queries');
 var config = require('../config');
 
 

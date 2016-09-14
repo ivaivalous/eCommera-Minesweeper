@@ -1,10 +1,32 @@
-{{#if wrongpasswordtitle}}
-    <h2 class='successful'> {{wrongpasswordtitle}}</h2>
+{{#if session.socialNetworkUser}}
+    <h2>Hey, {{session.displayName}} from Facebook!</h2>
+    <p>
+        You can edit your profile - display name, email and password by going to your account on Facebook.
+    </p>
+{{else}}
+    <div class="update-screen">
+        <form class="user-form">
+        <div>
+            <label for="update-name">Display Name</label>
+            <input type="text" id="update-name" value="{{session.displayName}}" />
+        </div>
+        <div>
+            <label for="update-email">Email Address</label>
+            <input type="email" id="update-email" value="{{session.userEmail}}"/>
+        </div>
+        <div>
+            <label for="update-prev-pass">Previous password</label>
+            <input type="password" placeholder="***" id="update-prev-pass" />
+        </div>
+        <div>
+            <label for="update-new-pass">New password</label>
+            <input type="password" id="update-new-pass" />
+        </div>
+        <div>
+            <label for="update-new-pass-confirm">Confirm new password</label>
+            <input type="password" id="update-new-pass-confirm" />
+        </div>
+            <button id="update-submit" type="submit">Submit</button>
+        </form>
+    </div>
 {{/if}}
-<form action="/account" method="POST">
-    <input type="email" name="email" value="{{session.userEmail}}" disabled/>
-    <input type="password" placeholder="Old Password" name=oldpassword />
-    <input type="password" placeholder="New Password" name="password"/>
-    <input type="password" placeholder="Confirm" name="confirmpassword"/>
-    <button type="submit">Submit</button>
-</form>

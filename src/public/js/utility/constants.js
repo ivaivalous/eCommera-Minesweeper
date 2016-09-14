@@ -64,6 +64,15 @@
         }
     };
 
+    constants.locators.updatePage = {
+        nameInput: "#update-name",
+        emailInput: "#update-email",
+        previousPasswordInput: "#update-prev-pass",
+        newPasswordInput: "#update-new-pass",
+        newPasswordInputConfirm: "#update-new-pass-confirm",
+        submit: "#update-submit"
+    };
+
     constants.classes = {
         hiddenContainer: "hidden",
         centered: "centered",
@@ -102,6 +111,7 @@
             "Your password has to be no shorter than 8 characters, " +
             "with small and capital letters, and special characters. " +
             "Tough, yes, but it keeps you safe."),
+        missingPassword: "We need your current password so we can confirm your indentity",
         registrationSuccess: (
             "Registration went A-OK! " +
             "You can now log into your account. " +

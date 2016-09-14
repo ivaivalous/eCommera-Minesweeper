@@ -15,6 +15,18 @@
         loginWithFacebook();
     });
 
+    // "Register" button on the register page - handle registration
+    $(constants.locators.register.submit).click(function (event) {
+        event.preventDefault();
+        register();
+    });
+
+    // "Submit" button on the account page - handle profile update
+    $(constants.locators.updatePage.submit).click(function (event) {
+        event.preventDefault();
+        updateProfile();
+    });
+
     // Submit registration information to the API
     function register() {
         var email = $(constants.locators.register.email).val();
@@ -45,6 +57,35 @@
         );
     }
 
+    function updateProfile() {
+        var email;
+        var displayName;
+        var previousPassword;
+        var newPassword;
+        var newPasswordConfirmation;
+
+        // Clear any validation errors that might've occured during
+        // previous submissions
+        clearValidationErrors();
+
+        try {
+            // Make sure all user-supplied data is valid
+            validateUpdateForm();
+        } catch (e) {
+            // If any issues were discovered with user data,
+            // let the user know and halt the registration process
+            displayValidationError(e.locator, e.message, true);
+            return;
+        }
+
+        // Don't do anything about the old password:
+        // the server will validate it
+
+        // Send the updateProfile request to the server
+        // Deal with the response - display error/success message
+
+    }
+
     // Call when registration was successful to provide the user with feedback.
     function displayRegistrationSuccessMessage(response) {
         displaySuccessMessage(
@@ -63,6 +104,8 @@
         var email = $(constants.locators.register.email).val();
         var displayName = $(constants.locators.register.name).val();
         var password = $(constants.locators.register.password).val();
+        var passwordConfirmation = $(
+            constants.locators.register.passwordConfirm).val();
 
         // Build an error object for displaying validation errors
         var buildError = function(locator, message) {
@@ -93,28 +136,75 @@
         }
 
         // Do the password and its confirmation match?
-        if (!passwordsMatch()) {
+        if (!passwordsMatch(password, passwordConfirmation)) {
             throw buildError(
                 constants.locators.register.passwordConfirm,
                 constants.validationMessages.passwordsNoMatch);
         }
     }
 
+    function validateUpdateForm() {
+        const locators = constants.locators.updatePage;
+
+        var email = $(locators.emailInput).val();
+        var displayName = $(locators.nameInput).val();
+
+        var currentPassword = $(locators.previousPasswordInput).val();
+        var newPassword = $(locators.newPasswordInput).val();
+        var newPasswordConfirm = $(locators.newPasswordInputConfirm).val();
+
+        // Build an error object for displaying validation errors
+        var buildError = function(locator, message) {
+            return {
+                locator: locator,
+                message: message
+            };
+        };
+
+        // Is the display name the user chose valid?
+        if (!isDisplayNameValid(displayName)) {
+            throw buildError(
+                locators.nameInput,
+                constants.validationMessages.invalidName);
+        }
+
+        // Is the email the user submitted valid?
+        if (!isEmailValid(email)) {
+            throw buildError(
+                locators.emailInput,
+                constants.validationMessages.invalidEmail);
+        }
+
+        // Only verify the user has filled up the previous password
+        // It can't be regex-validated as the regex could've been
+        // changed since the user set the password.
+        if (!currentPassword.length) {
+            throw buildError(
+                locators.previousPasswordInput,
+                constants.validationMessages.missingPassword);
+        }
+
+        if (!passwordValid(newPassword)) {
+            throw buildError(
+                locators.newPasswordInput,
+                constants.validationMessages.invalidPassword);
+        }
+
+        // Do the password and its confirmation match?
+        if (!passwordsMatch(newPassword, newPasswordConfirm)) {
+            throw buildError(
+                locators.newPasswordInputConfirm,
+                constants.validationMessages.passwordsNoMatch);
+        }
+
+        console.log("All is fine lol");
+    }
+
     function loginWithFacebook() {
         socialLoginApi.login();
     }
 
-    // "Register" button on the register page - handle registration
-    $(constants.locators.register.submit).click(function (event) {
-        event.preventDefault();
-        register();
-    });
-
-    function passwordsMatch() {
-        var password = $(constants.locators.register.password).val();
-        var passwordConfirmation = $(
-            constants.locators.register.passwordConfirm).val();
-
+    function passwordsMatch(password, passwordConfirmation) {
         return password.length && password === passwordConfirmation;
     }
 
@@ -139,13 +229,17 @@
             constants.classes.hiddenContainer).text(message);
     }
 
-    function displayValidationError(locator, errorMessage) {
+    function displayValidationError(locator, errorMessage, attachToParent) {
         var errorSpan = $("<span></span>");
 
         errorSpan.addClass(constants.classes.validationError);
         errorSpan.text(errorMessage);
 
-        $(locator).before(errorSpan);
+        if (attachToParent) {
+             $(locator).parent().before(errorSpan);
+        } else {
+            $(locator).before(errorSpan);
+        }
     }
 
     // Before displaying a validation error message, you can clear any
