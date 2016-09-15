@@ -3,8 +3,6 @@
     generating hashesm salts and passwords.
 */
 
-"use strict";
-
 var crypto = require('crypto');
 var config = require('./config');
 
@@ -35,7 +33,7 @@ exports.generatePassword = function () {
     return crypto.randomBytes(
         ~~(Math.random() * (maxLength - minLength + 1) + minLength)
     ).toString('utf8');
-}
+};
 
 // Get the MD5 hash of a string
 exports.md5 = function(input) {

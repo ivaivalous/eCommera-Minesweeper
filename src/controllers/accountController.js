@@ -2,8 +2,6 @@
     Handle user login, registration and account detail changes.
 */
 
-"use strict";
-
 var db = require('../database');
 var auth = require('../authentication');
 var queries = require('../queries');
@@ -471,14 +469,14 @@ exports.change = function (request, response) {
                 validateUserUpdateData(
                     user, displayName, email,
                     passwordChangeNeeded, newPassword);
-            } catch (error) {
-                respondUpdateError(response, error);
+            } catch (updateError) {
+                respondUpdateError(response, updateError);
                 return;
             }
 
             // If the submitted email is different from the current one,
             // verify no other user is already using this address
-            checkEmailAvailability(email, function(error, isFree) {
+            checkEmailAvailability(email, function(checkError, isFree) {
                 if (!isFree && email !== user.email) {
                     respondUpdateError(response, "EmailTaken");
                     return;
@@ -502,12 +500,12 @@ function buildUpdateErrorResponse(message) {
     return {
         success: false,
         message: message
-    }
+    };
 }
 
 function respondUpdateError(response, message) {
     response.status(400);
-    response.send(buildUpdateErrorResponse(message))
+    response.send(buildUpdateErrorResponse(message));
 }
 
 // Get a user by its ID and perform action with the data

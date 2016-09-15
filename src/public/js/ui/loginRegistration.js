@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 (function () {
     'use strict';
 
@@ -270,6 +271,6 @@
     // Before displaying a validation error message, you can clear any
     // that have been displayed already.
     function clearValidationErrors() {
-        $('.' + constants.classes.validationError).remove()
+        $('.' + constants.classes.validationError).remove();
     }
 })();

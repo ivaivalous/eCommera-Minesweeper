@@ -3,8 +3,6 @@
     making moves, checking game status.
 */
 
-"use strict";
-
 var games = require('../game/games');
 var messages = require('../messages');
 var validation = require('../game/gameValidation');

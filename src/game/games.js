@@ -3,8 +3,6 @@
     for player intecation with them.
 */
 
-"use strict";
-
 var config = require('../config');
 var messages = require('../messages');
 var validation = require('./gameValidation');
@@ -118,7 +116,7 @@ var getGameStatus = function(gameId, userId) {
     gameSummary.gameStartsIn = game.gameStartsIn;
     gameSummary.hasStarted = game.hasStarted;
     gameSummary.hasEnded = game.hasEnded;
-    gameSummary.canBeStarted = canGameBeStarted(game),
+    gameSummary.canBeStarted = canGameBeStarted(game);
     gameSummary.map = getGameMap(game);
     gameSummary.players = game.players;
     gameSummary.thinkTime = game.thinkTime;
@@ -176,7 +174,7 @@ var getMoveFeedback = function(isMoveLegal, hitMine) {
     return {
         success: isMoveLegal,
         hitMine: hitMine
-    }
+    };
 };
 
 var makeMove = function(gameId, userId, xPos, yPos) {
@@ -224,7 +222,7 @@ var makeMove = function(gameId, userId, xPos, yPos) {
     }
 
     games[gameId] = game;
-    return getMoveFeedback(true, game.map.isMine(xPos, yPos));;
+    return getMoveFeedback(true, game.map.isMine(xPos, yPos));
 };
 
 // Apply after-turn player scoring
@@ -243,7 +241,7 @@ var applyScoringAfterTurn = function(game, xPos, yPos, numberOfOpenCells) {
             game.players[playerIndex] = scoring.addEmptyFieldsExpandedScore(
                 player, numberOfOpenCells);
         }
-    }
+    };
 };
 
 // Prior to letting the player make a move,

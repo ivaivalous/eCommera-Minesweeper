@@ -2,8 +2,6 @@
     Handle the home page, dashboard and player ranking.
 */
 
-"use strict";
-
 var db = require('../database');
 var queries = require('../queries');
 

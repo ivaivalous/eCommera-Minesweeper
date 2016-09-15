@@ -2,8 +2,6 @@
     A list of MySQL queries used throughout the game.
 */
 
-'use strict';
-
 var queries = {};
 exports.queries = queries;
 
@@ -40,7 +38,7 @@ queries.updateUserBasicInfoById = (
 
 queries.updateUserInfoById = (
     "UPDATE users SET email = ?, display_name = ?, password = ?, salt = ? " +
-    " WHERE id = ?"
+    "WHERE id = ?"
 );
 
 queries.getPlayerStats = (

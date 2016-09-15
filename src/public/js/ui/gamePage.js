@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
 (function () {
     'use strict';
+
     const TABLE_ROW = "tr";
     const TABLE_CELL = "td";
     const MILLIS_IN_SECOND = 1000;

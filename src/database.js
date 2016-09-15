@@ -3,8 +3,6 @@
     It's recommended you rely on this module for all DB interaction.
 */
 
-"use strict";
-
 var mysql = require('mysql');
 
 var _credentials = {

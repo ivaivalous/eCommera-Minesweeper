@@ -3,8 +3,6 @@
     on the user's email address.
 */
 
-"use strict";
-
 var config = require('../config');
 var auth = require('../authentication');
 var https = require("https");

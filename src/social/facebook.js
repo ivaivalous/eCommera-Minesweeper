@@ -4,8 +4,6 @@
     to prevent impersonation.
 */
 
-"use strict";
-
 var config = require('../config');
 var https = require("https");
 

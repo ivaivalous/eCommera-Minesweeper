@@ -4,8 +4,6 @@
     set up, if a game is join-able and whether a specific player may join it.
 */
 
-"use strict";
-
 var config = require('../config');
 var messages = require('../messages');
 
@@ -82,7 +80,7 @@ var verifyGameJoinable = function(game) {
 
         throw {error: messages.error.gameRoomJoinGeneral};
     }
-}
+};
 
 var canGameBeStarted = function (game, userId) {
     var minPlayers = config.gameBoundaries.minPlayersToStart;
