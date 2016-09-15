@@ -58,11 +58,12 @@
     }
 
     function updateProfile() {
-        var email;
-        var displayName;
-        var previousPassword;
-        var newPassword;
-        var newPasswordConfirmation;
+        var locators = constants.locators.updatePage;
+        var email = $(locators.emailInput).val();
+        var displayName = $(locators.nameInput).val();
+        var previousPassword = $(locators.previousPasswordInput).val();
+        var newPassword = $(locators.newPasswordInput).val();
+        var newPasswordConfirmation = $(locators.newPasswordInputConfirm).val();
 
         // Clear any validation errors that might've occured during
         // previous submissions
@@ -83,14 +84,19 @@
 
         // Send the updateProfile request to the server
         // Deal with the response - display error/success message
-
+        loginApi.updateAccount(
+            displayName, email, previousPassword, newPassword,
+            displayUpdateSuccessMessage,
+            displayUpdateBackendError
+        );
     }
 
     // Call when registration was successful to provide the user with feedback.
     function displayRegistrationSuccessMessage(response) {
         displaySuccessMessage(
+            constants.locators.register.successContainer,
             constants.validationMessages.registrationSuccess);
-    };
+    }
 
     // Even though there is front-end validation of user-supplied data
     // no input from the user can really be trusted to have passed validation.
@@ -98,7 +104,20 @@
     function displayRegistrationBackendError(error) {
         displayValidationError(
             constants.locators.register.email, error.message);
-    };
+    }
+
+    // Call when the user's account has been updated successful to let her know
+    function displayUpdateSuccessMessage(response) {
+        displaySuccessMessage(
+            constants.locators.updatePage.successContainer,
+            constants.validationMessages.updateSuccess);
+    }
+
+    // Display any update form errors reported by the backend
+    function displayUpdateBackendError(response) {
+        displayValidationError(
+            constants.locators.updatePage.nameInput, response.message, true);
+    }
 
     function validateRegistrationForm() {
         var email = $(constants.locators.register.email).val();
@@ -184,6 +203,14 @@
                 constants.validationMessages.missingPassword);
         }
 
+        // The user may leave the new password and new password
+        // confirmation inputs empty if she doesn't want to have
+        // her password changed.
+        // It is still necessary to supply the current password.
+        if (!newPassword.length && !newPasswordConfirm.length) {
+            return;
+        }
+
         if (!passwordValid(newPassword)) {
             throw buildError(
                 locators.newPasswordInput,
@@ -196,8 +223,6 @@
                 locators.newPasswordInputConfirm,
                 constants.validationMessages.passwordsNoMatch);
         }
-
-        console.log("All is fine lol");
     }
 
     function loginWithFacebook() {
@@ -224,8 +249,8 @@
     }
 
     // Display a success message on the register page
-    function displaySuccessMessage(message) {
-        $(constants.locators.register.successContainer).removeClass(
+    function displaySuccessMessage(successLocator, message) {
+        $(successLocator).removeClass(
             constants.classes.hiddenContainer).text(message);
     }
 

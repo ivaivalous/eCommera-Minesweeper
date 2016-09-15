@@ -39,9 +39,26 @@
             email: email,
             userId: userId,
             accessToken: accessToken
-        })
-        .done(function() {
+        }).done(function() {
             window.location = '/dashboard';
+        });
+    };
+
+    loginApi.updateAccount = function(
+            name, email, currentPassword, newPassword,
+            successCallback, errorCallback) {
+
+        $.post('account', {
+            name: name,
+            email: email,
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }).done(function(response) {
+            if (response.success) {
+                successCallback(response);
+            } else {
+                errorCallback(response);
+            }
         });
     };
 })();

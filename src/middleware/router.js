@@ -22,9 +22,12 @@ router.post('/facebookLogin', accountController.facebookLogin);
 router.get('/register', accountController.registerPage);
 router.post('/register', accountController.register);
 
-router.get('/user/:id', accountController.profile); // visit a user's public profile
-router.get('/account', accountController.show); //change password page
-router.post('/account', accountController.change); //the actual change of password 
+// A user profile page, with stats and avatar
+router.get('/user/:id', accountController.profile);
+// The update account page
+router.get('/account', accountController.show);
+// Actual user update account requests go here
+router.post('/account', accountController.change);
 
 // game communication
 router.get('/list', authenticated(gameController.listGames));

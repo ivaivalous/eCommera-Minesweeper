@@ -27,7 +27,6 @@ function validateRegisterInput(data) {
     return (isEmailValid(data.email) &&
         isDisplayNameValid(data.name) &&
             isPasswordValid(data.password));
-
 }
 
 function whatWentWrong(data){
@@ -138,9 +137,7 @@ var runLoginQuery = function(
             // 2. She is a social network user and socialNetworkLogin is true
             // socialNetworkLogin is used so that verification with the SN API
             // is done in advance
-            if ((hash === pass && !result.social_network_user) ||
-                    (socialNetworkLogin && result.social_network_user)) {
-
+            if (canLogin(password, socialNetworkLogin, result)) {
                 request.session.isUserLogged = true;
                 request.session.userEmail = email;
                 request.session.userId = result.id;
@@ -158,6 +155,27 @@ var runLoginQuery = function(
         }
     });
 };
+
+// Check if login is possible with the given credentials
+function canLogin(attemptedPassword, socialLogin, user) {
+    var salt = user.salt;
+    var currentPasswordHash = user.password;
+    var attemptedPasswordHash = auth.hashPassword(attemptedPassword, salt);
+    var socialNetworkUser = user.social_network_user;
+
+    if (!socialNetworkUser && currentPasswordHash === attemptedPasswordHash) {
+        // Successfull login with password
+        return true;
+    }
+
+    if (socialNetworkUser && socialLogin) {
+        // Successful login via social network - verification
+        // with the social network API must be done in advance
+        return true;
+    }
+
+    return false;
+}
 
 // Login or register a Facebook user
 exports.facebookLogin = function (request, response) {
@@ -254,7 +272,6 @@ var updateUserBasicInfo = function(oldEmail, newEmail, newDisplayName) {
             [newEmail, newDisplayName, oldEmail],
             function (error, results) {
                 console.log("Updated user");
-                // TODO checks
             }
     );
 };
@@ -271,7 +288,6 @@ var transformUserToSocialNetworkUser = function(
             [displayName, socialNetworkId, email],
             function (error, results) {
                 console.log("User " + email + " is now a SN user");
-                // TODO checks
             }
     );
 };
@@ -403,69 +419,121 @@ exports.show = function (request, response) {
         return;
     }
 
-    console.log(response.viewModel);
-
     response.viewModel.socialNetworkUser = true;
     response.viewModel.header.userMenuItems.account.current = true;
     response.viewModel.title = "Update your account";
     response.render('login/account', response.viewModel);    
 };
 
-exports.change = function (request, response) {
-    var salt, currentPassword;
-    var updatePassword = "UPDATE users SET password = ?, salt = ? WHERE email = ?";
-    var getSaltAndPassword = "SELECT salt, password FROM users WHERE email = ?";
-    var input = {
-        email : request.session.userEmail,
-        oldpassword : request.body.oldpassword,
-        password : request.body.password,
-        confirmpassword : request.body.confirmpassword
-    };
+// Generate the necessary query and parameters for updating a users
+function getUpdateQuery(
+    isPasswordChangeNeeded, email, displayName, newPassword, userId) {
 
-    if(isPasswordValid(input.password)){
-         if(input.password == input.confirmpassword){
-            db.connect(function (err, connection) {
-                if(err){
-                // render error page
-                response.viewModel.error = err;
-                response.render('error/500', response.viewModel);
+    var query = {};
+
+    if (isPasswordChangeNeeded) {
+        var salt = auth.generateSalt();
+        var hash = auth.hashPassword(newPassword, salt);
+
+        query.query = queries.queries.updateUserInfoById;
+        query.params = [email, displayName, hash, salt, userId];
+    } else {
+        query.query = queries.queries.updateUserBasicInfoById;
+        query.params = [email, displayName, userId];
+    }
+
+    return query;
+}
+
+exports.change = function (request, response) {
+    var userId = request.session.userId;
+    var displayName = request.body.name;
+    var email = request.body.email;
+    var currentPassword = request.body.currentPassword;
+    var newPassword = request.body.newPassword;
+    var passwordChangeNeeded = newPassword.length > 0;
+    var query = getUpdateQuery(
+        passwordChangeNeeded, email, displayName, newPassword, userId);
+
+    var verifyUserChange = function(error, results) {
+        if (error || !results.length) {
+            respondUpdateError(response, "NoSuchUser");
+            return;
+        } else {
+            var user = results[0];
+
+            if (!canLogin(currentPassword, false, user)) {
+                respondUpdateError(response, "InvalidCredentials");
                 return;
+            }
+
+            try {
+                validateUserUpdateData(
+                    user, displayName, email,
+                    passwordChangeNeeded, newPassword);
+            } catch (error) {
+                respondUpdateError(response, error);
+                return;
+            }
+
+            // If the submitted email is different from the current one,
+            // verify no other user is already using this address
+            checkEmailAvailability(email, function(error, isFree) {
+                if (!isFree && email !== user.email) {
+                    respondUpdateError(response, "EmailTaken");
+                    return;
                 }
-                connection.query(getSaltAndPassword, [input.email] , function(err, result) {
-                    if(err){
-                        response.viewModel.error = err;
-                        response.render('error/500', response.viewModel);
-                        return;
-                    }
-                    if(result.length === 0){
-                        response.viewModel.title = 'No user found try again';
-                        response.redirect('/account');
-                        return;
-                    }
-                    salt = result[0].salt;
-                    currentPassword = result[0].password;
-                    if(auth.hashPassword(input.oldpassword, salt) == currentPassword){
-                        var newSalt = auth.generateSalt();
-                        var newPassword = auth.hashPassword(input.password, newSalt);
-                        connection.query(updatePassword, [newPassword, newSalt, input.email] , function(err){
-                            if(err){
-                                response.viewModel.error = err;
-                                response.render('error/500', response.viewModel);
-                            }
-                            response.viewModel.title = "Change your password ";
-                            response.viewModel.wrongpasswordtitle = 'Password changed';
-                            response.render('login/account', response.viewModel);
-                            return;
-                        });
-                    }
+
+                // Update the user in DB
+                db.query(query.query, query.params, function () {
+                    // Respond the change was successful
+                    request.session.displayName = displayName;
+                    request.session.email = email;
+                    response.send({success: true});
                 });
             });
-        
         }
-    } else {
-        response.viewModel.title = "Change your password ";
-        response.viewModel.wrongpasswordtitle = 'Your password have to contain a-Z 0-9 and special symbols';
-        response.render('login/account', response.viewModel);
-        return;
-    }
+    };
+
+    withUser(userId, verifyUserChange);
 };
+
+function buildUpdateErrorResponse(message) {
+    return {
+        success: false,
+        message: message
+    }
+}
+
+function respondUpdateError(response, message) {
+    response.status(400);
+    response.send(buildUpdateErrorResponse(message))
+}
+
+// Get a user by its ID and perform action with the data
+function withUser(id, action) {
+    var query = queries.queries.getUserById;
+    db.query(query, [id], action);
+}
+
+function validateUserUpdateData(
+        user, newDisplayName, newEmail,
+        passwordChangeNeeded, newPassword) {
+
+    // Check if the user is a SN user: they can't update their
+    // accounts through Minesweeper
+    if (user.social_network_user === 1) {
+        throw "SNUser";
+    }
+
+    // Validate user-submitted data, client-side validation
+    // can't be trusted
+    if (!isEmailValid(newEmail) || !isDisplayNameValid(newDisplayName)) {
+        throw "InvalidData";
+    }
+
+    // Validate the new password if it was submitted
+    if (passwordChangeNeeded && !isPasswordValid(newPassword)) {
+        throw "InvalidNewPassword";
+    }
+}

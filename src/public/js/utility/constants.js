@@ -70,7 +70,8 @@
         previousPasswordInput: "#update-prev-pass",
         newPasswordInput: "#update-new-pass",
         newPasswordInputConfirm: "#update-new-pass-confirm",
-        submit: "#update-submit"
+        submit: "#update-submit",
+        successContainer: "#update-success"
     };
 
     constants.classes = {
@@ -115,6 +116,7 @@
         registrationSuccess: (
             "Registration went A-OK! " +
             "You can now log into your account. " +
-            "You will be redirected to the login page in 5 seconds")
+            "You will be redirected to the login page in 5 seconds"),
+        updateSuccess: "You account was updated successfully"
     };
 })();

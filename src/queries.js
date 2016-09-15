@@ -8,6 +8,8 @@ var queries = {};
 exports.queries = queries;
 
 queries.getCustomer = "SELECT * FROM users WHERE email = ?";
+queries.getUserById = "SELECT * FROM users WHERE id = ?";
+
 queries.register = (
     "INSERT INTO users (email, password, salt, display_name, active) " +
     "VALUES (?, ?, ?, ?, 1)"
@@ -22,13 +24,23 @@ queries.registerSocialNetworkUser = (
 );
 
 queries.transformToSocialNetworkUser = (
-    "UPDATE user SET display_name = ?, social_network_id = ?, " +
+    "UPDATE users SET display_name = ?, social_network_id = ?, " +
     "social_network_user = 1 WHERE email = ?"
 );
 
 queries.updateUserBasicInfo = (
-    "UPDATE user SET email = ?, display_name = ? " +
+    "UPDATE users SET email = ?, display_name = ? " +
     "WHERE email = ?"
+);
+
+queries.updateUserBasicInfoById = (
+    "UPDATE users SET email = ?, display_name = ? " +
+    "WHERE id = ?"
+);
+
+queries.updateUserInfoById = (
+    "UPDATE users SET email = ?, display_name = ?, password = ?, salt = ? " +
+    " WHERE id = ?"
 );
 
 queries.getPlayerStats = (
