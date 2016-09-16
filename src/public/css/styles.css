@@ -310,6 +310,10 @@ label:not(.navigation-trigger) {
     .main-footer {
         width: calc(100% - 40px);
     }
+
+    .desktop-only {
+        display: none;
+    }
 }
 
 .popup {
