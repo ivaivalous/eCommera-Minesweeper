@@ -1,6 +1,6 @@
 <div class="tabs">
     <label for="tab-1" tabindex="0"></label>
-    <input id="tab-1" type="radio" name="tabs" checked="true" aria-hidden="true">
+    <input id="tab-1" type="radio" name="tabs" checked="checked" aria-hidden="true">
 
     <h2 class="games-list-title">Now Playing</h2>
     <div>
@@ -27,11 +27,11 @@
     </div>
 
     <label for="tab-2" tabindex="0"></label>
-    <input id="tab-2" type="radio" name="tabs" checked="true" aria-hidden="true">
+    <input id="tab-2" type="radio" name="tabs" aria-hidden="true">
     <h2>History</h2>
-    <div>
+    <div id="past-games">
         <h3>Your total score is {{totalScore}}</h3>
-        <h4>You made it through these games</h4>
+        <h4>You Made It Through All These Battles</h4>
         <div class="item-list-wrapper">
             {{#if gamesPlayed}}
                 <table class="item-list-table" cellspacing="0">
@@ -76,26 +76,27 @@
     <div class="server-validation-error hidden" id="game-create-error">
     </div>
     <form>
-        <label for="game-name">Room name:</label>
-        <input id="game-name" type="text" />
-        <label for="game-public">Show game on listing page:</label>
+        <label for="game-name">Room name: <abbr class="help" title="This name will appear on the list of games">?</abbr></label>
+        <input id="game-name" type="text" value="{{session.displayName}}'s Game Room"/>
+
+        <label for="game-public">Show game on listing page: <abbr class="help" title="If a game isn't listed, only people who have the link will be able to join">?</abbr></label>
         <input id="game-public" type="checkbox" checked="checked" />
         <br />
 
-        <label for="game-players">Max number of players:</label>
-        <input id="game-players" type="number" />
+        <label for="game-players">Max number of players: <abbr class="help" title="The maximum number of players you would like to be able to join the game. The game can start without all of them joining.">?</abbr></label>
+        <input id="game-players" type="number" value="4" />
         <br />
 
-        <label for="game-map-x">Map size, x:</label>
-        <input id="game-map-x" type="number" />
+        <label for="game-map-x">Map width: <abbr class="help" title="The game field will have this many columns">?</abbr></label>
+        <input id="game-map-x" type="number" value="10" />
         <br />
 
-        <label for="game-map-y">Map size, y:</label>
-        <input id="game-map-y" type="number" />
+        <label for="game-map-y">Map height: <abbr class="help" title="The game field will have this many rows">?</abbr></label>
+        <input id="game-map-y" type="number" value="10" />
         <br />
 
-        <label for="game-mine-count">Number of mines:</label>
-        <input id="game-mine-count" type="number" />
+        <label for="game-mine-count">Number of mines: <abbr class="help" title="The more mines per empty cell, the higher score you can get">?</abbr></label>
+        <input id="game-mine-count" type="number" value="12" />
         <br />
 
         <div class="form-actions">

@@ -21,7 +21,7 @@ a:active {
     text-decoration: underline;
 }
 
-label {
+label:not(.navigation-trigger) {
     padding: 10px 0px 5px 0px;
 }
 
@@ -189,14 +189,14 @@ label {
     margin: 0;
     padding: 10px;
     font-size: 20px;
-    background: rgba(255,255,255,.2);
+    background: rgba(8, 36, 58, .7);
     color: white;
     text-transform: capitalize;
 
 }
 
 .main-footer {
-    max-width: 800px;
+    min-width: 280px;
     text-align: center;
     font-size: 12px;
     margin: 20px;
@@ -246,11 +246,15 @@ label {
 
     .item-list-table {
         width: 100%;
-        text-align: left;
+        text-align: center;
     }
 
     .item-list-table td {
         padding: 20px 10px;
+    }
+
+    .main-footer {
+        width: calc(100% - 280px);
     }
 }
 
@@ -296,11 +300,15 @@ label {
 
     .item-list-table {
         width: 100%;
-        text-align: left;
+        text-align: center;
     }
 
     .item-list-table td {
         padding: 20px 4px;
+    }
+
+    .main-footer {
+        width: calc(100% - 40px);
     }
 }
 
@@ -311,6 +319,7 @@ label {
     margin-right: auto;
     position: fixed;
     z-index: 10;
+    text-align: left;
 
     overflow: auto;
 
@@ -790,4 +799,28 @@ div#login-error, div#registration-error {
     border-bottom: 1px dashed #eee;
     border-left: 1px dashed #eee;
     border-right: 1px dashed #eee;
+}
+
+div#past-games h3 {
+    font-size: 2em;
+}
+
+div#past-games h4 {
+    font-size: 1.8em;
+}
+
+abbr.help {
+    border-radius: 50%;
+    padding: 3px 5px 8px 5px;
+    background: #4385E6;
+    color: #fff;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.left-aligned {
+    text-align: left;
 }
