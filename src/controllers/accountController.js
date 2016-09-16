@@ -363,7 +363,7 @@ exports.register = function (request, response) {
 // User profile preview page
 exports.profile = function (request, response) {
     // if user is not logged in redirect them to homepage
-    if(!request.session.isUserLogged){
+    if (!request.session.isUserLogged) {
         response.redirect('/');
         return;
     }
@@ -371,44 +371,29 @@ exports.profile = function (request, response) {
     var userid = request.params.id;
     var sql = queries.queries.getPlayerStats;
     
-    db.connect(function (err, connection) {
-       
-       if(err){
+    db.query(sql, [userid] , function(err, result) {
+        if(err || result.length === 0){
             // render error page
-            response.viewModel.error = err;
+            response.viewModel.error = "This user doesn't exist!";
             response.render('error/500', response.viewModel);
             return;
         }
-        
-        connection.query(sql, [userid] , function(err, result) {
-            
-            if(err || result.length === 0){
-                // render error page
-                response.viewModel.error = "This user doesn't exist!";
-                response.render('error/500', response.viewModel);
-                return;
-            }
-            // @TODO:
-            // Gather more information 
 
-            // The information that will be displayed on profile page
-            var player = result[0];
+        // The information that will be displayed on profile page
+        var player = result[0];
 
-            response.viewModel.userProfile = {
-                name : player.displayName,
-                avatarUri: gravatar.getGravatarUri(player.email),
-                gamesPlayed: player.gamesPlayed,
-                averageScore: player.averageScore,
-                bestScore: player.bestScore,
-                worstScore: player.worstScore
-            };
+        response.viewModel.userProfile = {
+            name : player.displayName,
+            avatarUri: gravatar.getGravatarUri(player.email),
+            gamesPlayed: player.gamesPlayed,
+            averageScore: player.averageScore,
+            bestScore: player.bestScore,
+            worstScore: player.worstScore
+        };
 
-            response.viewModel.title = "Profile Page of " + result[0].displayName;
-            
-            response.render('login/profile', response.viewModel);
-      });
-
-    });
+        response.viewModel.title = "Profile Page of " + result[0].displayName;
+        response.render('login/profile', response.viewModel);
+  });
 };
 
 exports.show = function (request, response) {

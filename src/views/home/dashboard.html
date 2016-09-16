@@ -1,63 +1,72 @@
-<p>Here you can see a list of all games currently waiting for players to join. You can choose any one and join the fun! Or you can create a new game and invite your friends!</p>
+<div class="tabs">
+    <label for="tab-1" tabindex="0"></label>
+    <input id="tab-1" type="radio" name="tabs" checked="true" aria-hidden="true">
 
-<h2 class="games-list-title">Available Games</h2>
+    <h2 class="games-list-title">Now Playing</h2>
+    <div>
+        <p>
+            Here you can see a list of all games currently waiting for players to join. You can choose any one and join the fun! Or you can create a new game and invite your friends!
+        </p>
+        <div class="item-list-wrapper" id="games-list">
+            <button id="create-game" class="create-item-button button">Create a new game</button>
+            <button id="reload-games">Refresh game list</button>
 
-<div class="item-list-wrapper" id="games-list">
-    <button id="create-game" class="create-item-button button">Create a new game</a>
-    <button id="reload-games">Refresh game list</button>
+            <table id="games-list" class="item-list-table" cellspacing="0">
+                <thead>
+                    <th>Room Name</th>
+                    <th>Host</th>
+                    <th>Players</th>
+                    <th>Map Size</th>
+                    <th>Difficulty</th>
+                    <th>&nbsp;</th>
+                </thead>
+                <tbody id="games-list-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <table id="games-list" class="item-list-table" cellspacing="0">
-        <thead>
-            <th>Room Name</th>
-            <th>Host</th>
-            <th>Players</th>
-            <th>Map Size</th>
-            <th>Difficulty</th>
-            <th>&nbsp;</th>
-        </thead>
-        <tbody id="games-list-body">
-        </tbody>
-    </table>
-</div>
+    <label for="tab-2" tabindex="0"></label>
+    <input id="tab-2" type="radio" name="tabs" checked="true" aria-hidden="true">
+    <h2>History</h2>
+    <div>
+        <h3>Your total score is {{totalScore}}</h3>
+        <h4>You made it through these games</h4>
+        <div class="item-list-wrapper">
+            {{#if gamesPlayed}}
+                <table class="item-list-table" cellspacing="0">
+                    <thead>
+                        <th>Game Start Time</th>
+                        <th>Game End Time</th>
+                        <th>Number of players</th>
+                        <th>Score</th>
+                    </thead>
+                    <tbody>
 
-<br />
-<hr />
+                        {{#each gamesPlayed}}
+                            <tr>
+                                <td>
+                                    {{this.started}}
+                                </td>
+                                <td>
+                                    {{this.ended}}
+                                </td>
+                                <td>
+                                    {{this.players}}
+                                </td>
+                                <td>
+                                    {{this.score}}
+                                </td>
+                            </tr>
+                        {{/each}}
 
-<h2>Your Game History</h2>
-<h3>Total score: {{totalScore}}</h3>
-<div class="item-list-wrapper">
-    {{#if gamesPlayed}}
-        <table class="item-list-table" cellspacing="0">
-            <thead>
-                <th>Game start time</th>
-                <th>Game end time</th>
-                <th>Number of players</th>
-                <th>Score</th>
-            </thead>
-            <tbody>
-
-                {{#each gamesPlayed}}
-                    <tr>
-                        <td>
-                            {{this.started}}
-                        </td>
-                        <td>
-                            {{this.ended}}
-                        </td>
-                        <td>
-                            {{this.players}}
-                        </td>
-                        <td>
-                            {{this.score}}
-                        </td>
-                    </tr>
-                {{/each}}
-
-            </tbody>
-        </table>
-    {{else}}
-        <p>You haven't played any games yet.</p>
-    {{/if}}
+                    </tbody>
+                </table>
+            {{else}}
+                <p>You haven't played any games yet.</p>
+            {{/if}}
+        </div>
+    </div>
 </div>
 
 <div class="popup hidden" id="create-game-form">
