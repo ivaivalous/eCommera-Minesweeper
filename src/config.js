@@ -15,7 +15,7 @@ module.exports = {
 	database : {
 		host : 'localhost',
 		user : 'root',
-		password : '',
+		password : 'root',
 		database : 'minesweeper'  
 
 
