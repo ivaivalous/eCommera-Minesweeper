@@ -1,8 +1,12 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto&subset=cyrillic';
+
 body {
     margin: 0;
     color: #555;
     background: #f4f4f4;
-    font-family: sans-serif;
+    font-family: 'Roboto', sans-serif;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 a,
@@ -15,6 +19,10 @@ a:hover,
 a:active {
     color: #a20;
     text-decoration: underline;
+}
+
+label:not(.navigation-trigger) {
+    padding: 10px 0px 5px 0px;
 }
 
 #navigationTriggerCheckbox {
@@ -46,7 +54,7 @@ a:active {
 .navigation-header {
     position: relative;
     padding-top: 140px;
-    background: url(http://ecommera.com/sites/default/files/styles/hero_image_breakpoints_theme_orderdynamics_wide_1x/public/hero/rs_partners_banner.jpg) #0d314b;
+    background: url(../img/banner.jpg) #0d314b;
 }
 
 .navigation-logo {
@@ -111,10 +119,12 @@ a:active {
 }
 
 .main-header {
-    padding: 10px;
+    padding: 10px 0px;
     background: white;
     border-bottom: 1px solid #f74902;
     box-shadow: 0 0 5px rgba(0,0,0,.3);
+    width: calc(100% - 280px);
+    min-width: 280px;
 }
 
 .main-header .navigation-trigger {
@@ -123,6 +133,7 @@ a:active {
     height: 12px;
     width: 20px;
     margin-top: 2px;
+    margin-left: 10px;
     border-top: 2px solid #888;
     border-bottom: 2px solid #888;
     cursor: pointer;
@@ -151,17 +162,19 @@ a:active {
 }
 
 .main-content {
-    max-width: 800px;
+    width: calc(100% - 280px);
+    min-width: 280px;
 }
 
 .page-container {
     margin: 10px;
     padding: 10px;
-    overflow: hidden;
     background: white;
     border: 1px solid #eee;
     border-radius: 4px;
     box-shadow: 0 5px 5px -5px rgba(0,0,0,.3);
+    min-width: 280px;
+    text-align: center;
 }
 
 .page-header {
@@ -169,19 +182,21 @@ a:active {
     margin-bottom: 10px;
     padding-top: 60px;
     background: #ffeecc;
-    background: url(http://ecommera.com/sites/default/files/styles/hero_image_breakpoints_theme_orderdynamics_wide_1x/public/hero/rs_partners_banner.jpg) #0d314b;
+    background: url(../img/banner.jpg) #0d314b;
 }
 
 .page-title {
     margin: 0;
     padding: 10px;
     font-size: 20px;
-    background: rgba(255,255,255,.3);
+    background: rgba(8, 36, 58, .7);
     color: white;
+    text-transform: capitalize;
+
 }
 
 .main-footer {
-    max-width: 800px;
+    min-width: 280px;
     text-align: center;
     font-size: 12px;
     margin: 20px;
@@ -206,6 +221,118 @@ a:active {
         -webkit-transform: translate(0,0);
         transform: translate(0,0);
     }
+
+    #game-grid-panel {
+        width: 65%;
+        display: inline-block;
+    }
+
+    #players-list-panel {
+        width: 30%;
+        display: inline-block;
+    }
+
+    .profile-info {
+        margin-left: 30px;
+    }
+
+    .popup {
+        top: 50px;
+        width: 40%;
+        max-width: 400px;
+        min-width: 320px;
+        border-radius: 4px;
+    }
+
+    .item-list-table {
+        width: 100%;
+        text-align: center;
+    }
+
+    .item-list-table td {
+        padding: 20px 10px;
+    }
+
+    .main-footer {
+        width: calc(100% - 280px);
+    }
+}
+
+@media screen and (max-width: 799px) {
+    .main-header {
+        width: 100%;
+    }
+
+    .main-content {
+        width: 95%;
+        margin: auto;
+    }
+
+    .page-container {
+        margin: 10px 4px;
+    }
+
+    #game-grid-panel {
+        display: block;
+        width: 100%;
+        margin: auto;
+    }
+
+    #game-grid-panel table {
+        margin: auto;
+    }
+
+    #players-list-panel {
+        width: 80%;
+        margin: auto;
+    }
+
+    .profile-info {
+        margin-left: 10px;
+    }
+
+    .popup {
+        top: 40px;
+        max-width: 400px;
+        min-width: 250px;
+        max-height: calc(100vh - 20px);
+    }
+
+    .item-list-table {
+        width: 100%;
+        text-align: center;
+    }
+
+    .item-list-table td {
+        padding: 20px 4px;
+    }
+
+    .main-footer {
+        width: calc(100% - 40px);
+    }
+
+    .desktop-only {
+        display: none;
+    }
+}
+
+.popup {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: fixed;
+    z-index: 10;
+    text-align: left;
+
+    overflow: auto;
+
+    background-color: #FFF;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+#players-list-panel table {
+    margin: auto;
 }
 
 /* reusables */
@@ -220,6 +347,8 @@ input[type=password] {
     max-width: 300px;
     box-sizing: border-box;
     padding: 10px 20px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 10px;
     border: 1px solid #eee;
     border-left: 2px solid #aaa;
@@ -240,7 +369,7 @@ a.button,
     -webkit-appearance: none;
     display: inline-block;
     padding: 10px 20px;
-    margin: 0;
+    margin: 10px;
     color: white;
     font-size: inherit;
     border: 0 none;
@@ -248,6 +377,8 @@ a.button,
     background: #f74902;
     box-shadow: inset 0 -2px 1px rgba(0,0,0,.3);
     transition: background .1s ease-out;
+    cursor: pointer;
+    min-width: 200px;
 }
 
 button:hover,
@@ -267,6 +398,27 @@ a.button:active,
     background: #333;
     position: relative;
     top: 1px;
+    outline: none;
+}
+
+button:disabled,
+input[type=button]:disabled,
+input[type=submit]:disabled,
+a.button:disabled,
+.button:disabled {
+    background: #777;
+    position: relative;
+    top: 1px;
+    outline: none;
+    cursor: not-allowed;
+}
+
+input#login-facebook {
+    background-color: #3b5998;
+}
+
+input#login-facebook:hover {
+    background-color: #555555;
 }
 
 .error-message {
@@ -287,11 +439,6 @@ a.button:active,
     margin-bottom: 10px;
 }
 
-.item-list-table {
-    width: 100%;
-    text-align: left;
-}
-
 .item-list-table th {
     padding: 10px;
     font-weight: normal;
@@ -299,7 +446,11 @@ a.button:active,
 
 .item-list-table td {
     border-top: 1px solid #ddd;
-    padding: 20px 10px;
+    vertical-align: middle;
+}
+
+.item-list-table td.user-large {
+    font-size: 20px;
 }
 
 .item-list-table tr:first-child td {
@@ -318,14 +469,12 @@ a.button:active,
 /* profile page */
 
 .profile-info{
-    text-align: right;
-    margin-left: 30px;
+    text-align: left;
 }
 
 .profile-info > p {
     line-height: 20px;
-    margin:0px;
-    font-family: 
+    margin: 0px;
 }
 
 .profile-info,
@@ -333,6 +482,349 @@ a.button:active,
     display: inline-block;
 }
 
-.user-info-wrapper{
+.user-info-wrapper {
     display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.popup .header {
+    background: #0d314b url("../img/banner.jpg") repeat scroll 0 0;
+}
+
+.popup form {
+    padding: 20px;
+}
+
+.popup label {
+    display: block;
+}
+
+.popup input {
+    margin: 0px;
+    text-align: left;
+}
+
+.form-actions {
+    text-align: center;
+}
+
+.centered {
+    text-align: center;
+}
+
+.server-validation-error {
+    border-radius: 2px;
+    background-color: #f74902;
+    color: #FFF;
+    margin: 4px;
+    padding: 10px;
+}
+
+#timer {
+    margin: -15px auto 30px auto;
+    padding: 10px;
+    width: 300px;
+
+    text-align: center;
+    border-radius: 0px 0px 2px 2px;
+    color: #fff;
+    font-size: 1.2em;
+    background-color: #F85800;
+    box-shadow: 0px 7px 11px -6px rgba(0, 0, 0, 0.75);
+}
+
+#game-screen {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+#game-screen div {
+    vertical-align: top;
+}
+
+#game-screen h2 {
+    margin-top: 0px;
+}
+
+#players-table td {
+    padding: 6px;
+}
+
+tr.now-playing td {
+    font-weight: bold;
+}
+
+.status-cell {
+    width: 20px;
+    height: 20px;
+}
+
+.alive {
+    background-color: green;
+}
+
+.dead {
+    background-color: red;
+}
+
+.player-name {
+    text-align: left;
+}
+
+.score-cell {
+    text-align: right;
+    min-width: 60px;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    background-color: #B5B5B5;
+    cursor: pointer;
+    border-radius: 1px;
+}
+
+.open {
+    background-color: #E5E5E5;
+    cursor: default;
+}
+
+.mine {
+    background-color: red;
+    cursor: default;
+}
+
+.number {
+    background-color: #E5E5E5;
+    font-weight: bold;
+    cursor: default;
+}
+
+#players-list-game-over {
+    text-align: center;
+    padding: 20px;
+}
+
+#players-table-game-over {
+    margin: auto;
+}
+
+.successful{    
+    color: darkred;
+    font-size: 14px;
+}
+
+table.player-stats th {
+    font-weight: normal;
+    padding-right: 20px;
+}
+
+.error {
+    background-color: #FFCCCC;
+    padding: 20px;
+    border-left: 2px solid #F74902;
+    max-width: 800px;
+}
+
+.error h2 {
+    color: #062037;
+}
+
+.success-message {
+    background-color: rgba(92, 224, 125, 0.3);
+    padding: 20px;
+    border-left: 2px solid #5DA16A;
+    max-width: 800px;
+    text-align: left;
+    margin-bottom: 20px;   
+}
+
+.validation-error {
+    display: block;
+    position: relative;
+    background: #FFCCCC;
+    border-radius: 2px;
+    margin: 20px auto 14px auto;
+    padding: 4px 10px;
+    max-width: 300px;
+    text-align: justify;
+}
+
+.validation-error:after, .validation-error:before {
+    top: 100%;
+    right: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.validation-error:after {
+    border-color: border: 4px solid #c2e1f5;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.validation-error:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-top-color: #FFCCCC;
+    border-width: 12px;
+    margin-left: -12px;
+}
+
+div#login-error, div#registration-error {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-screen {
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+}
+
+.update-screen {
+    max-width: 500px;
+    margin: auto;
+}
+
+.update-screen input {
+    display: inline-block;
+}
+
+.update-screen label {
+    display: inline-block;
+    min-width: 180px;
+    max-width: 300px;
+    padding-left: 10px;
+}
+
+/* Dashboard adopted from http://codepen.io/thierry/pen/RrQpzK */
+.tabs {
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #EEE;
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.3);
+}
+
+.tabs > label {
+    position: absolute;
+    z-index: 1;
+}
+
+.tabs > label,
+.tabs > h2 {
+    font-size: 1.1em;
+    font-weight: normal;
+    width: 6em;
+    height: 2em;
+    line-height: 2em;
+    margin-left: 10px;
+    margin-top: 0;
+}
+
+.tabs input,
+.tabs > label ~ label,
+.tabs > h2 ~ h2 {
+    position: absolute;
+    top: 0;
+}
+
+.tabs label:nth-child(1),
+.tabs h2:nth-child(3) {
+    left: 0em;
+}
+
+.tabs label:nth-child(5),
+.tabs h2:nth-child(7) {
+    left: 7em;
+}
+
+.tabs label:nth-child(9),
+.tabs h2:nth-child(11) {
+    left: 13em;
+}
+
+.tabs input + h2 + div {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important; 
+    width: 1px !important; 
+    overflow: hidden;
+}
+
+.tabs input:checked + h2 + div {
+    position: static !important;
+    padding: 1em !important;
+    height: auto !important; 
+    width: auto !important; 
+}
+
+.tabs label:hover {
+    cursor: pointer;
+}
+
+.tabs > div {
+    padding: 1em;
+}
+
+.tabs input[name="tabs"] {
+    opacity: 0;
+    position: absolute;
+}
+
+.tabs input[name="tabs"]:focus + h2 {
+    outline: 1px dotted #000;
+    outline-offset: 10px;
+}
+
+.tabs:hover h2 {
+    outline: none !important;
+}
+
+.tabs input[name="tabs"]:checked + h2 {
+    background: #F85800;
+    color: #fff;
+    border-radius: 0px 0px 2px 2px;
+    box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.3) inset;
+}
+
+.tabs input[name="tabs"]:not(:checked) + h2 {
+    border-radius: 0px 0px 2px 2px;
+    border-bottom: 1px dashed #eee;
+    border-left: 1px dashed #eee;
+    border-right: 1px dashed #eee;
+}
+
+div#past-games h3 {
+    font-size: 2em;
+}
+
+div#past-games h4 {
+    font-size: 1.8em;
+}
+
+abbr.help {
+    border-radius: 50%;
+    padding: 3px 5px 8px 5px;
+    background: #4385E6;
+    color: #fff;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.left-aligned {
+    text-align: left;
 }

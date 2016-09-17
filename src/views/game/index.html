@@ -1,1 +1,46 @@
-<!-- ... -->
+<div id="timer">
+    <div id="action-expected">
+    </div>
+    <div id="time-left">
+    </div>
+    <div id="start-game" class="hidden">
+        <button id="start-game-button" disabled="disabled">Start game</button>
+    </div>
+</div>
+
+<div id="game-screen">
+    <div id="game-grid-panel">
+        <table id="game-map">
+            <tbody id="game-map-body">
+            </tbody>
+        </table>
+    </div>
+
+    <div id="players-list-panel">
+        <div class="header">
+            <h2>Players</h2>
+        </div>
+        <div>
+            <table id="players-table">
+                <tbody id="players-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="game-over-screen" class="popup hidden">
+    <div class="header">
+        <h1 class="page-title">Game Over</h1>
+    </div>
+
+    <div id="players-list-game-over">
+        <h2>Final Score</h2>
+        <div>
+            <table id="players-table-game-over">
+                <tbody id="players-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

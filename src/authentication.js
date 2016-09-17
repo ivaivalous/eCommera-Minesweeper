@@ -1,13 +1,10 @@
-var jwt = require('jsonwebtoken');
+/*
+    Handle user security functionality such as
+    generating hashesm salts and passwords.
+*/
+
 var crypto = require('crypto');
-
 var config = require('./config');
-
-var _configuration = {
-    jwtSecret: config.jwt.secret,
-    jwtTtlHours: config.jwt.ttlHours + 'h',
-    algorithm: config.jwt.algorithm
-}
 
 exports.hashPassword = function(password, salt) {
     var iterations = config.passwordHashing.numberOfIterations;
@@ -17,32 +14,28 @@ exports.hashPassword = function(password, salt) {
         password, salt, iterations, keyLength);
 
     return Buffer(hash, 'binary').toString('hex');
-}
+};
 
 // Generate a random salt.
 // Should be used on registration and password change.
 // On login, salt is retrieved from the DB.
 exports.generateSalt = function () {
     return crypto.randomBytes(16).toString('hex');
-}
+};
 
-exports.issueJwt = function(email, displayName) {
-    var data = {email: email, displayName: displayName};
-    var token = jwt.sign(
-        data, _configuration.jwtSecret,
-        {
-            algorithm: _configuration.algorithm,
-            expiresIn: _configuration.jwtTtlHours
-        }
-    );
+// When Facebook-registering a user, a random password
+// ought to be generated as the user would be logging in without
+// an actual password.
+exports.generatePassword = function () {
+    var minLength = 32;
+    var maxLength = 64;
 
-    return token;
-}
+    return crypto.randomBytes(
+        ~~(Math.random() * (maxLength - minLength + 1) + minLength)
+    ).toString('utf8');
+};
 
-exports.validateJwt = function(token) {
-    return jwt.verify(
-        token,
-        _configuration.jwtSecret,
-        { algorithms: [_configuration.algorithm] }
-    );
-}
+// Get the MD5 hash of a string
+exports.md5 = function(input) {
+    return crypto.createHash('md5').update(input).digest("hex");
+};

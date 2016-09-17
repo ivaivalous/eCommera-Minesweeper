@@ -1,47 +1,42 @@
+/*
+    Handle MySQL database connectivity and querying.
+    It's recommended you rely on this module for all DB interaction.
+*/
+
 var mysql = require('mysql');
+var config = require('./config');
 
-var _credentials = {
-  host     : '',
-  user     : '',
-  password : '',
-  database : ''
-};
+var pool = null;
 
-function setCredentials (newCredentials) {
-    _credentials.host = newCredentials.host || '';
-    _credentials.user = newCredentials.user || '';
-    _credentials.password = newCredentials.password || '';
-    _credentials.database = newCredentials.database || '';
-}
+function getPool() {
+    if (pool === null) {
+        console.log("Initializing MySQL connection pool");
+        pool = mysql.createPool({
+            connectionLimit : 10,
+            host            : config.database.host,
+            user            : config.database.user,
+            password        : config.database.password,
+            database        : config.database.database
+        });
+    }
 
-function connect (callback) {
-    var connection = mysql.createConnection({
-        host : _credentials.host,
-        user : _credentials.user,
-        password : _credentials.password,
-        database : _credentials.database
-    });
-
-    connection.connect(function (err) {
-        callback(err, connection);
-    });
+    return pool;
 }
 
 // Run a query against the database
 function query (queryLiteral, params, callback) {
-    // connect to the database first
-    connect(function (error, connection) {
-        if (error) {
-            // let the caller script handle the error
-            callback(error);
+    getPool().getConnection(function(errorGettingConnection, connection) {
+        if (errorGettingConnection) {
+            // Error getting a connection
+            callback(errorGettingConnection);
             return;
         }
 
-        // execute the query and then the callback both when errors occur or not
-        connection.query(queryLiteral, params, callback);
+        connection.query(queryLiteral, params, function(err, rows) {
+            callback(err, rows);
+            connection.release();
+        });
     });
 }
 
-exports.setCredentials = setCredentials;
-exports.connect = connect;
 exports.query = query;

@@ -11,18 +11,7 @@ var bodyParser = require('body-parser');
 // This is a simple alternative to command line arguments, or bash 
 // scripts that export variables or jenkins/travis configuration
 var config = require('./config');
-
-// initialize the database module
-var database = require('./database');
-database.setCredentials({
-	host : config.database.host,
-	user : config.database.user,
-	password : config.database.password,
-	database : config.database.database
-});
-
-// Use for JWT-based authentication
-var authentication = require('./authentication');
+var auth = require('./authentication');
 
 // create the server web application
 var app = express();
@@ -32,7 +21,15 @@ app.set('port', config.port || 3000);
 app.use(bodyParser.urlencoded({extended : true}));
 
 //Initialize and set the session
-app.use(session({key: "sessionCookie", resave: true, saveUninitialized: true, secret: 'shhh', cookie: { maxAge: 300000 }}));
+app.use(
+    session({
+        key: "sessionCookie",
+        resave: true,
+        saveUninitialized: true,
+        secret: config.session.secret,
+        cookie: { maxAge: config.session.cookieMaxAge }
+    })
+);
 
 // the view model intercepts all requests and adds commonly used view 
 // data for the templates (such as texts, session, users, etc.)
@@ -57,7 +54,8 @@ app.listen(app.get('port'), function(){
 
 /*
 @TODO:
-- print detailed errors when in development environment https://github.com/expressjs/errorhandler
+- print detailed errors when in development environment
+https://github.com/expressjs/errorhandler
 - use a json file for static texts?
 */
 

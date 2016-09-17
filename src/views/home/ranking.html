@@ -1,26 +1,29 @@
 <div class="item-list-wrapper">
-	{{#if users}}
-		<table class="item-list-table" cellspacing="0">
-			<thead>
-				<th>Player</th>
-				<th>Score</th>
-			</thead>
-			<tbody>
+    {{#if users}}
+        <table class="item-list-table" cellspacing="0">
+            <thead>
+                <th>#</th>
+                <th class="left-aligned">Player</th>
+                <th>Score</th>
+            </thead>
+            <tbody>
 
-				{{#each users}}
-					<tr>
-						<td>
-							<a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
-						</td>
-						<td>
-							{{this.score}}
-						</td>
-					</tr>
-				{{/each}}
+                {{#each users}}
+                    <tr>
+                        <td>{{increment @index}}</td>
+                        <td class="user-large left-aligned">
+                            {{gravatar this.avatarUri "20"}}
+                            <a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
+                        </td>
+                        <td>
+                            {{this.score}}
+                        </td>
+                    </tr>
+                {{/each}}
 
-			</tbody>
-		</table>
-	{{else}}
-		<p>There are no users yet :(</p>
-	{{/if}}
+            </tbody>
+        </table>
+    {{else}}
+        <p>Nobody has played a game yet. Why don't you start one?</p>
+    {{/if}}
 </div>

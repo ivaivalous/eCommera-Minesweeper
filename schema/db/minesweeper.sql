@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: minesweeper
 -- ------------------------------------------------------
--- Server version	5.7.13-log
+-- Server version 5.7.13-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,12 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- -----------------------------------------------------
--- Schema minesweeper
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `minesweeper` DEFAULT CHARACTER SET utf8 ;
-USE `minesweeper` ;
-
 --
 -- Table structure for table `games`
 --
@@ -32,8 +26,9 @@ CREATE TABLE `games` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'A unique ID for the game.',
   `private` tinyint(1) NOT NULL COMMENT 'Was this a private (listed) game room?',
   `host_user_id` int(10) unsigned NOT NULL COMMENT 'ID of the user who hosted this game.',
-  `game_start_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The time the game started at.',
-  `game_finish_time` datetime NOT NULL COMMENT 'Time the game ended.',
+  `number_of_players` int(10) NOT NULL DEFAULT '1',
+  `game_start_time` datetime DEFAULT NULL COMMENT 'The time the game started at.',
+  `game_finish_time` datetime DEFAULT NULL COMMENT 'Time the game ended.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `host_user_id_idx` (`host_user_id`),
@@ -60,40 +55,6 @@ CREATE TABLE `games_played` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `user_activation_tokens`
---
-
-DROP TABLE IF EXISTS `user_activation_tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_activation_tokens` (
-  `user_id` int(10) unsigned NOT NULL COMMENT 'The ID of the user the token applies to.',
-  `token` varchar(128) DEFAULT NULL COMMENT 'A generated token for user activation.',
-  `issued_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Time the token was issued at, to allow checking for validity.',
-  PRIMARY KEY (`user_id`),
-  KEY `fk_password_reset_tokens_users_idx` (`user_id`),
-  CONSTRAINT `fk_password_reset_tokens_users0` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user_password_reset_tokens`
---
-
-DROP TABLE IF EXISTS `user_password_reset_tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_password_reset_tokens` (
-  `user_id` int(10) unsigned NOT NULL COMMENT 'The ID of the user the token applies to.',
-  `token` varchar(45) DEFAULT NULL COMMENT 'A generated token for password reset.',
-  `issued_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Time the token was issued at, to allow checking for validity.',
-  PRIMARY KEY (`user_id`),
-  KEY `fk_password_reset_tokens_users_idx` (`user_id`),
-  CONSTRAINT `fk_password_reset_tokens_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `users`
 --
 
@@ -105,12 +66,15 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL COMMENT 'The user''s email address. It must be unique and it can be changed.\nUsed for user validation/password reset.',
   `display_name` varchar(32) NOT NULL COMMENT 'A name the user will go by in the game/high scores/etc. Not unique, changeable.',
   `active` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether the user has activated their account via email.',
-  `password` char(128) NOT NULL COMMENT 'A password hash, used to verify against when the user logs in.',
+  `password` char(128) NOT NULL COMMENT 'A salt + password hash, used to verify against when the user logs in.',
   `salt` char(32) NOT NULL,
+  `social_network_id` varchar(90) DEFAULT NULL COMMENT 'Use if the user is authenticated via a social network account, e.g. Facebook',
+  `social_network_user` tinyint(1) DEFAULT '0' COMMENT 'Whether the user is using his or her social network account instead of the normal email/password login combination. Social network users are unable to login using a password.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `social_network_id_UNIQUE` (`social_network_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -122,4 +86,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-15 18:12:29
+-- Dump completed on 2016-09-08 18:01:17

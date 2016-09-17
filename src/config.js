@@ -17,14 +17,11 @@ module.exports = {
 		user : 'root',
 		password : 'root',
 		database : 'minesweeper'  
-
-
 	},
-	jwt: {
-		secret: 'crypto horse',
-		ttlHours: 24,
-		algorithm: 'HS256'
-	},
+    session: {
+        secret: "REPLACE ME",
+        cookieMaxAge: 21600000
+    },
 	passwordHashing: {
 		numberOfIterations: 1000,
 		keyLengthBytes: 64
@@ -32,7 +29,70 @@ module.exports = {
 	regex: {
         emailValidation: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         displayNameValidation: /^.{2,64}$/,
-        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^\w])).{8,100}$/
+        passwordValidation: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w]).{8,100}$/,
+        roomNameValidation: /^.{3,32}$/
+    },
+    gameBoundaries: {
+    	x: {
+    		minX: 5,
+    		maxX: 100
+    	},
+    	y: {
+    		minY: 5,
+    		maxY: 100
+    	},
+    	minePercentMax: 0.9,
+    	maxPlayerCount: 100,
+    	allowedGameIdCharacters: "BCDFJKLMNPQRSTVWXYXbcdfghjklmnpqrstvwxyz123456789",
+        defaultGameStartTimeMs: 60000,
+        defaultThinkTimeMs: 30000,
+        maxGames: 200,
+        maxGamesPerHost: 2,
+        maxGamesToJoin: 2,
+        minPlayersToStart: 2,
+        roomIdLength: 7,
+        difficultyRanges: [{
+            start: 0,
+            end: 20,
+            name: "Easy",
+            bonusModifier: 0
+        }, {
+            start: 20,
+            end: 40,
+            name: "Medium",
+            bonusModifier: 0.02
+        }, {
+            start: 40,
+            end: 65,
+            name: "Hard",
+            bonusModifier: 0.05
+        }, {
+            start: 65,
+            end: 100,
+            name: "Insane",
+            bonusModifier: 0.1
+        }]
+    },
+    scoring: {
+        stepEmptyCell: 10,
+        stepNeighboringEach: 20,
+        stepOnNeighboringAll: 200,
+        stepMine: -100,
+        stepPerExpanded: 10,
+        stepPerExpandedMax: 120,
+        timeBonus: 10,
+        firstToStepMine: -200,
+        stepOnMineFirstTurn: -300,
+        lastStanding: 200,
+        gameBeaten: 400
+    },
+    maxGameNonUpdatedInterval: 30000,
+    social: {
+        facebook: {
+            applicationSecret: ""
+        },
+        gravatar: {
+            defaultImageUrl: "identicon"
+        }
     }
-	
 };

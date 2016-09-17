@@ -1,9 +1,14 @@
-<form id="register" class="user-form">
-    <input id="register-email" type="text" placeholder="Your email" required />
-    <input id="register-name" type="text" placeholder="Display name" required />
+<div class="login-screen">
+    <div class="success-message hidden" id="registration-success">
+    </div>
 
-    <input id="register-password" type="password" placeholder="Password" required />
-    <input id="register-password-confirm" type="password" placeholder="Confirm password" required />
+    <form id="register" class="user-form">
+        <input id="register-email" type="email" placeholder="Your email" required />
+        <input id="register-name" type="text" pattern=".{2,64}" placeholder="Display name" required />
 
-    <button id="submit-registration" class="positive-action">Register</button>
-</form>
+        <input id="register-password" type="password" placeholder="Password" required />
+        <input id="register-password-confirm" type="password" placeholder="Confirm password" required />
+
+        <input type="submit" id="submit-registration" class="positive-action" value="Register" />
+    </form>
+</div>
