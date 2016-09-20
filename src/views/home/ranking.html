@@ -3,7 +3,7 @@
         <table class="item-list-table" cellspacing="0">
             <thead>
                 <th>#</th>
-                <th>Player</th>
+                <th class="left-aligned">Player</th>
                 <th>Score</th>
             </thead>
             <tbody>
@@ -11,7 +11,7 @@
                 {{#each users}}
                     <tr>
                         <td>{{increment @index}}</td>
-                        <td class="user-large">
+                        <td class="user-large left-aligned">
                             {{gravatar this.avatarUri "20"}}
                             <a href="{{../profileLink}}{{this.id}}">{{this.name}}</a>
                         </td>

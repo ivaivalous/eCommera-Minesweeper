@@ -3,8 +3,6 @@
     http://handlebarsjs.com/block_helpers.html
 */
 
-"use strict";
-
 var handlebars = require('hbs');
 
 handlebars.registerHelper('json', function(value) {

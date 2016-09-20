@@ -13,18 +13,6 @@ var bodyParser = require('body-parser');
 var config = require('./config');
 var auth = require('./authentication');
 
-// initialize the database module
-var database = require('./database');
-database.setCredentials({
-	host : config.database.host,
-	user : config.database.user,
-	password : config.database.password,
-	database : config.database.database
-});
-
-// Use for JWT-based authentication
-var authentication = require('./authentication');
-
 // create the server web application
 var app = express();
 app.set('port', config.port || 3000);

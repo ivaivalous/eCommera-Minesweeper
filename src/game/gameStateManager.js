@@ -5,8 +5,6 @@
     is re-calculated.
 */
 
-"use strict";
-
 var config = require('../config');
 var grid = require('./grid');
 var scoring = require('./scoring');

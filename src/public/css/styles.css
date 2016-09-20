@@ -1,8 +1,10 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto&subset=cyrillic';
+
 body {
     margin: 0;
     color: #555;
     background: #f4f4f4;
-    font-family: sans-serif;
+    font-family: 'Roboto', sans-serif;
     width: 100%;
     overflow-x: hidden;
 }
@@ -17,6 +19,10 @@ a:hover,
 a:active {
     color: #a20;
     text-decoration: underline;
+}
+
+label:not(.navigation-trigger) {
+    padding: 10px 0px 5px 0px;
 }
 
 #navigationTriggerCheckbox {
@@ -169,6 +175,7 @@ a:active {
     border-radius: 4px;
     box-shadow: 0 5px 5px -5px rgba(0,0,0,.3);
     min-width: 280px;
+    text-align: center;
 }
 
 .page-header {
@@ -183,12 +190,14 @@ a:active {
     margin: 0;
     padding: 10px;
     font-size: 20px;
-    background: rgba(255,255,255,.3);
+    background: rgba(8, 36, 58, .7);
     color: white;
+    text-transform: capitalize;
+
 }
 
 .main-footer {
-    max-width: 800px;
+    min-width: 280px;
     text-align: center;
     font-size: 12px;
     margin: 20px;
@@ -246,11 +255,15 @@ a:active {
 
     .item-list-table {
         width: 100%;
-        text-align: left;
+        text-align: center;
     }
 
     .item-list-table td {
         padding: 20px 10px;
+    }
+
+    .main-footer {
+        width: calc(100% - 280px);
     }
 }
 
@@ -298,11 +311,19 @@ a:active {
 
     .item-list-table {
         width: 100%;
-        text-align: left;
+        text-align: center;
     }
 
     .item-list-table td {
         padding: 20px 4px;
+    }
+
+    .main-footer {
+        width: calc(100% - 40px);
+    }
+
+    .desktop-only {
+        display: none;
     }
 }
 
@@ -313,6 +334,7 @@ a:active {
     margin-right: auto;
     position: fixed;
     z-index: 10;
+    text-align: left;
 
     overflow: auto;
 
@@ -365,7 +387,7 @@ a.button,
     -webkit-appearance: none;
     display: inline-block;
     padding: 10px 20px;
-    margin: 0px 10px;
+    margin: 10px;
     color: white;
     font-size: inherit;
     border: 0 none;
@@ -374,6 +396,7 @@ a.button,
     box-shadow: inset 0 -2px 1px rgba(0,0,0,.3);
     transition: background .1s ease-out;
     cursor: pointer;
+    min-width: 200px;
 }
 
 button:hover,
@@ -477,8 +500,10 @@ input#login-facebook:hover {
     display: inline-block;
 }
 
-.user-info-wrapper{
+.user-info-wrapper {
     display: flex;
+    justify-content: center;
+    margin: auto;
 }
 
 .hidden {
@@ -511,7 +536,6 @@ input#login-facebook:hover {
 
 .popup label {
     display: block;
-    padding: 10px 0px 5px 0px;
 }
 
 .popup input {
@@ -536,9 +560,13 @@ input#login-facebook:hover {
 }
 
 #timer {
+<<<<<<< HEAD
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
+=======
+    margin: -15px auto 30px auto;
+>>>>>>> 5478992b13019cf3893cc0f0f02cef00fa82c751
     padding: 10px;
     width: 300px;
 
@@ -624,6 +652,12 @@ tr.now-playing td {
     cursor: default;
 }
 
+.flagged {
+    background-image: url("../img/flag.png");
+    background-size: 22px;
+    background-color: #B5B5B5;
+}
+
 .mine {
     background-image: url(../img/mine-4.png) ;
     background-size: 18px;
@@ -651,6 +685,7 @@ tr.now-playing td {
     margin: auto;
 }
 
+<<<<<<< HEAD
 #start-new-game {
     margin-top: 15px;
 }
@@ -660,6 +695,8 @@ tr.now-playing td {
     font-size: 14px;
 }
 
+=======
+>>>>>>> 5478992b13019cf3893cc0f0f02cef00fa82c751
 .successful{    
     color: darkred;
     font-size: 14px;
@@ -681,16 +718,24 @@ table.player-stats th {
     color: #062037;
 }
 
+.success-message {
+    background-color: rgba(92, 224, 125, 0.3);
+    padding: 20px;
+    border-left: 2px solid #5DA16A;
+    max-width: 800px;
+    text-align: left;
+    margin-bottom: 20px;   
+}
+
 .validation-error {
     display: block;
     position: relative;
     background: #FFCCCC;
-    border: 1px solid #F85800;
-    border-radius: 1px;
+    border-radius: 2px;
     margin: 20px auto 14px auto;
     padding: 4px 10px;
-    box-shadow: 0 0 2px rgba(0,0,0,.3);
     max-width: 300px;
+    text-align: justify;
 }
 
 .validation-error:after, .validation-error:before {
@@ -711,12 +756,12 @@ table.player-stats th {
 }
 .validation-error:before {
     border-color: rgba(194, 225, 245, 0);
-    border-top-color: #F85800;
+    border-top-color: #FFCCCC;
     border-width: 12px;
     margin-left: -12px;
 }
 
-div#login-error {
+div#login-error, div#registration-error {
     margin-bottom: 20px;
     text-align: left;
 }
@@ -724,4 +769,144 @@ div#login-error {
 .login-screen {
     text-align: center;
     max-width: 500px;
+    margin: auto;
+}
+
+.update-screen {
+    max-width: 500px;
+    margin: auto;
+}
+
+.update-screen input {
+    display: inline-block;
+}
+
+.update-screen label {
+    display: inline-block;
+    min-width: 180px;
+    max-width: 300px;
+    padding-left: 10px;
+}
+
+/* Dashboard adopted from http://codepen.io/thierry/pen/RrQpzK */
+.tabs {
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #EEE;
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.3);
+}
+
+.tabs > label {
+    position: absolute;
+    z-index: 1;
+}
+
+.tabs > label,
+.tabs > h2 {
+    font-size: 1.1em;
+    font-weight: normal;
+    width: 6em;
+    height: 2em;
+    line-height: 2em;
+    margin-left: 10px;
+    margin-top: 0;
+}
+
+.tabs input,
+.tabs > label ~ label,
+.tabs > h2 ~ h2 {
+    position: absolute;
+    top: 0;
+}
+
+.tabs label:nth-child(1),
+.tabs h2:nth-child(3) {
+    left: 0em;
+}
+
+.tabs label:nth-child(5),
+.tabs h2:nth-child(7) {
+    left: 7em;
+}
+
+.tabs label:nth-child(9),
+.tabs h2:nth-child(11) {
+    left: 13em;
+}
+
+.tabs input + h2 + div {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important; 
+    width: 1px !important; 
+    overflow: hidden;
+}
+
+.tabs input:checked + h2 + div {
+    position: static !important;
+    padding: 1em !important;
+    height: auto !important; 
+    width: auto !important; 
+}
+
+.tabs label:hover {
+    cursor: pointer;
+}
+
+.tabs > div {
+    padding: 1em;
+}
+
+.tabs input[name="tabs"] {
+    opacity: 0;
+    position: absolute;
+}
+
+.tabs input[name="tabs"]:focus + h2 {
+    outline: 1px dotted #000;
+    outline-offset: 10px;
+}
+
+.tabs:hover h2 {
+    outline: none !important;
+}
+
+.tabs input[name="tabs"]:checked + h2 {
+    background: #F85800;
+    color: #fff;
+    border-radius: 0px 0px 2px 2px;
+    box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.3) inset;
+}
+
+.tabs input[name="tabs"]:not(:checked) + h2 {
+    border-radius: 0px 0px 2px 2px;
+    border-bottom: 1px dashed #eee;
+    border-left: 1px dashed #eee;
+    border-right: 1px dashed #eee;
+}
+
+div#past-games h3 {
+    font-size: 2em;
+}
+
+div#past-games h4 {
+    font-size: 1.8em;
+}
+
+abbr.help {
+    border-radius: 50%;
+    padding: 3px 5px 8px 5px;
+    background: #4385E6;
+    color: #fff;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.left-aligned {
+    text-align: left;
 }

@@ -1,14 +1,18 @@
+/*jshint esversion: 6 */
 (function () {
     'use strict';
+
     const TABLE_ROW = "tr";
     const TABLE_CELL = "td";
     const MILLIS_IN_SECOND = 1000;
     const RELOAD_FROM_SERVER = 2000;
     const VIBRATION_LENGTH_MS = 1000;
+
     var timeToShow = 0;
     var gameId = null;
     var initialMapDrawn = false;
     var hasGameEnded = false;
+    var flaggedCells = [];
     var supportsVibration = "vibrate" in navigator;
 
     $(document).ready(function() {
@@ -194,9 +198,15 @@
 
             for (var xIndex = 0; xIndex < mapX; xIndex++) {
                 var cell = $(document.createElement(TABLE_CELL));
+                var cellData = {x: xIndex, y: yIndex};
+
                 cell.addClass(constants.classes.cell.cell);
                 cell.addClass(constants.classes.cell.closed);
-                cell.bind('click', {x: xIndex, y: yIndex}, clickCell);
+                cell.bind('click', cellData, clickCell);
+
+                // Bing flag functions
+                cell.bind('contextmenu', cellData, flagCell);
+                cell.bind('taphold', cellData, flagCell);
 
                 row.append(cell);
             }
@@ -210,7 +220,7 @@
             var cell = openCells[i];
             var classToAdd = constants.classes.cell.open;
             var row = $($(constants.locators.gamePage.map.table + " tr")[cell.y]);
-            var td = $(row.find("td")[cell.x]);
+            var td = $(row.find(TABLE_CELL)[cell.x]);
 
             if (cell.isMine) {
                 classToAdd = constants.classes.cell.mine;
@@ -219,8 +229,40 @@
                 td.text(cell.neighboringMineCount);
             }
 
+            removeFlag(cell.x, cell.y);
             td.addClass(classToAdd);
         }
+    }
+
+    function drawFlag(x, y, hadFlag) {
+        if (hadFlag === undefined) {
+            hadFlag = isFlagged(x, y);
+        }
+        var flagClass = constants.classes.cell.flagged;
+        var row = $($(constants.locators.gamePage.map.table + " tr")[y]);
+        var td = $(row.find(TABLE_CELL)[x]);
+
+        if (hadFlag) {
+            // Flag was present, remove it
+            td.removeClass(flagClass);
+        } else {
+            td.addClass(flagClass);
+        }
+    }
+
+    // Check if a cell has been flagged
+    function isFlagged(x, y) {
+        var targetCoordinates = getFlagId(x, y);
+        return flaggedCells.indexOf(targetCoordinates) !== -1;
+    }
+
+    function getFlagId(x, y) {
+        return x + ":" + y;
+    }
+
+    function removeFlag(x, y) {
+        var targetCoordinates = getFlagId(x, y);
+        delete flaggedCells[targetCoordinates];
     }
 
     function handleGameOver(response) {
@@ -245,6 +287,26 @@
             }
             getGameStatus();
         });
+    };
+
+    var flagCell = function(data) {
+        var x = data.data.x;
+        var y = data.data.y;
+        var id = getFlagId(x, y);
+
+        // Don't display the right click menu
+        arguments[0].originalEvent.preventDefault();
+
+        // If the cell hasn't been flagged already
+        if (flaggedCells.indexOf(id) === -1) {
+            // Have it flagged
+            flaggedCells.push(id);
+            drawFlag(x, y, false);
+        } else {
+            // Otherwise remove the flag
+            delete flaggedCells[id];
+            drawFlag(x, y, true);
+        }
     };
 
     function handleError(response) {

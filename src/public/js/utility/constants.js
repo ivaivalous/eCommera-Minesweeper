@@ -22,7 +22,7 @@
         passwordConfirm: "#register-password-confirm",
         submit: "#submit-registration",
         container: "#register",
-        error: "#invalidsuccess"
+        successContainer: "#registration-success"
     };
 
     constants.locators.gameListing = {
@@ -66,6 +66,16 @@
         }
     };
 
+    constants.locators.updatePage = {
+        nameInput: "#update-name",
+        emailInput: "#update-email",
+        previousPasswordInput: "#update-prev-pass",
+        newPasswordInput: "#update-new-pass",
+        newPasswordInputConfirm: "#update-new-pass-confirm",
+        submit: "#update-submit",
+        successContainer: "#update-success"
+    };
+
     constants.classes = {
         hiddenContainer: "hidden",
         centered: "centered",
@@ -80,7 +90,8 @@
             closed: "closed",
             open: "open",
             mine: "mine",
-            number: "number"
+            number: "number",
+            flagged: "flagged"
         },
         validationError: "validation-error"
     };
@@ -100,10 +111,16 @@
     constants.validationMessages = {
         passwordsNoMatch: "Passwords don't match",
         invalidEmail: "Please make sure to submit a valid email",
-        invalidName: "We'd be happy accept any name between 2 and 64 characters in length",
+        invalidName: "We'll happily accept any name between 2 and 64 characters in length",
         invalidPassword: (
             "Your password has to be no shorter than 8 characters, " +
             "with small and capital letters, and special characters. " +
-            "Tough, yes, but it keeps you safe.")
+            "Tough, yes, but it keeps you safe."),
+        missingPassword: "We need your current password so we can confirm your indentity",
+        registrationSuccess: (
+            "Registration went A-OK! " +
+            "You can now log into your account. " +
+            "You will be redirected to the login page in 5 seconds"),
+        updateSuccess: "You account was updated successfully"
     };
 })();

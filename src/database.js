@@ -3,72 +3,40 @@
     It's recommended you rely on this module for all DB interaction.
 */
 
-"use strict";
-
 var mysql = require('mysql');
+var config = require('./config');
 
-var _credentials = {
-  host     : '',
-  user     : '',
-  password : '',
-  database : ''
-};
+var pool = null;
 
-var reconnectDelay = 2000;
+function getPool() {
+    if (pool === null) {
+        console.log("Initializing MySQL connection pool");
+        pool = mysql.createPool({
+            connectionLimit : 10,
+            host            : config.database.host,
+            user            : config.database.user,
+            password        : config.database.password,
+            database        : config.database.database
+        });
+    }
 
-function setCredentials (newCredentials) {
-    _credentials.host = newCredentials.host || '';
-    _credentials.user = newCredentials.user || '';
-    _credentials.password = newCredentials.password || '';
-    _credentials.database = newCredentials.database || '';
-}
-
-function connect (callback) {
-    var connection = mysql.createConnection({
-        host : _credentials.host,
-        user : _credentials.user,
-        password : _credentials.password,
-        database : _credentials.database
-    });
-
-    connection.connect(function (err) {
-        if (err) {
-            console.log("Error connecting to DB: ", err);
-            
-            setTimeout(function () {
-                connect(callback);
-            }, reconnectDelay);
-        } else {
-            callback(err, connection);
-        }
-    });
-
-    connection.on("error", function(err) {
-        console.log("DB communication error: ", err);
-
-        if (err.code === "PROTOCOL_CONNECTION_LOST") {
-            connect(callback);
-        } else {
-            throw err;
-        }
-    });
+    return pool;
 }
 
 // Run a query against the database
 function query (queryLiteral, params, callback) {
-    // connect to the database first
-    connect(function (error, connection) {
-        if (error) {
-            // let the caller script handle the error
-            callback(error);
+    getPool().getConnection(function(errorGettingConnection, connection) {
+        if (errorGettingConnection) {
+            // Error getting a connection
+            callback(errorGettingConnection);
             return;
         }
 
-        // execute the query and then the callback both when errors occur or not
-        connection.query(queryLiteral, params, callback);
+        connection.query(queryLiteral, params, function(err, rows) {
+            callback(err, rows);
+            connection.release();
+        });
     });
 }
 
-exports.setCredentials = setCredentials;
-exports.connect = connect;
 exports.query = query;

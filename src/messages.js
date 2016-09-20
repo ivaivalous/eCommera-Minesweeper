@@ -1,7 +1,5 @@
 // This file contains text strings for user-facing messages
 
-"use strict";
-
 var error = {
     gameUnavailable: "This game is no longer available.",
     gameRoomFull: "This game room is full",

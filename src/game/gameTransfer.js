@@ -3,8 +3,6 @@
     to the database.
 */
 
-"use strict";
-
 var db = require('../database');
 var queries = require('../queries');
 

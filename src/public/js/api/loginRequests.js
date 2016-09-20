@@ -3,7 +3,9 @@
 
     var loginApi = window.loginApi || (window.loginApi = {});
 
-    loginApi.register = function(email, displayName, password) {
+    loginApi.register = function(
+            email, displayName, password, successCallback, errorCallback) {
+
         var REDIRECTION_TIMEOUT = 6000;
 
         $.post('register', {
@@ -13,15 +15,19 @@
         })
         .done(function(data) {
             if(data.success === true) {
+                // Hide the login form
                 $(constants.locators.register.container).addClass(
                     constants.classes.hiddenContainer);
+
+                // Redirect the user to the login page
                 setTimeout(function() {
                     window.location = '/login';
                 }, REDIRECTION_TIMEOUT);
+
+                successCallback(data);
+            } else {
+                errorCallback(data);
             }
-            $(constants.locators.register.error).html(
-                data.message).removeClass(
-                    constants.classes.hiddenContainer);
         });
     };
 
@@ -33,9 +39,26 @@
             email: email,
             userId: userId,
             accessToken: accessToken
-        })
-        .done(function() {
+        }).done(function() {
             window.location = '/dashboard';
+        });
+    };
+
+    loginApi.updateAccount = function(
+            name, email, currentPassword, newPassword,
+            successCallback, errorCallback) {
+
+        $.post('account', {
+            name: name,
+            email: email,
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }).done(function(response) {
+            if (response.success) {
+                successCallback(response);
+            } else {
+                errorCallback(response);
+            }
         });
     };
 })();

@@ -4,11 +4,8 @@
     which grid cells are open, which ones contain mines, etc.
 */
 
-"use strict";
-
 var db = require('../database');
 var auth = require('../authentication');
-var queries = require('../queries');
 var config = require('../config');
 
 
