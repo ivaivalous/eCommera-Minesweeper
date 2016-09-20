@@ -87,7 +87,8 @@
             closed: "closed",
             open: "open",
             mine: "mine",
-            number: "number"
+            number: "number",
+            flagged: "flagged"
         },
         validationError: "validation-error"
     };
