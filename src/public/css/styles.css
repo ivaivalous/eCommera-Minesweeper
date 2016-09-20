@@ -392,6 +392,10 @@ label:not(.navigation-trigger) {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
+.create-game-form #popup {
+    background-color: #FFF !important;
+}
+
 .players-list-panel table {
     margin: auto;
 }
@@ -946,4 +950,10 @@ abbr.help {
 
 .left-aligned {
     text-align: left;
+}
+
+.game-info {
+    font-size: 1.2em;
+    text-align: justify;
+    padding: 20px 40px;
 }
