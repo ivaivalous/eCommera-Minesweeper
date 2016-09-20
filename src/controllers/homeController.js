@@ -16,7 +16,7 @@ exports.show = function (request, response) {
     response.viewModel.header.menuItems.home.current = true;
 
     // put a title for the page
-    response.viewModel.title = 'eCommera Minesweeper';
+    response.viewModel.title = 'Minesweeper by eCommera';
     
     response.render('home/index', response.viewModel);
 };

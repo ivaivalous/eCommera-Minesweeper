@@ -222,6 +222,7 @@
         for (var i = 0; i < openCells.length; i++) {
             var cell = openCells[i];
             var classToAdd = constants.classes.cell.open;
+            var numberClass = constants.classes.cell.numberPartial;
             var row = $($(constants.locators.gamePage.map.table + " tr")[cell.y]);
             var td = $(row.find(TABLE_CELL)[cell.x]);
 
@@ -229,6 +230,9 @@
                 classToAdd = constants.classes.cell.mine;
             } else if (cell.neighboringMineCount > 0) {
                 classToAdd = constants.classes.cell.number;
+                numberClass += cell.neighboringMineCount;
+
+                td.addClass(numberClass);
                 td.text(cell.neighboringMineCount);
             }
 

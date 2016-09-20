@@ -91,6 +91,7 @@
             open: "open",
             mine: "mine",
             number: "number",
+            numberPartial: "number-",
             flagged: "flagged"
         },
         validationError: "validation-error"

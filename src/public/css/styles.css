@@ -719,10 +719,43 @@ td.onturn{
 }
 
 .number {
-    background-color: #E5E5E5;
     font-weight: bold;
     cursor: default;
+    background-color: #E5E5E5;
 }
+
+.number-1 {
+    color: #007F0E;
+}
+
+.number-2 {
+    color: #007F46;
+}
+
+.number-3 {
+    color: #007F7F;
+}
+
+.number-4 {
+    color: #AEFD01;
+}
+
+.number-5 {
+    color: #B6FF00;
+}
+
+.number-6 {
+    color: #FFD800;
+}
+
+.number-7 {
+    color: #FF6A00;
+}
+
+.number-8 {
+    color: #FF0000;
+}
+
 
 #players-list-game-over {
     text-align: center;
