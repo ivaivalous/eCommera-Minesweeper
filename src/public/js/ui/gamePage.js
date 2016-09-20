@@ -100,6 +100,7 @@
 
         if (isOwnTurn) {
             row.addClass(constants.classes.playerInTurn);
+            statusCell.addClass('onturn');
         }
 
         return row;
@@ -108,7 +109,7 @@
     function setTimeDisplay(game) {
         var actionExpectedPanel = $(constants.locators.gamePage.actionExpected);
         var timeLeftPanel = $(constants.locators.gamePage.timeLeft);
-
+        
         if (game.hasStarted) {
             var name = getCurrentUserDisplayName(game);
             var textToUse = name + "'s turn";
@@ -116,6 +117,8 @@
             // Highlight it's the current user's turn
             if (game.currentPlayerTurn.isRequestee) {
                 textToUse = "Your turn";
+                var statusCell = $(document.getElementsByClassName('alive'));
+                statusCell.removeClass('alive').addClass('onturn');
             }
 
             actionExpectedPanel.text(textToUse);

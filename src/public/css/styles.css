@@ -25,7 +25,10 @@ label:not(.navigation-trigger) {
     padding: 10px 0px 5px 0px;
 }
 
-#navigationTriggerCheckbox {
+
+#navigationTriggerCheckbox, 
+#showPlayersTriggerCheckbox {
+
     display: none;
 }
 
@@ -49,6 +52,11 @@ label:not(.navigation-trigger) {
     box-shadow: 0 0 5px rgba(0,0,0,.3);
     -webkit-transform: translate(0,0);
     transform: translate(0,0);
+}
+#showPlayersTriggerCheckbox:checked ~ .players-list-panel {
+    box-shadow: 0 0 5px rgba(0,0,0,.3);
+    -webkit-transform: translate(0,100%);
+    transform: translate(0,100%s);
 }
 
 .navigation-header {
@@ -112,8 +120,23 @@ label:not(.navigation-trigger) {
     background: rgba(0,0,0,.3);
     transition: opacity .3s ease-out;
 }
+.playerList-overlay {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    background: rgba(0,0,0,.3);
+    transition: opacity .3s ease-out;
+}
+#navigationTriggerCheckbox:checked ~ .navigation-overlay
+{
+    right: 0;
+    left: 0;
+    opacity: 1;
+}
 
-#navigationTriggerCheckbox:checked ~ .navigation-overlay {
+#showPlayersTriggerCheckbox:checked ~ .playerList-overlay{
     right: 0;
     left: 0;
     opacity: 1;
@@ -139,7 +162,16 @@ label:not(.navigation-trigger) {
     border-bottom: 2px solid #888;
     cursor: pointer;
 }
-
+.playerList-trigger {
+    position: fixed;
+    right: 1%;
+    height: 20px;
+    width: 10px;
+    top:50%;    
+    border-left: 2px solid #888;
+    border-right: 2px solid #888;
+    cursor: pointer;
+}
 .main-header .navigation-trigger:after {
     content: '';
     position: absolute;
@@ -217,7 +249,8 @@ label:not(.navigation-trigger) {
         padding-left: 280px;
     }
 
-    .main-header .navigation-trigger {
+    .main-header .navigation-trigger,
+    .playerList-trigger {
         display: none;
     }
 
@@ -236,7 +269,7 @@ label:not(.navigation-trigger) {
         display: inline-block;
     }
 
-    #players-list-panel {
+    .players-list-panel {
         width: 30%;
         display: inline-block;
     }
@@ -269,7 +302,7 @@ label:not(.navigation-trigger) {
 
 @media screen and (max-width: 799px) {
     .main-header,
-    #players-list-panel {
+    .players-list-panel {
         width: 100%;
     }
 
@@ -292,10 +325,10 @@ label:not(.navigation-trigger) {
         margin: auto;
     }
 
-    #players-list-panel {
-        width: 100%;
-        margin-top: 10px;
-        margin: auto;
+    .players-list-panel {
+        
+     /*margin-top: 10px;
+      margin: auto;*/
     }
 
     .profile-info {
@@ -318,12 +351,29 @@ label:not(.navigation-trigger) {
         padding: 20px 4px;
     }
 
+
     .main-footer {
         width: calc(100% - 40px);
     }
 
     .desktop-only {
         display: none;
+    }
+    .players-list-panel {
+        width: 60%;
+        position: fixed;
+        z-index: 20;
+        right: 0;
+        top: 0;
+        background: #55565a;
+        background: white;
+        -webkit-transform: translate(100%,100%);
+        transform: translate(100%,100%);
+        -webkit-transition: -webkit-transform .3s ease-in;
+        transition: transform .3s ease-in;  
+    }
+    .playerList-trigger{
+        display: inline;
     }
 }
 
@@ -342,7 +392,7 @@ label:not(.navigation-trigger) {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
-#players-list-panel table {
+.players-list-panel table {
     margin: auto;
 }
 
@@ -526,7 +576,7 @@ input#login-facebook:hover {
 }
 
 .popup .header ,
-#players-list-panel .header {
+.players-list-panel .header {
     background: #0d314b url("../img/banner.jpg") repeat scroll 0 0;
 }
 
@@ -560,13 +610,10 @@ input#login-facebook:hover {
 }
 
 #timer {
-<<<<<<< HEAD
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
-=======
-    margin: -15px auto 30px auto;
->>>>>>> 5478992b13019cf3893cc0f0f02cef00fa82c751
+
     padding: 10px;
     width: 300px;
 
@@ -604,29 +651,26 @@ tr.now-playing td {
     height: 20px;
 }
 
-.alive {
-    background-color: green;
+td.alive {
+    background: url(../img/greenDot.png)  no-repeat center;
+    background-size: 10px;
+}
+td.onturn{
+    background: url(../img/red_dot.png)  no-repeat center;
+    background-size: 10px;
 }
 
-/*#triangle-right {
-	width: 0;
-	height: 0;
-	border-top: 50px solid transparent;
-	border-left: 100px solid red;
-	border-bottom: 50px solid transparent;
-}*/
 #list-wrapper .lie_decoration{
     text-decoration: line-through;
 
 }
- #players-list-panel .dead {
+.players-list-panel .dead {
         background-size: 30px;
         
 }
 .dead {
     background: url(../img/skull2.png) no-repeat;
     background-size: 20px;
-
 }
 
 .player-name {
@@ -685,18 +729,11 @@ tr.now-playing td {
     margin: auto;
 }
 
-<<<<<<< HEAD
+
 #start-new-game {
     margin-top: 15px;
 }
 
-#invalidsuccess{
-    color: darkred;
-    font-size: 14px;
-}
-
-=======
->>>>>>> 5478992b13019cf3893cc0f0f02cef00fa82c751
 .successful{    
     color: darkred;
     font-size: 14px;
@@ -750,7 +787,7 @@ table.player-stats th {
 }
 
 .validation-error:after {
-    border-color: border: 4px solid #c2e1f5;
+    border: 4px solid #c2e1f5;
     border-width: 10px;
     margin-left: -10px;
 }
