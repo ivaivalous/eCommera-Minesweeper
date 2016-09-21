@@ -11,7 +11,9 @@
 <body>
 	<header class="main-header">
 		<label for="navigationTriggerCheckbox" class="navigation-trigger"></label>
-		<label for="showPlayersTriggerCheckbox" class="playerList-trigger"></label>
+		<div class="slide-in-button hidden"> 
+			<label for="showPlayersTriggerCheckbox" class="playerList-trigger"></label>
+		</div>
 		<h1 class="header-title">
 			<a href="/">{{header.title}}</a>
 		</h1>
@@ -32,10 +34,6 @@
 	<input type="checkbox" name="navigationTriggerCheckbox" id="navigationTriggerCheckbox">
 
 	<label for="navigationTriggerCheckbox" class="navigation-overlay"></label>
-
-
-	
-	
 	<nav class="navigation-bar">
 		<header class="navigation-header">
 			<a href="/" class="navigation-logo"></a>

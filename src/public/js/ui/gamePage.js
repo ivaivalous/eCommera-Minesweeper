@@ -17,6 +17,7 @@
 
     $(document).ready(function() {
         if (location.pathname.indexOf("/play") !== -1) {
+            $('.slide-in-button').removeClass('hidden');
             gameId = location.pathname.replace("/play/", "");
 
             getGameStatus(gameId);
@@ -98,7 +99,7 @@
         row.append(nameCell);
         row.append(scoreCell);
 
-        if (isOwnTurn) {
+        if (isOwnTurn && player.alive) {
             row.addClass(constants.classes.playerInTurn);
             statusCell.addClass('onturn');
         }
@@ -279,13 +280,13 @@
 
     var clickCell = function(data , event) {
         if(data.target.className != "cell closed"){
-            return
+            return;
         }
         var x = data.data.x;
         var y = data.data.y;
 
         gameApi.makeMove(gameId, x, y, function(response) {
-            if (supportsVibration && response.success && response.hitMine) {
+            if (supportsVibration && response.success && response.hitMine) {              
                 navigator.vibrate(VIBRATION_LENGTH_MS);
             }
             getGameStatus();
