@@ -406,6 +406,10 @@ label:not(.navigation-trigger) {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
+.create-game-form #popup {
+    background-color: #FFF !important;
+}
+
 .players-list-panel table {
     margin: auto;
 }
@@ -729,10 +733,43 @@ td.onturn{
 }
 
 .number {
-    background-color: #E5E5E5;
     font-weight: bold;
     cursor: default;
+    background-color: #E5E5E5;
 }
+
+.number-1 {
+    color: #007F0E;
+}
+
+.number-2 {
+    color: #007F46;
+}
+
+.number-3 {
+    color: #007F7F;
+}
+
+.number-4 {
+    color: #AEFD01;
+}
+
+.number-5 {
+    color: #B6FF00;
+}
+
+.number-6 {
+    color: #FFD800;
+}
+
+.number-7 {
+    color: #FF6A00;
+}
+
+.number-8 {
+    color: #FF0000;
+}
+
 
 #players-list-game-over {
     text-align: center;
@@ -801,10 +838,11 @@ table.player-stats th {
 }
 
 .validation-error:after {
-    border: 4px solid #c2e1f5;
+    border-color: border: 4px solid #c2e1f5;
     border-width: 10px;
     margin-left: -10px;
 }
+
 .validation-error:before {
     border-color: rgba(194, 225, 245, 0);
     border-top-color: #FFCCCC;
@@ -960,4 +998,10 @@ abbr.help {
 
 .left-aligned {
     text-align: left;
+}
+
+.game-info {
+    font-size: 1.2em;
+    text-align: justify;
+    padding: 20px 40px;
 }
